@@ -1,0 +1,164 @@
+    /* Reset & Global */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Poppins', sans-serif; 
+      background-color: #ffffff; 
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Logo Kiri Atas */
+    .header-logo {
+      position: absolute;
+      top: 30px;
+      left: 50px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-logo img { height: 40px; }
+    .header-logo .logo-name { font-size: 14px; font-weight: 600; color: #005461; line-height: 1.2; }
+    .header-logo .logo-name small { font-size: 11px; font-weight: 400; color: #888; }
+
+    /* Bagian Atas (Warna Putih) */
+    .top-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 50px;
+      position: relative;
+    }
+
+   
+    /* --- KOTAK TIKET ANTRIAN --- */
+    .ticket-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 5; /* Biar di atas background */
+      margin-top: 60px;
+    }
+    .ticket-box {
+      border: 1.5px solid #b0b0b0;
+      border-radius: 8px;
+      padding: 30px 60px;
+      text-align: center;
+      background-color: #fff;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+    .ticket-box h3 {
+      font-size: 15px;
+      color: #333;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    .ticket-box .nomor {
+      font-size: 42px;
+      color: #005461;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+    .ticket-box .jadwal-title {
+      font-size: 14px;
+      color: #333;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    .ticket-box .jadwal-waktu {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 15px;
+    }
+    .ticket-box .info-antrian {
+      font-size: 14px;
+      color: #00828C;
+      font-weight: 700;
+      margin-bottom: 25px;
+    }
+    .ticket-box .terima-kasih {
+      font-size: 14px;
+      color: #333;
+      font-weight: 700;
+    }
+
+    /* Tombol Ambil Antrian */
+    .btn-ambil {
+      background-color: #00828C;
+      color: #ffffff;
+      border: none;
+      padding: 12px 40px;
+      border-radius: 25px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+    }
+    .btn-ambil:hover {
+      background-color: #005461;
+      transform: translateY(-2px);
+    }
+
+    /* --- BAGIAN BAWAH (Warna Tosca) --- */
+    .bottom-section {
+      background-color: #00828C;
+      border-top-left-radius: 40px;
+      border-top-right-radius: 40px;
+      padding: 60px 20px 80px 20px;
+      text-align: center;
+      position: relative;
+      margin-top: 40px; /* Jarak dari atas */
+    }
+    .bottom-text {
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      margin: 0;
+    }
+
+    /* --- GAMBAR DOKTER 3D --- */
+    .doctor-img {
+      position: absolute;
+      left: 2%;
+      bottom: 0; /* Nempel ke garis bawah layar */
+      height: 430px; /* Sesuaikan dengan ukuran gambar aslimu */
+      z-index: 10;
+    }
+
+    /* =========================================
+   PENGATURAN POSISI TIKET & JUDUL
+   ========================================= */
+
+/* Mengatur posisi keseluruhan area tiket (turun ke bawah) */
+.ticket-wrapper {
+  margin-top: 100px; /* UBAH ANGKA INI BUAT NURUNIN/NAIKIN TIKETNYA */
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Memastikan semua isinya ke tengah */
+}
+
+/* Styling untuk teks "Tiket Antrian Anda" */
+.judul-tiket {
+  color: #005461;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 25px;
+}
+
+/* Memastikan kotak tiket tepat di tengah */
+.ticket-box {
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Jarak tombol dengan kotak tiket */
+.btn-ambil {
+  margin-top: 25px;
+}
+

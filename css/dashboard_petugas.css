@@ -1,0 +1,118 @@
+/* =========================================
+   CSS KHUSUS DASHBOARD PETUGAS
+   Digunakan oleh: dashboard_petugas.html
+   ========================================= */
+
+/* 1. Mengubah Card Hijau agar layoutnya cocok untuk form */
+.card-pilih.petugas-layout {
+  width: 195%; 
+  max-width: 1050px;
+  justify-content: space-between;
+  padding: 35px 100px;
+}
+
+/* 2. Membesarkan gambar dokter KHUSUS di layout petugas */
+.petugas-layout .dokter-img {
+  height: 650px; 
+  margin-top: -153px; 
+  margin-left: -40px; 
+}
+
+/* 3. Styling Kotak Putih Form di Kanan */
+.form-box-petugas {
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 25px 30px;
+  width: 350px;
+  color: #333;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+.form-box-petugas h2 {
+  font-size: 16px;
+  color: #1a1a1a;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+}
+
+/* 4. Styling Input Group & Ikon di dalamnya */
+.input-group {
+  margin-bottom: 12px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 11px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+/* Bungkusan agar ikon bisa masuk ke dalam input */
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Posisi Ikon */
+.input-icon {
+  position: absolute;
+  left: 12px;
+  width: 16px;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Styling Input Box */
+.input-group input {
+  width: 100%;
+  padding: 10px 15px 10px 38px; /* Padding kiri 38px agar teks tidak nabrak ikon */
+  border: 1px solid #e0e0e0;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  font-size: 11px;
+  color: #333;
+  outline: none;
+  font-family: 'Poppins', sans-serif;
+}
+
+.input-group input:focus {
+  border-color: #005461;
+}
+
+/* Memaksa input tanggal bawaan browser selalu terang/putih */
+input[type="date"] {
+  color-scheme: light;
+}
+
+/* 5. Tombol Cetak Antrian */
+.btn-cetak-antrian {
+  width: 100%;
+  background-color: #005461;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  transition: 0.3s;
+  font-family: 'Poppins', sans-serif;
+}
+
+.btn-cetak-antrian:hover {
+  background-color: #003d47;
+}
+
+.btn-cetak-antrian img {
+  filter: brightness(0) invert(1);
+  width: 18px;
+}

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Form Pasien Baru - Rumah Sakit</title>
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/pasien2.css" />
+</head>
+<body>
+
+  <div class="dashboard-container">
+    <div class="main-content">
+      <div class="header-logo">
+        <img src="../../assets/logo/logors2.png" alt="Logo Rumah Sakit">
+      </div>
+
+
+      <!-- AREA KONTEN -->
+      <div class="content-area">
+        <div class="form-card">
+
+          <!-- STEPPER -->
+          <div class="stepper">
+            <div class="step done">
+              <div class="step-circle">1</div>
+              <p>Memilih Jenis Pasien</p>
+            </div>
+            <div class="step-line"></div>
+            <div class="step active">
+              <div class="step-circle">2</div>
+              <p>Mengisi Form<br>Pendaftaran Pasien Baru</p>
+            </div>
+            <div class="step-line"></div>
+            <div class="step">
+              <div class="step-circle">3</div>
+              <p>Verifikasi Kode OTP</p>
+            </div>
+            <div class="step-line"></div>
+            <div class="step">
+              <div class="step-circle">4</div>
+              <p>Pengambilan Kartu<br>Rekam Medis</p>
+            </div>
+          </div>
+
+          <!-- FORM -->
+          <h2 class="form-title">Pasien Baru</h2>
+
+          <form>
+            <div class="form-group">
+              <label>Nama Lengkap</label>
+              <input type="text" placeholder="" />
+            </div>
+            <div class="form-group">
+              <label>Nomor Induk Kependudukan (NIK)</label>
+              <input type="text" placeholder="" />
+            </div>
+            <div class="form-group">
+              <label>Tempat, Tanggal Lahir</label>
+              <input type="text" placeholder="" />
+            </div>
+            <div class="form-group">
+              <label>Alamat</label>
+              <input type="text" placeholder="" />
+            </div>
+            <div class="form-group">
+              <label>Jenis Kelamin</label>
+              <input type="text" placeholder="" />
+            </div>
+            <div class="form-group">
+              <label>Nomor Telepon / WhatsApp</label>
+            <input type="tel" id="noWhatsApp" placeholder="Contoh: 08812345678" />
+            </div>
+
+            <div class="form-action">
+           <button type="button" class="btn-kembali" onclick="window.location.href='dashboard_pasien.html'">Kembali</button>
+           <button type="button" class="btn-selanjutnya" onclick="simpanLanjutOTP()">Selanjutnya</button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../../js/main.js"></script>
+  <script>
+  function simpanLanjutOTP() {
+    // 1. Ambil nomor yang diketik pasien
+    const nomorWA = document.getElementById('noWhatsApp').value;
+    
+    // 2. Simpan di memori browser sementara (sessionStorage)
+    sessionStorage.setItem('nomorPasien', nomorWA);
+    
+    // 3. Pindah ke halaman OTP
+    window.location.href = 'otp.html';
+  }
+</script>
+</body>
+</html>

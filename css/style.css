@@ -1,0 +1,344 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ===== GLOBAL ===== */
+body {
+  font-family: 'poppins', sans-serif;
+  height: 100vh;
+}
+
+/* ===== CONTAINER (pembungkus utama) ===== */
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+/* ===== FORM SIDE (bagian kiri) ===== */
+.form-side {
+  width: 45%;
+  min-width: 320px;
+  padding: 40px 10%;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow-y: auto;
+  flex-shrink: 0; /* biar form gak ikut menyusut saat layar kecil */
+  z-index: 1;
+}
+
+/* judul halaman (Daftar / Masuk) */
+.form-side h1 {
+  font-size: 28px;
+  font-weight: 500;
+  color: #1a1a1a;
+  margin-bottom: 20px;
+}
+
+/* teks kecil di bawah judul */
+.subtitle {
+  color: #666;
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+
+/* ===== TAB SWITCH (khusus index.html - tombol Pasien/Petugas) ===== */
+.tab-switch {
+  display: flex;
+  border-radius: 8px;
+  padding: 4px;
+  margin-bottom: 24px;
+  width: fit-content;
+  gap: 3px;
+}
+
+/* tombol tab (Pasien / Petugas) */
+.tab {
+  padding: 10px 50px;
+  border: 1px solid #388383;
+  background: transparent;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #080606;
+  transition: all 0.2s;
+}
+
+/* tab yang sedang aktif/dipilih */
+.tab.active {
+  background: #005461;
+  color: #fff;
+  font-weight: 500;
+}
+
+/* ===== FORM GROUP (setiap baris input) ===== */
+.form-group {
+  margin-bottom: 16px;
+  position: relative;
+}
+
+/* label (NIK, Nama, Nomor Telepon, dll) */
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+/* kotak input */
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="tel"] {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #eeebeb;
+  border-radius: 8px;
+  font-size: 10px;
+  outline: none;
+  transition: border 0.2s;
+}
+
+/* teks placeholder di dalam input */
+::placeholder {
+  color: rgba(102, 99, 99, 0.3);
+}
+
+/* warna outline kotak saat diklik */
+.form-group input:focus {
+  border-color: #82af98;
+}
+
+/* ===== PASSWORD (input kata sandi) ===== */
+/* biar ada ruang untuk icon mata */
+.password-group input {
+  padding-right: 40px;
+}
+
+/* icon mata show/hide password */
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 55%;
+  bottom: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #888;
+}
+
+/* ===== CHECKBOX (saya setuju syarat & ketentuan) ===== */
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkbox-group label {
+  margin-bottom: 0;
+  font-size: 10px;
+  color: #000000;
+}
+
+/* ===== REMEMBER ROW (khusus signin.html - ingat saya & lupa password) ===== */
+.remember-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* link lupa password */
+.remember-row a {
+  font-size: 10px;
+  color: #005baf;
+  text-decoration: none;
+}
+
+/* label ingat saya */
+.remember-row label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  color: #000000;
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+/* ===== BUTTON ===== */
+/* tombol utama (Daftar / Masuk) */
+.btn-primary {
+  width: 100%;
+  padding: 7px;
+  background: #005461;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.2s;
+}
+
+/* warna tombol saat di hover */
+.btn-primary:hover {
+  background: #249E94;
+}
+
+/* ===== DIVIDER (garis pemisah "atau") ===== */
+.divider {
+  position: relative;
+  text-align: center;
+  margin: 30px 0;
+  color: #000000;
+  font-size: 9px;
+}
+
+/* garis kiri */
+.divider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 47%;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* garis kanan */
+.divider::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 47%;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* ===== SOCIAL LOGIN (Google & Apple) ===== */
+.social-login {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+/* tombol Google / Apple */
+.btn-social {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: white;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-social:hover {
+  background: #f5f5f5;
+}
+
+/* ===== REDIRECT (sudah punya akun? / belum punya akun?) ===== */
+.redirect {
+  text-align: center;
+  font-size: 13px;
+  color: #000000;
+}
+
+/* link masuk / daftar */
+.redirect a {
+  color: #005baf;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* ===== IMAGE SIDE (bagian kanan - foto rumah sakit) ===== */
+.image-side {
+  width: 55%;
+  overflow: hidden;
+  border-radius: 40px 0 0 40px;
+  flex-shrink: 0;
+}
+
+.image-side img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  box-shadow: none;
+}
+
+
+/* ===== EMAIL ROW (input email + tombol kirim kode) ===== */
+.email-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.email-input-row input {
+  flex: 1;
+}
+
+/* tombol kirim kode - CUKUP SATU INI AJA */
+.btn-kirim {
+  padding: 18px 14px;
+  background: #005461;
+  color: white;
+  border: none;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.btn-kirim:hover {
+  background: #249E94;
+}
+
+/* tanda bintang merah */
+.required {
+  color: red;
+  margin-left: 2px;
+}
+
+/* padding khusus reset password */
+.reset-side {
+  padding: 40px 10%;
+}
+
+.reset-side input[type="text"],
+.reset-side input[type="email"],
+.reset-side input[type="password"] {
+  padding: 18px;
+}
+
+/* ===== LOGO ===== */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+  margin-left: 88px;
+}
+
+.logo-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #005461;
+  line-height: 1.3;
+}
+
+.logo-name small {
+  font-size: 11px;
+  font-weight: 400;
+  color: #888;
+}

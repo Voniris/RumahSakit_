@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Dashboard Petugas - Rumah Sakit Viamedika</title>
+  
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/dashboard.css" />
+  <link rel="stylesheet" href="../../css/dashboard_petugas.css" />
+</head>
+<body>
+
+  <div class="dashboard-container">
+
+    <div class="sidebar">
+      <div class="logo">
+        <img src="../../assets/icons/rs.png" alt="Logo" width="160" />
+      </div>
+
+      <nav class="sidebar-menu">
+        <a href="#" class="menu-item active">
+          <img src="../../assets/icons/beranda.png" />
+          <span>Dashboard</span>
+        </a>
+        <a href="#" class="menu-item">
+          <img src="../../assets/icons/pendaftaran.png" />
+          <span>Pendaftaran</span>
+        </a>
+        <a href="#" class="menu-item">
+          <img src="../../assets/icons/panggill.png" />
+          <span>Panggil Antrian</span>
+        </a>
+      </nav>
+
+      <button class="btn-logout" onclick="window.location.href='../../Halaman/auth/masuk.html'">
+        <img src="../../assets/icons/logout.png" width="18" class="logout-icon" style="filter: brightness(0) invert(1);" />
+        Log Out
+      </button>
+    </div>
+
+    <div class="main-content">
+
+      <div class="header">
+        <div class="header-left">
+          <h2>Pembuatan Tiket</h2>
+          <p>Pembuatan Tiket &bull; ID Terminal: REG-01</p>
+        </div>
+        <div class="header-right">
+          <div class="user-info">
+            <div class="user-avatar" style="background: url('https://ui-avatars.com/api/?name=Zavira+Pahelvi&background=random') center/cover;"></div>
+            <div>
+              <p class="user-name">Zavira Pahelvi</p>
+              <p class="user-role">Petugas</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-area">
+        <div class="card-pilih petugas-layout">
+          
+          <div class="card-right">
+            <img src="../../assets/images/Dokter.png" alt="Dokter" class="dokter-img" />
+          </div>
+
+          <div class="form-box-petugas">
+            <h2>
+              <img src="https://cdn-icons-png.flaticon.com/512/1077/1077063.png" width="18" alt="user">
+              Biodata Pasien
+            </h2>
+            
+            <form>
+              <div class="input-group">
+                <label>Nomor Induk Kependudukan (NIK)</label>
+                <div class="input-wrapper">
+                  <img src="../../assets/icons/iconnik.png" class="input-icon" alt="icon">
+                  <input type="text" placeholder="Enter 16-digit ID">
+                </div>
+              </div>
+              
+              <div class="input-group">
+                <label>Nama Lengkap</label>
+                <div class="input-wrapper">
+                  <img src="../../assets/icons/nmalngkp.png" class="input-icon" alt="icon">
+                  <input type="text" placeholder="Nama Pasien">
+                </div>
+              </div>
+              
+              <div class="input-group">
+                <label>Tanggal Lahir</label>
+                <div class="input-wrapper">
+                  <img src="../../assets/icons/tanggalabu.png" class="input-icon" alt="icon">
+                  <input type="date">
+                </div>
+              </div>
+              
+              <div class="input-group">
+                <label>Keluhan Utama</label>
+                <div class="input-wrapper">
+                  <img src="../../assets/icons/keluhan.png" class="input-icon" alt="icon">
+                  <input type="text" placeholder="Masukkan Keluhan">
+                </div>
+              </div>
+              <br>
+              <button type="button" class="btn-cetak-antrian" onclick="window.location.href='antrianbypetugas.html'">
+                <img src="../../assets/icons/printer.png" alt="Print">
+                Cetak Nomor Antrian
+              </button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

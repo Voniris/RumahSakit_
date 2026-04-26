@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Masuk - Rumah Sakit</title>
+  <link rel="stylesheet" href="../../css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="form-side">
+      <div class="logo">
+        <img src="../../assets/logo/Logors.png" alt="Logo" width="40" />
+        <span class="logo-name">Rumah Sakit<br><small>Viamedika</small></span>
+      </div>
+      <h1>Masuk</h1>
+
+        <div class="tab-switch">
+         <button class="tab active" onclick="switchTab('pasien')">Pasien</button>
+         <button class="tab" onclick="switchTab('petugas')">Petugas</button>
+        </div>
+
+      <form id="formLogin">
+        <div class="form-group">
+          <label>Alamat Email / NIK</label>
+          <input type="text" id="username" placeholder="Masukkan Email atau NIK Anda" required />
+        </div>
+
+        <div class="form-group password-group">
+          <label>Kata Sandi</label>
+          <input type="password" id="password" placeholder="Masukkan Kata Sandi" required />
+          <span class="toggle-password" onclick="togglePassword('password', this)">
+            <img src="../../assets/icons/closedeyes.png" width="20" />
+          </span>
+        </div>
+        <br>
+        <div class="remember-row">
+            <label><input type="checkbox" id="remember_me" /> Ingatlah selama 30 hari</label>
+                <a href="reset_password.html" style="margin-top: -50px;">Lupa Kata Sandi</a>
+        </div>
+        <br>
+        <button type="submit" class="btn-primary" id="btnSubmitLogin">Masuk</button>
+        
+        <p class="divider">Atau</p>
+
+        <div class="social-login">
+          <button type="button" class="btn-social">
+            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width="18"/> Sign in with Google
+          </button>
+          <button type="button" class="btn-social">
+            <img src="../../assets/logo/Logo_Apple.svg" alt="Apple" width="18"/> Sign in with Apple
+          </button>
+        </div>
+
+        <p class="redirect">Belum punya akun? <a href="daftar.html">Daftar</a></p>
+      </form>
+    </div>
+
+    <div class="image-side">
+      <img src="../../assets/images/Hospital.png" />
+    </div>
+  </div>
+
+  <script src="../../js/main.js"></script>
+
+  <script>
+    document.getElementById('formLogin').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const btnSubmit = document.getElementById('btnSubmitLogin');
+        btnSubmit.innerText = "Memeriksa...";
+        btnSubmit.disabled = true;
+
+        const payload = {
+            username: document.getElementById('username').value, // API butuh field username
+            password: document.getElementById('password').value,
+            remember_me: document.getElementById('remember_me').checked
+        };
+
+        try {
+            const response = await fetch('http://localhost:8000/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await response.json();
+
+            if(response.status === 200 || data.success) {
+                // Simpan token ke localStorage browser agar bisa dipakai di halaman selanjutnya
+                localStorage.setItem('rs_token', data.data.token);
+                alert("Login berhasil!");
+                // Arahkan ke dashboard pasien yang ada di folder pasien/
+                window.location.href = "../pasien/dashboard_pasien.html"; 
+            } else {
+                alert("Gagal Login: " + (data.message || "Username atau Password salah"));
+            }
+        } catch (error) {
+            alert("Error: Tidak dapat terhubung ke server Backend.");
+        } finally {
+            btnSubmit.innerText = "Masuk";
+            btnSubmit.disabled = false;
+        }
+    });
+  </script>
+</body>
+</html>

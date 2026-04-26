@@ -1,0 +1,428 @@
+/* =========================================
+   DASHBOARD.CSS — Layout Halaman Pasien
+   Digunakan oleh:
+   - dashboard_pasien.html
+   - form_pasien_baru.html
+   - form_pasien_lama.html
+   ========================================= */
+
+
+/* ─────────────────────────────────────────
+   1. LAYOUT UTAMA
+   ───────────────────────────────────────── */
+
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  background: #ffffff;
+}
+
+
+/* ─────────────────────────────────────────
+   2. SIDEBAR
+   ───────────────────────────────────────── */
+
+.sidebar {
+  width: 350px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  flex-shrink: 0;
+  height: 100vh;
+}
+
+.sidebar .logo {
+  display: flex; 
+  margin-top: 25px;
+  align-items: center;     
+  text-align: center;
+}
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Jarak antar kotak menu */
+  flex: 1;
+  margin-top: 50px; /* Jarak dari logo ke menu pertama */
+}
+
+/* KODE PERBAIKAN LEBAR MENU ADA DI SINI */
+.menu-item {
+  width: 195px; /* Lebar dibatasi agar tidak kepanjangan */
+  margin: 0 auto; /* Supaya posisinya di tengah-tengah sidebar */
+  padding: 12px 20px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Jarak antara ikon dan teks */
+  text-decoration: none;
+  font-size: 14px; /* Sedikit dikecilkan agar pas dengan lebar kotak */
+  color: #555;
+  transition: background 0.2s, color 0.2s;
+}
+
+/* Membatasi ukuran ikon agar rapi */
+/* Memaksa semua ikon punya ukuran tinggi yang sama biar seragam */
+.menu-item img {
+  width: 25px;   /* Lebar tetap 25px sesuai maumu */
+  height: 25px;  /* Paksa tinggi juga 25px biar gak ada yang lonjong/kegedean */
+  object-fit: contain; /* Jurus sakti biar gambar gak gepeng walau dipaksa ukurannya */
+}
+
+.menu-item.active {
+  background: #ECECEC;
+  color: #005461;
+  font-weight: 600;
+}
+
+.menu-item:hover:not(.active) {
+  background: #f5f5f5;
+}
+
+/* Jarak sebelum tombol logout */
+.btn-logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 195px; /* Disamakan dengan lebar menu-item */
+  margin: 0 auto; /* Ditengahkan */
+  padding: 10px 20px;
+  background: #e53935;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 6px rgba(229, 57, 53, 0.35);
+}
+
+.btn-logout:hover {
+  background: #c62828;
+}
+
+
+/* ─────────────────────────────────────────
+   3. MAIN CONTENT
+   ───────────────────────────────────────── */
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #ECECEC;
+  border-radius: 24px;
+  margin: 12px 12px 12px 0;
+  overflow-y: auto;
+  padding: 28px 32px;
+}
+
+
+/* ─────────────────────────────────────────
+   4. HEADER
+   ───────────────────────────────────────── */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.header-left h2 {
+  font-size: 40px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 2px;
+}
+
+.header-left p {
+  font-size: 23px;
+  color: #999;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-avatar {
+  width: 38px;
+  height: 38px;
+  background: #005461;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 1px;
+}
+
+.user-role {
+  font-size: 11px;
+  color: #999;
+}
+
+
+/* ─────────────────────────────────────────
+   5. CONTENT AREA
+   ───────────────────────────────────────── */
+
+.content-area {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* ─────────────────────────────────────────
+   6. CARD PILIH JENIS PASIEN (dashboard)
+   ───────────────────────────────────────── */
+
+.card-pilih {
+  background: linear-gradient(135deg, #3BC1A8 0%, #1F9E9C 40%, #0C6C74 75%, #084C57 100%);
+  border-radius: 20px;
+  padding: 40px 44px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  color: white;
+  width: 75%;
+  max-width: 700px;
+  position: relative;
+}
+
+.card-left h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.card-left p {
+  font-size: 13px;
+  opacity: 0.75;
+  margin-bottom: 20px;
+}
+
+/* --- Wrapper Utama Dropdown --- */
+.custom-dropdown {
+  position: relative;
+  width: 100%;
+  max-width: 280px;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* --- Tombol Pemicu Dropdown --- */
+.dropdown-trigger {
+  padding: 12px 40px 12px 20px;
+  border-radius: 20px;
+  background-color: #f5f5f5;
+  color: #005461;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  
+  /* Ikon Segitiga dari Assets Kamu */
+  background-image: url('../assets/icons/segitiga.png');
+  background-repeat: no-repeat;
+  background-position: right 20px center;
+  background-size: 12px;
+  
+  /* Supaya teks tidak bisa diblok/highlight */
+  user-select: none; 
+}
+
+/* --- Kotak Pembungkus Pilihan (Tersembunyi secara default) --- */
+.dropdown-options {
+  position: absolute;
+  top: 105%; /* Jarak jatuhnya dari tombol utama */
+  left: 0;
+  width: 100%;
+  background-color: transparent; /* Ini yang bikin kotak putihnya hilang! */
+  box-shadow: none; /* Hilangkan bayangan kotak pembungkus */
+  padding: 0;
+  display: none; 
+  z-index: 10;
+}
+
+/* Class tambahan untuk memunculkan dropdown via JS */
+.dropdown-options.show {
+  display: block;
+}
+
+/* --- Desain Pilihan "Pasien Baru" & "Pasien Lama" (BEBAS DIMODIF) --- */
+.option-item {
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff; /* Teks warna putih */
+  background-color: #005461; /* Background warna hijau khas RS-mu */
+  border-radius: 20px; /* Bentuk kapsul membulat penuh */
+  margin-top: 10px; /* Jarak melayang antar tombol */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+/* Hapus garis bawah di opsi paling akhir */
+.option-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Efek saat mouse diarahkan ke pilihan (Hover) */
+.option-item:hover {
+  background-color: #06363d; /* Warna hijaunya sedikit lebih gelap saat disorot */
+}
+
+.pilihan-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn-pilihan {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  background: transparent;
+  color: white;
+  font-size: 13px;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+  width: 185px;
+}
+
+.btn-pilihan.active,
+.btn-pilihan:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: white;
+  font-weight: 600;
+}
+
+.card-right {
+  flex-shrink: 0;
+  
+}
+
+.dokter-img {
+  height: 500px;        /* bebas mau gede */
+  margin-left: -67px;
+  margin-top: -100px;   /* keluar kiri */
+  margin-bottom: -48px; /* turun dikit */
+}
+
+
+/* ─────────────────────────────────────────
+   7. FORM CARD (form pasien baru / lama)
+   ───────────────────────────────────────── */
+
+.form-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px 44px;
+  width: 75%;
+  max-width: 720px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+
+/* ─────────────────────────────────────────
+   8. STEPPER
+   ───────────────────────────────────────── */
+
+.stepper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  margin-bottom: 36px;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  font-size: 11px;
+  color: #bbb;
+  width: 110px;
+  flex-shrink: 0;
+}
+
+.step-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #ddd;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 8px;
+  transition: background 0.2s;
+}
+
+.step.active .step-circle,
+.step.done .step-circle {
+  background: #005461;
+}
+
+.step.active {
+  color: #005461;
+  font-weight: 600;
+}
+
+.step.done {
+  color: #005461;
+}
+
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: #ddd;
+  margin-top: 17px;
+  min-width: 24px;
+}
+
+
+/* ─────────────────────────────────────────
+   9. FORM INPUT (dalam form card)
+   ───────────────────────────────────────── */
+
+.form-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #005461;
+  margin-bottom: 24px;
+}
+
+.form-action {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.form-action .btn-primary {
+  width: auto;
+  padding: 10px 32px;
+  font-size: 13px;
+}

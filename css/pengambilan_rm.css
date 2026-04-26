@@ -1,0 +1,136 @@
+ /* Reset & Global */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Poppins', sans-serif; 
+      background-color: #ffffff; 
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Logo Kiri Atas */
+    .header-logo {
+      position: absolute;
+      top: 30px;
+      left: 50px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-logo img { height: 40px; }
+    .header-logo .logo-name { font-size: 14px; font-weight: 600; color: #005461; line-height: 1.2; }
+    .header-logo .logo-name small { font-size: 11px; font-weight: 400; color: #888; }
+
+    /* --- BAGIAN ATAS (PUTIH) --- */
+    .top-section {
+      background-color: #ffffff;
+      padding-top: 60px;
+      padding-bottom: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* --- STEPPER KHUSUS 4 STEP --- */
+    .stepper {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      width: 800px;
+    }
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      font-size: 11px;
+      width: 150px;
+      flex-shrink: 0;
+    }
+    .step-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #ddd;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+    .step-line {
+      flex: 1;
+      height: 2px;
+      background: #ddd;
+      margin-top: 18px;
+      min-width: 20px;
+    }
+    
+    /* Warna Step */
+    .step.done .step-circle { background: #3BC1A8; }
+    .step.done { color: #3BC1A8; font-weight: 500; }
+    
+    .step.active .step-circle { background: #005461; }
+    .step.active { color: #005461; font-weight: 700; }
+
+
+    /* --- KOTAK TERIMA KASIH (OVERLAPPING) --- */
+    .success-box {
+    background-color: #005461;
+    color: #ffffff;
+    width: 75%;
+    max-width: 850px;
+    
+    /* Ini urutan margin yang benar biar kotaknya turun tapi tetap di tengah */
+    margin-top:150px;       /* Mendorong kotak ke bawah */
+    margin-left: auto;      /* Menjaga kotak tetap di tengah layar */
+    margin-right: auto;     /* Menjaga kotak tetap di tengah layar */
+    margin-bottom: -70px;   /* Efek tumpuk/overlap ke area hijau di bawahnya */
+    
+    border-radius: 30px;
+    padding: 60px 20px;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .success-box h1 {
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .success-box h2 {
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+    }
+
+    /* --- BAGIAN BAWAH (TOSCA TERANG) --- */
+    .bottom-section {
+      background: linear-gradient(90deg, #3BC1A8 0%, #006D77 100%);
+      border-top-left-radius: 40px;
+      border-top-right-radius: 40px;
+      
+      /* BARIS INI YANG DIUBAH JADI 0 BIAR OVERLAP-NYA JALAN */
+      margin-top: 0; 
+      
+      padding-top: 120px; /* Padding besar biar teksnya gak ketutup kotak gelap */
+      padding-bottom: 40px;
+      padding-left: 10%;
+      padding-right: 10%;
+      text-align: center;
+      color: #ffffff;
+      flex-grow: 1; /* Biar ngisi sisa layar sampai mentok bawah */
+    }
+    .bottom-section p {
+      font-size: 12px;
+      line-height: 1.8;
+      margin-bottom: 8px;
+    }
+    .bottom-section .bold-text {
+      font-weight: 600;
+      font-size: 13px;
+    }

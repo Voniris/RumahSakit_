@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cetak Nomor Antrian</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/cetakkartubypetugas.css">
+</head>
+<body>
+
+  <div class="header-logo">
+    <img src="../../assets/logo/Logors.png" alt="Logo">
+    <span class="logo-name">Rumah Sakit<br><small>Viamedika</small></span>
+  </div>
+
+  <div class="top-section">
+    <div class="ticket-wrapper">
+        
+        <h2 class="judul-tiket">Tiket Antrian Anda</h2>
+        
+        <div class="ticket-box">
+          <h3>Nomor Antrian</h3>
+          <div class="nomor" id="nomorAntrian">A-001</div>
+          
+          <div class="jadwal-title">Jadwal Antrian</div>
+          <div class="jadwal-waktu">
+            <span id="tanggalAntrian">Senin, 27 April 2026</span><br>
+            <span id="waktuAntrian">Pukul 10.00</span>
+          </div>
+          
+          <div class="info-antrian" id="infoSisa">Ada 10 Antrian Didepan</div>
+          
+          <div class="terima-kasih">-Terima Kasih-</div>
+        </div>
+        
+        <button class="btn-ambil" onclick="cetakTiket()">Ambil Antrian</button>
+      </div>
+  </div> <div class="bottom-section">
+    <img src="../../assets/images/Dokter.png" alt="Dokter 3D" class="doctor-img">
+    
+    <p class="bottom-text">Silakan Datang Sesuai dengan Jadwal yang diberikan untuk menghindari keterlambatan.</p>
+  </div>
+
+  <script>
+    // Fungsi sementara untuk tombol Ambil Antrian
+    function cetakTiket() {
+      alert("Tiket sedang diunduh/dicetak...");
+      // Nanti bisa diarahkan kembali ke dashboard atau pop-up sukses
+      // window.location.href = "dashboard_pasien.html";
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,278 @@
+.header-logo {
+  position: absolute;
+  top: 30px;
+  left: 70px;
+  z-index: 10;
+}
+
+.header-logo img {
+  height: 66px; /* Sesuaikan dengan ukuran logomu */
+}
+
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  background: #ffffff;
+}
+
+/* ─────────────────────────────────────────
+   3. MAIN CONTENT
+   ───────────────────────────────────────── */
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #3BC1A8 3%, #1F9E9C 40%, #0C6C74 75%, #084C57 100%);
+}
+
+.content-area {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ─────────────────────────────────────────
+   7. FORM CARD (form pasien baru / lama)
+   ───────────────────────────────────────── */
+
+.form-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px 44px;
+  width: 1310px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* Menargetkan kotak input saat sedang diklik/aktif */
+.form-card input:focus, 
+.form-card select:focus, 
+.form-card textarea:focus {
+  border-color: #3BC1A8; /* Warna garis ijo pas diklik */
+  box-shadow: 0 0 0 3px rgba(59, 193, 168, 0.1); /* Efek bayangan halus di luar kotak */
+  outline: none; /* Menghilangkan garis biru bawaan browser */
+  background-color: #f9fffE; /* Sedikit perubahan warna background biar kontras */
+}
+
+/* ─────────────────────────────────────────
+   8. STEPPER
+   ───────────────────────────────────────── */
+
+.stepper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  margin-bottom: 36px;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  font-size: 11px;
+  color: #bbb;
+  width: 110px;
+  flex-shrink: 0;
+}
+
+.step-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #ddd;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 8px;
+  transition: background 0.2s;
+}
+
+/* --- STEP SELESAI (Done) --- */
+.step.done .step-circle {
+  background: #3BC1A8;
+}
+.step.done {
+  color: #3BC1A8; /* Warna teks step 1 */
+}
+
+/* --- STEP AKTIF (Active) --- */
+.step.active .step-circle {
+  background: #005461;
+}
+.step.active {
+  color: #005461; /* Warna teks step 2 */
+  font-weight: 700;
+}
+
+/* --- STEP BELUM AKTIF (Default) --- */
+.step {
+  color: #bbb; /* Warna abu-abu untuk step 3 & 4 */
+}
+
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: #ddd;
+  margin-top: 17px;
+  min-width: 24px;
+}
+
+/* ─────────────────────────────────────────
+   9. FORM INPUT (dalam form card)
+   ───────────────────────────────────────── */
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #8A8A8A; /* Warna hijau tua biar senada dengan tema RS-mu */
+  margin-bottom: 8px; /* Kasih jarak dikit ke kotaknya */
+  text-align: left;
+}
+
+.form-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #005461;
+  margin-bottom: 24px;
+}
+
+/* --- TOMBOL KEMBALI & SELANJUTNYA --- */
+.form-action {
+  display: flex;
+  justify-content: space-between; /* Ini yang bikin tombolnya misah ke kiri dan kanan */
+  align-items: center;
+  margin-top: 30px;
+}
+
+.btn-kembali, 
+.btn-selanjutnya {
+  background-color: #00828C; /* Warna tosca */
+  color: #ffffff;
+  border: none;
+  padding: 12px 36px; 
+  border-radius: 25px; 
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); 
+  transition: all 0.3s ease;
+}
+
+.btn-kembali:hover, 
+.btn-selanjutnya:hover {
+  background-color: #005461; /* Warna hijau tua saat disorot mouse */
+  transform: translateY(-2px); 
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); 
+}
+
+/* ─────────────────────────────────────────
+   10. HALAMAN OTP
+   ───────────────────────────────────────── */
+
+/* --- KONTINER OTP --- */
+.otp-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Memastikan semua elemen di tengah */
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* --- IKON WHATSAPP --- */
+.wa-icon-wrapper {
+  width: 80px;
+  height: 80px;
+  background-color: #00828C; /* Warna bulat hijau */
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 10px rgba(0, 130, 140, 0.2);
+}
+
+/* --- TEKS OTP --- */
+.otp-container h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #005461;
+  margin-bottom: 5px;
+}
+
+.otp-subtitle {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+.otp-resend {
+  font-size: 13px;
+  color: #888;
+  font-weight: 500;
+}
+
+.otp-resend a {
+  color: #00828C; /* Warna khusus teks Kirim Ulang */
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.otp-resend a:hover {
+  text-decoration: underline;
+}
+
+/* --- KOTAK INPUT OTP (Garis Bawah) --- */
+.otp-inputs {
+  display: flex;
+  gap: 15px; /* Jarak antar garis */
+  margin: 30px 0;
+}
+
+.otp-box {
+  width: 45px;
+  height: 50px;
+  border: none;
+  border-bottom: 4px solid #b0b0b0; /* Warna garis bawah abu-abu */
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  color: #333;
+  background-color: transparent;
+  outline: none;
+  transition: border-color 0.2s;
+  /* Supaya warna background input tidak berubah pas di-klik karena CSS lamamu */
+  box-shadow: none !important; 
+}
+
+/* Saat kotak diketik / diklik, garis bawah jadi hijau */
+.otp-box:focus {
+  border-bottom: 4px solid #00828C;
+  background-color: transparent !important;
+}
+
+/* --- TOMBOL VERIFIKASI --- */
+.btn-verifikasi {
+  background-color: #00828C;
+  color: #ffffff;
+  border: none;
+  padding: 12px 40px;
+  border-radius: 25px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.btn-verifikasi:hover {
+  background-color: #005461;
+  transform: translateY(-2px);
+}

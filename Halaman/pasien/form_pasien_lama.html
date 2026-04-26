@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Form Pasien Lama - Rumah Sakit</title>
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/pasien2.css" />
+</head>
+<body>
+
+  <div class="dashboard-container">
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+      <!-- AREA KONTEN -->
+      <div class="content-area">
+        <div class="form-card">
+
+          <!-- STEPPER -->
+          <div class="stepper">
+            <div class="step done">
+              <div class="step-circle">1</div>
+              <p>Memilih Jenis Pasien</p>
+            </div>
+            <div class="step-line"></div>
+            <div class="step active">
+              <div class="step-circle">2</div>
+              <p>Mengisi Form<br>Pasien Lama</p>
+            </div>
+            <div class="step-line"></div>
+            <div class="step">
+              <div class="step-circle">3</div>
+              <p>Cetak Nomor Antrian</p>
+            </div>
+          </div>
+
+          <!-- FORM -->
+          <h2 class="form-title">Pasien Lama</h2>
+
+          <form>
+            <div class="form-group">
+              <label>Nama Lengkap</label>
+              <input type="text" placeholder="" />
+            </div>
+            <div class="form-group">
+              <label>Nomor Induk Kependudukan (NIK)</label>
+              <input type="text" placeholder="" />
+            </div>
+            <div class="form-group">
+              <label>Nomor Rekam Medis</label>
+              <input type="text" placeholder="" />
+            </div>
+
+            <div class="form-action">
+           <button type="button" class="btn-kembali" onclick="window.location.href='dashboard_pasien.html'">Kembali</button>
+           <button type="button" class="btn-selanjutnya" onclick="window.location.href='cetak_antrian.html'">Selanjutnya</button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../../js/main.js"></script>
+</body>
+</html>

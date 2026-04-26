@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Dashboard Pasien - Rumah Sakit Viamedika</title>
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/dashboard.css" />
+</head>
+<body>
+
+  <div class="dashboard-container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="logo">
+        <img src="../../assets/icons/rs.png" alt="Logo" width="160" />
+      </div>
+      
+      
+      <nav class="sidebar-menu">
+        <a href="#" class="menu-item active">
+          <img src="../../assets/icons/beranda.png" width="18" />
+          <span>Dashboard</span>
+        </a>
+
+        <a href="#" class="menu-item">
+          <img src="../../assets/icons/pendaftaran.png" />
+          <span>Pendaftaran</span>
+        </a>
+        
+      </nav>
+
+      <button class="btn-logout" onclick="window.location.href='../../Halaman/auth/masuk.html'">
+        <img src="../../assets/icons/logout.png" width="18" />
+        Log Out
+      </button>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+      <!-- HEADER -->
+      <div class="header">
+        <div class="header-left">
+          <h2>Pembuatan Tiket</h2>
+          <p>Pembuatan Tiket &bull; ID Terminal: REG-01</p>
+        </div>
+        <div class="header-right">
+          <div class="user-info">
+            <div class="user-avatar">P</div>
+            <div>
+              <p class="user-name">Pasien</p>
+              <p class="user-role">Zahira Alfiyar</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD PILIH JENIS PASIEN -->
+      <div class="content-area">
+        <div class="card-pilih">
+          <div class="card-right">
+            <img src="../../assets/images/Dokter.png" alt="Dokter" class="dokter-img" />
+          </div>
+
+          <div class="card-left">
+      <h2>Pilih Jenis Pasien</h2>
+        <p>Silakan pilih salah satu jenis pasien di bawah ini</p>
+
+    <div class="pilihan-buttons">
+  <div class="custom-dropdown">
+    
+    <div class="dropdown-trigger" onclick="toggleDropdown()">
+      <span id="dropdown-text">Pilih Jenis Pasien</span>
+    </div>
+
+    <div class="dropdown-options" id="dropdown-options">
+      <div class="option-item" onclick="pilihJenis('baru')">Pasien Baru</div>
+      <div class="option-item" onclick="pilihJenis('lama')">Pasien Lama</div>
+    </div>
+
+  </div>
+</div>
+
+           
+
+<script>
+  // Fungsi untuk buka-tutup dropdown
+  function toggleDropdown() {
+    const options = document.getElementById("dropdown-options");
+    options.classList.toggle("show");
+  }
+
+  // Fungsi saat opsi dipilih
+  function pilihJenis(jenis) {
+    // Tutup menu dropdown setelah diklik
+    document.getElementById("dropdown-options").classList.remove("show");
+    
+    // Langsung arahkan ke halaman form yang sesuai
+    setTimeout(() => {
+      if (jenis === 'baru') {
+        window.location.href = 'form_pasien_baru.html';
+      } else if (jenis === 'lama') {
+        window.location.href = 'form_pasien_lama.html';
+      }
+    }, 150);
+  }
+
+  // Opsional: Klik di sembarang tempat (luar dropdown) untuk menutup menu
+  window.onclick = function(event) {
+    if (!event.target.matches('.dropdown-trigger') && !event.target.matches('#dropdown-text')) {
+      const dropdowns = document.getElementsByClassName("dropdown-options");
+      for (let i = 0; i < dropdowns.length; i++) {
+        let openDropdown = dropdowns[i];
+        if (openDropdown.classList.contains('show')) {
+          openDropdown.classList.remove('show');
+        }
+      }
+    }
+  }
+</script>
+</body>
+</html>

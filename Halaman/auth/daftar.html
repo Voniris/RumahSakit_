@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Daftar</title>
+    <link rel="stylesheet" href="../../css/style.css" />
+</head>
+<body>
+    <div class="container">
+        <div class="form-side">
+            <div class="logo">
+                <img src="../../assets/logo/Logors.png" alt="Logo" width="40" />
+                <span class="logo-name">Rumah Sakit<br><small>Viamedika</small></span>
+            </div>
+            <h1>Daftar</h1>
+
+            <div class="tab-switch">
+                <button class="tab active" onclick="switchTab('pasien')">Pasien</button>
+                <button class="tab" onclick="switchTab('petugas')">Petugas</button>
+            </div>
+
+            <form id="formDaftar">
+                <div id="field-nik" class="form-group">
+                    <label>NIK</label>
+                    <input type="text" id="nik" placeholder="Maukkan NIK Anda" required />
+                </div>
+                <div class="form-group">
+                    <label>Nama</label>
+                    <input type ="text" id="nama_lengkap" placeholder="Masukkan Nama Anda" required />
+                </div>
+                <div class="form-group">
+                    <label>Nomor Telepon</label>
+                    <input type="tel" id="no_telepon" placeholder="Masukkan nomor Anda" required />
+                </div>
+                <div class="form-group">
+                    <label>Alamat Email</label>
+                    <input type="email" id="email" placeholder="Masukkan Alamat Email" required />
+                </div>
+                <div class="form-group password-group">
+                    <label>Kata Sandi</label>
+                    <input type="password" id="password" placeholder="Masukkan Kata Sandi" required />
+                    <span class="toggle-password" onclick="togglePassword('password', this)">
+                        <img src="../../assets/icons/closedeyes.png" width="20" />
+                    </span>
+                </div>
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="agree" required />
+                    <label for="agree">Saya menyetujui syarat & ketentuan</label>
+                </div>
+
+                <button type="submit" class="btn-primary" id="btnSubmitDaftar">Daftar</button>
+
+                <p class="divider">Atau </p>
+
+                <div class="social-login">
+                  <button type="button" class="btn-social">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width="18"/> Sign in with Google
+                  </button>
+                  <button type="button" class="btn-social">
+                    <img src="../../assets/logo/Logo_Apple.svg" alt="Apple" width="18"/> Sign in with Apple
+                </button>
+                </div>
+
+                <p class="redirect">Sudah punya akun? <a href="masuk.html">Masuk</a></p>
+            </form>
+        </div>
+
+        <div class="image-side">
+            <img src="../../assets/images/Hospital.png" />
+        </div>
+    </div>
+
+    <script src="../../js/main.js"></script>
+
+    <script>
+        document.getElementById('formDaftar').addEventListener('submit', async function(e) {
+            e.preventDefault(); // Mencegah reload halaman
+            const btnSubmit = document.getElementById('btnSubmitDaftar');
+            btnSubmit.innerText = "Memproses...";
+            btnSubmit.disabled = true;
+
+            // Kumpulkan data dari input
+            const payload = {
+                nik: document.getElementById('nik').value,
+                nama_lengkap: document.getElementById('nama_lengkap').value,
+                no_telepon: document.getElementById('no_telepon').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                password_confirmation: document.getElementById('password').value, // Backend mewajibkan ini
+                tanggal_lahir: "2000-01-01", // Default wajib API
+                jenis_kelamin: "L", // Default wajib API
+                jenis_pasien: "umum" // Default wajib API
+            };
+
+            try {
+                // Tembak API Register
+                const response = await fetch('http://localhost:8000/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+
+                if(response.status === 201 || data.success) {
+                    alert("Registrasi berhasil! Cek email kamu untuk verifikasi akun."); // Sesuai pesan backend
+                    window.location.href = "masuk.html"; // Lempar ke halaman login
+                } else {
+                    alert("Gagal Daftar: " + (data.message || "Periksa kembali data Anda"));
+                }
+            } catch (error) {
+                alert("Error: Tidak dapat terhubung ke server Backend. Pastikan server sudah jalan!");
+            } finally {
+                btnSubmit.innerText = "Daftar";
+                btnSubmit.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
