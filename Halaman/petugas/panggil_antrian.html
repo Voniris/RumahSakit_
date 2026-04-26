@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Panggil Antrian - Rumah Sakit Viamedika</title>
+  
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/panggilbypetugas.css" />
+</head>
+<body>
+
+  <div class="dashboard-container">
+    
+    <div class="sidebar">
+      <div class="logo">
+        <img src="../../assets/icons/rs.png" alt="Logo" width="160" />
+      </div>
+
+      <nav class="sidebar-menu">
+        <a href="#" class="menu-item">
+          <img src="../../assets/icons/beranda.png" />
+          <span>Dashboard</span>
+        </a>
+        <a href="#" class="menu-item">
+          <img src="../../assets/icons/pendaftaran.png" />
+          <span>Pendaftaran</span>
+        </a>
+        <a href="#" class="menu-item active">
+          <img src="../../assets/icons/panggill.png" />
+          <span>Panggil Antrian</span>
+        </a>
+      </nav>
+
+      <button class="btn-logout">
+        <img src="../../assets/icons/logout.png" alt="logout" width="18" style="filter: brightness(0) invert(1);"> 
+        Log Out
+      </button>
+    </div>
+
+    <div class="main-content">
+      
+      <div class="header">
+        <div class="header-left">
+          <h2>Pemanggilan Antrian</h2>
+        </div>
+        <div class="user-info">
+          <img src="../../assets/images/user.png" alt="Avatar" class="user-avatar-img" style="width: 45px; height: 45px; border-radius: 50%;">
+          <div>
+            <div class="user-role" style="font-size: 11px; color: #666; font-weight: 600;">Petugas</div>
+            <div class="user-name" style="font-size: 13px; font-weight: 700;">Zavira Pahelvi</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="queue-container">
+        
+        <div class="active-queue-card">
+          <div class="status-badge">
+            <span class="dot"></span> Berlangsung
+          </div>
+          
+          <h1 id="nomorAntrian" class="big-number">A-001</h1>
+          <h3 id="namaPasien" class="patient-name">Mr. Rajwa Shahifa</h3>
+          <p id="infoDokter" class="doctor-info">Kedokteran Umum &bull; Dr. James</p>
+          
+          <div class="timer-badge">
+            ⏱ 05:25
+          </div>
+
+          <div class="action-buttons">
+            <button class="btn-action btn-lewatin">
+              <img src="../../assets/icons/lewati.png" alt="Lewati">
+              Lewati
+            </button>
+            <button class="btn-action btn-recall">
+              <img src="../../assets/icons/recall.png" alt="Recall">
+              Recall
+            </button>
+            <button class="btn-action btn-next">
+              <img src="../../assets/icons/megaphone.png" alt="Berikutnya">
+              Berikutnya
+            </button>
+          </div>
+        </div>
+
+        <div class="waiting-list-card">
+          <div class="waiting-header">
+            <div class="waiting-title">
+              <img src="../../assets/icons/people.png" alt="Antrian" width="24">
+              <div>
+                <h4>Antrian</h4>
+                <p>General Medicine</p>
+              </div>
+            </div>
+            <div class="waiting-count">4 Tertunda</div>
+          </div>
+
+          <div class="waiting-list">
+            <div class="waiting-item">
+              <div class="item-number">
+                <span class="lbl-no">No.</span>
+                <span class="val-no">A-002</span>
+              </div>
+              <div class="item-info">
+                <h5>Mr. Maulana</h5>
+                <p>⏱ Menunggu 15m</p>
+              </div>
+            </div>
+
+            <div class="waiting-item">
+              <div class="item-number">
+                <span class="lbl-no">No.</span>
+                <span class="val-no">A-003</span>
+              </div>
+              <div class="item-info">
+                <h5>Mr. Ivan Adinata</h5>
+                <p>⏱ Menunggu 22m</p>
+              </div>
+            </div>
+
+            <div class="waiting-item">
+              <div class="item-number">
+                <span class="lbl-no">No.</span>
+                <span class="val-no">A-004</span>
+              </div>
+              <div class="item-info">
+                <h5>Mr. Akhmad Saputra</h5>
+                <p>⏱ Menunggu 28m</p>
+              </div>
+            </div>
+
+            <div class="waiting-item">
+              <div class="item-number">
+                <span class="lbl-no">No.</span>
+                <span class="val-no">A-005</span>
+              </div>
+              <div class="item-info">
+                <h5>Mr. Firdaus</h5>
+                <p>⏱ Menunggu 35m</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div> </div>
+  </div>
+
+</body>
+</html>

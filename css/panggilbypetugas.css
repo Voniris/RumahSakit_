@@ -1,0 +1,235 @@
+/* ===================================================
+   CSS KHUSUS PANGGIL ANTRIAN (ISOLASI TOTAL - REVISI)
+   =================================================== */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Poppins', sans-serif; overflow: hidden; background: #fff; }
+
+.dashboard-container { display: flex; height: 100vh; width: 100vw; }
+
+/* --- SIDEBAR (Disamakan 100% dengan Dashboard Petugas) --- */
+.sidebar { 
+  width: 350px; 
+  background: #fff; 
+  display: flex; 
+  flex-direction: column; 
+  padding: 24px 16px; 
+  flex-shrink: 0; 
+}
+
+.sidebar .logo { 
+  margin-top: 25px; 
+  text-align: center; 
+}
+
+.sidebar-menu { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 15px; 
+  margin-top: 50px; 
+  flex: 1; 
+}
+
+.menu-item {
+  width: 195px; /* Lebar dibatasi agar tidak kepanjangan */
+  margin: 0 auto; /* Supaya posisinya di tengah-tengah sidebar */
+  padding: 12px 20px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Jarak antara ikon dan teks */
+  text-decoration: none;
+  font-size: 14px; /* Sedikit dikecilkan agar pas dengan lebar kotak */
+  color: #555;
+  transition: background 0.2s, color 0.2s;
+}
+
+/* Membatasi ukuran ikon agar rapi */
+/* Memaksa semua ikon punya ukuran tinggi yang sama biar seragam */
+.menu-item img {
+  width: 25px;   /* Lebar tetap 25px sesuai maumu */
+  height: 25px;  /* Paksa tinggi juga 25px biar gak ada yang lonjong/kegedean */
+  object-fit: contain; /* Jurus sakti biar gambar gak gepeng walau dipaksa ukurannya */
+}
+
+.menu-item.active {
+  background: #ECECEC;
+  color: #005461;
+  font-weight: 600;
+}
+
+.menu-item:hover:not(.active) {
+  background: #f5f5f5;
+}
+
+/* Tombol Logout */
+.btn-logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 195px; /* Disamakan dengan lebar menu-item */
+  margin: 0 auto; /* Ditengahkan */
+  padding: 10px 20px;
+  background: #e53935;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 6px rgba(229, 57, 53, 0.35);
+}
+
+/* Hover Logout */
+.btn-logout:hover {
+  background: #cc0000;
+}
+
+
+/* --- MAIN CONTENT & HEADER --- */
+.main-content { flex: 1; background: #ECECEC; border-radius: 30px 0 0 30px; margin: 15px 0 15px 0; padding: 40px; display: flex; flex-direction: column; overflow-y: auto; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+.header-left h2 { font-size: 26px; font-weight: 700; color: #1a1a1a; }
+.user-info { display: flex; align-items: center; gap: 12px; }
+
+/* --- GRID LAYOUT KIRI & KANAN --- */
+.queue-container {
+  display: flex;
+  gap: 30px;
+  flex: 1;
+}
+
+/* 1. KOTAK KIRI (AKTIF) */
+.active-queue-card {
+  flex: 1; 
+  background: #fff;
+  border-radius: 25px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+.status-badge {
+  background: #e0f2f1;
+  color: #00897b;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 30px;
+}
+.status-badge .dot { width: 10px; height: 10px; background: #00897b; border-radius: 50%; }
+
+.big-number { font-size: 85px; font-weight: 800; color: #1a1a1a; line-height: 1; margin-bottom: 10px; }
+.patient-name { font-size: 22px; font-weight: 700; color: #333; margin-bottom: 5px; }
+.doctor-info { font-size: 14px; color: #888; margin-bottom: 25px; }
+
+.timer-badge {
+  background: #f5f5f5;
+  padding: 10px 25px;
+  border-radius: 15px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  width: 100%;
+}
+
+.btn-action {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px 10px;
+  border-radius: 15px;
+  border: none;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.btn-action img { 
+    width: 24px; 
+    height: 24px; 
+    object-fit: contain; }
+
+/* Warna Tombol */
+.btn-lewatin { background: #f5f5f5; color: #555; }
+.btn-recall { background: #fff2cc; color: #d69e2e; }
+.btn-next { background: #005461; color: #fff; }
+.btn-next img { filter: brightness(0) invert(1); } 
+
+/* 2. KOTAK KANAN (DAFTAR TUNGGU) */
+.waiting-list-card {
+  flex: 1;
+  background: #fff;
+  border-radius: 25px;
+  padding: 30px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.waiting-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.waiting-title { display: flex; align-items: center; gap: 15px; }
+.waiting-title h4 { font-size: 18px; font-weight: 700; color: #1a1a1a; }
+.waiting-title p { font-size: 12px; color: #888; }
+.waiting-count { background: #f0f0f0; color: #666; padding: 6px 15px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+
+.waiting-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  overflow-y: auto; 
+}
+
+.waiting-item {
+  background: #f8f9fa;
+  border-radius: 15px;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: 0.2s;
+}
+.waiting-item:hover { background: #f0f4f5; }
+
+.item-number {
+  background: #fff;
+  padding: 10px 15px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 65px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+.lbl-no { font-size: 10px; color: #888; }
+.val-no { font-size: 14px; font-weight: 700; color: #333; }
+
+.item-info h5 { font-size: 15px; font-weight: 700; color: #1a1a1a; margin-bottom: 3px; }
+.item-info p { font-size: 12px; color: #888; }
