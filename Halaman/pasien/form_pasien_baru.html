@@ -72,7 +72,21 @@
               <label>Nomor Telepon / WhatsApp</label>
             <input type="tel" id="noWhatsApp" placeholder="Contoh: 08812345678" />
             </div>
-
+            
+            <!-- Dropdown Pilih Unit -->
+             <div class="form-group">
+            <select class="select-unit" required>
+              <!-- Tambahin 'hidden' biar pas diklik, opsi 'Pilih Unit' gak muncul di daftar -->
+              <option value="" disabled selected hidden>Pilih Unit</option>
+              
+              <!-- Warna #333 biar pas pilihan aslinya muncul, warnanya hitam gelap, bukan abu-abu -->
+              <option value="umum" style="color: #333;">Poli Umum</option>
+              <option value="gigi" style="color: #333;">Poli Gigi</option>
+              <option value="kia" style="color: #333;">Poli KIA (Ibu & Anak)</option>
+              <option value="penyakit_dalam" style="color: #333;">Poli Penyakit Dalam</option>
+            </select>
+          </div>
+            
             <div class="form-action">
            <button type="button" class="btn-kembali" onclick="window.location.href='dashboard_pasien.html'">Kembali</button>
            <button type="button" class="btn-selanjutnya" onclick="simpanLanjutOTP()">Selanjutnya</button>

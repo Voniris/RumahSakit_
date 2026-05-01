@@ -1,15 +1,3 @@
-/* =========================================
-   DASHBOARD.CSS — Layout Halaman Pasien
-   Digunakan oleh:
-   - dashboard_pasien.html
-   - form_pasien_baru.html
-   - form_pasien_lama.html
-   ========================================= */
-
-
-/* ─────────────────────────────────────────
-   1. LAYOUT UTAMA
-   ───────────────────────────────────────── */
 
 .dashboard-container {
   display: flex;
@@ -19,9 +7,7 @@
 }
 
 
-/* ─────────────────────────────────────────
-   2. SIDEBAR
-   ───────────────────────────────────────── */
+/* 2. SIDEBAR */
 
 .sidebar {
   width: 350px;

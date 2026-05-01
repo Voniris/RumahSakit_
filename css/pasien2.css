@@ -276,3 +276,37 @@
   background-color: #005461;
   transform: translateY(-2px);
 }
+
+/* --- KOTAK PILIH UNIT --- */
+.select-unit {
+  width: 100%;
+  padding: 14px 20px; /* Jarak atas-bawah dan kiri-kanan biar pas */
+  border-radius: 8px;
+  margin-top: 17px;
+  border: 1px solid #d1d1d1; /* Garis abu-abu tipis */
+  background-color: #ffffff; /* Background abu-abu sangat muda */
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  color: #888888; /* Warna teks abu-abu kayak placeholder */
+  cursor: pointer;
+
+  /* Menghilangkan panah bawaan browser */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  /* Bikin panah segitiga custom warna hijau tua (#005461) */
+  background-image: url('data:image/svg+xml;utf8,<svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 12L0 0H16L8 12Z" fill="%23005461"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 20px center; /* Posisi panah di kanan */
+  background-size: 14px; /* Ukuran panahnya */
+  transition: all 0.3s ease;
+}
+
+/* Biar pas diklik efeknya sama kayak kotak inputanmu yang lain */
+.select-unit:focus {
+  border-color: #3BC1A8;
+  box-shadow: 0 0 0 3px rgba(59, 193, 168, 0.1);
+  outline: none;
+  background-color: #f9fffE;
+}
