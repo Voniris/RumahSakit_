@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard Pasien - Rumah Sakit Viamedika</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css" />
+  <link rel="stylesheet" href="../../css/homescreen.css" />
+</head>
+<body>
+
+  <div class="dashboard-container">
+    
+    <!-- 1. SIDEBAR KIRI -->
+    <aside class="sidebar-dashboard">
+      <div class="sidebar-logo">
+        <img src="../../assets/logo/Logors.png" alt="Logo" />
+        <span>Rumah Sakit<br><small>Viamedika</small></span>
+      </div>
+
+      <!-- Menu Items -->
+      <a href="#" class="menu-item active">
+        <img src="../../assets/icons/beranda.png" alt="Home" width="27">
+        <span>Dashboard</span>
+      </a>
+      <a href="dashboard_pasien.html" class="menu-item"> <!-- Arahkan ke HTML Pendaftaranmu -->
+        <img src="../../assets/icons/pendaftaran.png" alt="Daftar" width="20">
+        <span>Pendaftaran</span>
+      </a>
+      <a href="#" class="menu-item">
+        <img src="../../assets/icons/panggill.png" alt="Antrian" width="20">
+        <span>Lihat Antrian</span>
+      </a>
+    </aside>
+
+    <!-- 2. KONTEN KANAN -->
+    <main class="main-content">
+      
+      <!-- Header Profil (Klik untuk Pop Up) -->
+      <div class="top-profile" onclick="toggleProfilePopup()">
+        <img src="../../assets/images/zahra.png" alt="Zahra Kaliope" />
+        <div class="info-user">
+          <span class="role">Pasien</span>
+          <span class="name">Zahra Kaliope</span>
+        </div>
+      </div>
+
+      <!-- Banner Selamat Datang -->
+      <div class="welcome-banner">
+        <img src="../../assets/images/dokter.png" alt="Dokter 3D" /> <!-- Pastikan nama file gambar dokternya bener ya -->
+        <h1>Selamat Datang Di Rumah Sakit Viamedika</h1>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- 3. POP UP PROFIL (Disembunyikan secara default) -->
+  <div id="profilePopupOverlay" class="popup-overlay" style="display: none;">
+    <div class="profile-popup-card">
+      <button class="btn-close-popup" onclick="toggleProfilePopup()">✖</button>
+      
+      <img src="../../assets/images/zahra.png" alt="Zahra Kaliope" class="popup-avatar" />
+      <h3 class="popup-name">Zahra Kaliope</h3>
+      <p class="popup-role">Pasien</p>
+      
+      <div class="popup-actions">
+        <button class="btn-edit-profil">✏ Edit Profil</button>
+        <!-- Nanti ini bisa diarahin ke halaman Login lagi -->
+        <button class="btn-keluar" onclick="window.location.href='login.html'">Keluar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT JS UNTUK BUKA/TUTUP POP UP -->
+  <script>
+    function toggleProfilePopup() {
+      const popup = document.getElementById("profilePopupOverlay");
+      if (popup.style.display === "none") {
+        popup.style.display = "flex";
+      } else {
+        popup.style.display = "none";
+      }
+    }
+  </script>
+
+</body>
+</html>

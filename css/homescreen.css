@@ -1,0 +1,198 @@
+/* --- CSS KHUSUS DASHBOARD INI --- */
+    body {
+      background-color: #F8F9FA; /* Warna background abu-abu terang */
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .dashboard-container {
+      display: flex;
+      height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+      gap: 20px;
+    }
+
+    /* --- SIDEBAR KIRI --- */
+    .sidebar-dashboard {
+      background-color: #ffffff;
+      width: 295px;
+      border-radius: 20px;
+      padding: 30px 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 70px;
+    }
+
+    .sidebar-logo img { width: 40px; }
+    .sidebar-logo span {
+      font-weight: 0;
+      color: #000000;
+      font-size: 14px;
+      line-height: 1.2;
+    }
+    .sidebar-logo small { font-weight: 300; }
+
+    .menu-item {
+      width: 100%;
+      background-color: #ECECEC;
+      padding: 12px 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      color: #333;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      box-sizing: border-box;
+      transition: 0.3s;
+    }
+
+    .menu-item:hover{
+        background-color: #e2e2e2;
+    }
+    
+    .menu-item.active {
+      background-color: #d8dbdb;
+    }
+
+    /* --- KONTEN KANAN (MAIN) --- */
+    .main-content {
+      flex: 1;
+      background-color: #EFEFEF; /* Sesuai warna background card di gambar */
+      border-radius: 20px;
+      padding: 30px;
+      position: relative;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    /* Profil Kanan Atas */
+    .top-profile {
+      position: absolute;
+      top: 30px;
+      right: 30px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.5);
+      padding: 5px 15px 5px 5px;
+      border-radius: 30px;
+    }
+
+    .top-profile img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .top-profile .info-user {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-profile .info-user .role {
+      font-size: 12px;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .top-profile .info-user .name {
+      font-size: 11px;
+      color: #666;
+    }
+
+    /* Banner Tengah */
+    .welcome-banner {
+      background: linear-gradient(to right, #20B2A6, #0E6B63);
+      border-radius: 20px;
+      margin-top: 130px;
+      margin-left: 50px;
+      margin-right: 50px;
+      height: 600px; /* Sesuaikan tingginya */
+      display: flex;
+      align-items: center;
+      padding: 0 50px;
+      position: relative;
+    }
+
+    .welcome-banner h1 {
+      color: white;
+      font-size: 28px;
+      font-weight: 600;
+      margin-left: 648px; /* Kasih jarak buat gambar dokter */
+      z-index: 2;
+    }
+
+    .welcome-banner img {
+      position: absolute;
+      left: 20px;
+      bottom: 0;
+      height: 120%; /* Biar dokternya nongol ke atas dikit */
+      z-index: 1;
+    }
+
+    /* --- POP UP PROFIL --- */
+    .popup-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .profile-popup-card {
+      background-color: #ffffff;
+      border-radius: 20px;
+      width: 300px;
+      padding: 20px;
+      position: relative;
+      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .btn-close-popup {
+      position: absolute;
+      top: 15px; right: 15px;
+      background: none;
+      border: none;
+      font-size: 18px;
+      color: #666;
+      cursor: pointer;
+    }
+
+    .popup-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
+
+    .popup-name { color: #0E6B63; font-size: 18px; font-weight: 600; margin: 0; }
+    .popup-role { color: #0E6B63; font-size: 12px; font-weight: 500; margin-top: 2px; margin-bottom: 20px; }
+    
+    .popup-actions { display: flex; gap: 10px; }
+    
+    .btn-edit-profil {
+      flex: 1; background-color: #ffffff; border: 1px solid #ccc; color: #333;
+      padding: 8px 0; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 500;
+    }
+    
+    .btn-keluar {
+      flex: 1; background-color: #D32F2F; border: none; color: #ffffff;
+      padding: 8px 0; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 500;
+    }
