@@ -16,7 +16,7 @@
     /* --- SIDEBAR KIRI --- */
     .sidebar-dashboard {
       background-color: #ffffff;
-      width: 295px;
+      width: 380px;
       border-radius: 20px;
       padding: 30px 20px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.05);
@@ -42,21 +42,26 @@
     .sidebar-logo small { font-weight: 300; }
 
     .menu-item {
-      width: 100%;
-      background-color: #ECECEC;
+      /* 👇 1. UBAH DUA BARIS INI 👇 */
+      width: 210px; /* Ganti dari 100% jadi angka segini biar memendek */
+      margin: 0 auto 20px auto; /* Jurus sakti biar posisinya ke tengah! */
+      /* 👆 ---------------------- 👆 */
+
+      /* Sisa kodingan di bawahnya biarin aja persis kayak sebelumnya: */
+      background-color: #f0f0f0;
       padding: 12px 20px;
       border-radius: 10px;
-      margin-bottom: 20px;
       display: flex;
       align-items: center;
       gap: 15px;
-      color: #333;
+      color: #0E6B63;
       text-decoration: none;
-      font-weight: 500;
-      font-size: 14px;
+      font-weight: 650;
+      font-size: 16px;
       box-sizing: border-box;
       transition: 0.3s;
-    }
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    }  
 
     .menu-item:hover{
         background-color: #e2e2e2;

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pendaftaran - Rumah Sakit Viamedika</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/pendaftaran.css" />
+</head>
+<body>
+
+  <div class="dashboard-container">
+    
+    <!-- 1. SIDEBAR KIRI -->
+    <aside class="sidebar-dashboard">
+      <div class="sidebar-logo">
+        <img src="../../assets/logo/Logors.png" alt="Logo" />
+        <span>Rumah Sakit<br><small>Viamedika</small></span>
+      </div>
+
+      <!-- Link balik ke Homescreen -->
+      <a href="dashboard_pasien.html" class="menu-item">
+        <img src="../../assets/icons/beranda.png" alt="Home" width="27">
+        <span>Dashboard</span>
+      </a>
+
+      <!-- Menu Pendaftaran (Posisi Nyala/Aktif) -->
+      <a href="#" class="menu-item active">
+        <img src="../../assets/icons/pendaftaran.png" alt="Daftar" width="20">
+        <span>Pendaftaran</span>
+      </a>
+
+      <a href="#" class="menu-item">
+        <img src="../../assets/icons/panggill.png" alt="Antrian" width="20">
+        <span>Lihat Antrian</span>
+      </a>
+    </aside>
+
+    <!-- 2. KONTEN KANAN -->
+    <main class="main-content">
+      
+      <!-- Header Profil Kanan Atas -->
+      <div class="top-profile" onclick="toggleProfilePopup()">
+        <img src="../../assets/images/zahra.png" alt="Zahra Kaliope" />
+        <div class="info-user">
+          <span class="role">Pasien</span>
+          <span class="name">Zahra Kaliope</span>
+        </div>
+      </div>
+
+      <!-- AREA TENGAH: CARD PILIH PASIEN -->
+      <div class="content-area">
+        <div class="card-pilih">
+          
+          <!-- Gambar Dokter Kiri -->
+          <img src="../../assets/images/dokter.png" alt="Dokter 3D" class="dokter-img" />
+          
+          <!-- Teks & Dropdown Kanan -->
+          <div class="card-right">
+            <h2>Pilih Jenis Pasien</h2>
+            <p>Silakan pilih salah satu jenis pasien di bawah ini</p>
+            
+            <div class="custom-dropdown">
+              <!-- Tombol Putih -->
+              <div class="dropdown-trigger" onclick="toggleDropdown()">
+                <span id="dropdown-text">Pilih Jenis Pasien</span>
+              </div>
+              
+              <!-- Pilihan Dropdown -->
+              <div class="dropdown-options" id="dropdown-options">
+                <div class="option-item" onclick="pilihJenis('baru')">Pasien Baru</div>
+                <div class="option-item" onclick="pilihJenis('lama')">Pasien Lama</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- 3. POP UP PROFIL -->
+  <div id="profilePopupOverlay" class="popup-overlay" style="display: none;">
+    <div class="profile-popup-card">
+      <button class="btn-close-popup" onclick="toggleProfilePopup()">✖</button>
+      <img src="../../assets/images/zahra.png" alt="Zahra Kaliope" class="popup-avatar" />
+      <h3 class="popup-name">Zahra Kaliope</h3>
+      <p class="popup-role">Pasien</p>
+      <div class="popup-actions">
+        <button class="btn-edit-profil">✏ Edit Profil</button>
+        <button class="btn-keluar" onclick="window.location.href='auth/masuk.html'">Keluar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT JS GABUNGAN -->
+  <script>
+    // 1. Fungsi Pop Up Profil (Dari Homescreen)
+    function toggleProfilePopup() {
+      const popup = document.getElementById("profilePopupOverlay");
+      if (popup.style.display === "none") {
+        popup.style.display = "flex";
+      } else {
+        popup.style.display = "none";
+      }
+    }
+
+    // 2. Fungsi Buka Tutup Dropdown (Dari Kodingan Kamu)
+    function toggleDropdown() {
+      const options = document.getElementById("dropdown-options");
+      options.classList.toggle("show");
+    }
+
+    // 3. Fungsi Pindah Halaman Pas Klik Pilihan
+    function pilihJenis(jenis) {
+      document.getElementById("dropdown-options").classList.remove("show");
+      
+      setTimeout(() => {
+        if (jenis === 'baru') {
+          window.location.href = 'form_pasien_baru.html';
+        } else if (jenis === 'lama') {
+          window.location.href = 'form_pasien_lama.html';
+        }
+      }, 150);
+    }
+
+    // 4. Otomatis nutup dropdown kalau klik area kosong di luar
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropdown-trigger') && !event.target.matches('#dropdown-text')) {
+        const dropdowns = document.getElementsByClassName("dropdown-options");
+        for (let i = 0; i < dropdowns.length; i++) {
+          let openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+  </script>
+
+</body>
+</html>

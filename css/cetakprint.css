@@ -1,0 +1,212 @@
+
+    /* =========================================
+       1. PENGATURAN DASAR & LAYOUT
+       ========================================= */
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Logo Kiri Atas */
+    .header-logo {
+      position: absolute;
+      top: 30px;
+      left: 50px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 10;
+    }
+    .header-logo img { width: 45px; }
+    .header-logo span { font-weight: 0; color: #000000; font-size: 14px; line-height: 1.2; }
+    .header-logo small { font-weight: 300; }
+
+    /* =========================================
+       2. STEPPER (Indikator Langkah)
+       ========================================= */
+    .stepper {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      margin-top: 60px;
+      margin-bottom: 20px;
+      z-index: 10;
+    }
+    
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      font-size: 13px;
+      width: 160px;
+      flex-shrink: 0;
+    }
+
+    .step-circle {
+      width: 45px; height: 45px; border-radius: 50%; color: white;
+      display: flex; align-items: center; justify-content: center; 
+      font-weight: 600; font-size: 16px; margin-bottom: 10px; 
+    }
+
+    /* Warna Step 1 & 2 (Hijau Terang) */
+    .step.light .step-circle { background: #3BC1A8; }
+    .step.light span { color: #005461; font-weight: 600; }
+
+    /* Warna Step 3 (Hijau Gelap) */
+    .step.dark .step-circle { background: #005461; }
+    .step.dark span { color: #005461; font-weight: 600; }
+
+    .step-line {
+      flex: 1; height: 3px; background: #999; margin-top: 21px; 
+      min-width: 40px; max-width: 80px;
+    }
+
+    /* =========================================
+       3. AREA KARTU TIKET & TOMBOL
+       ========================================= */
+    .content-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 10;
+      flex: 1;
+      margin-bottom: 40px;
+    }
+
+    .ticket-card {
+      border: 1px solid #777;
+      padding: 30px 40px;
+      text-align: center;
+      background: #fff;
+      width: 260px;
+      margin-bottom: 25px;
+      margin-top: 40px;
+    }
+
+    /* Gaya Teks di Dalam Tiket */
+    .tc-title { color: #005461; font-weight: 600; font-size: 15px; margin: 0; }
+    .tc-number { color: #005461; font-weight: 700; font-size: 38px; margin: 5px 0 15px 0; letter-spacing: 1px;}
+    .tc-grey { color: #888; font-size: 14px; font-weight: 500; margin-bottom: 15px; line-height: 1.4;}
+    
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 260px;
+    }
+
+    /* Tombol Cetak Nomor Antrian */
+    .btn-cetak {
+      background-color: #005461;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 25px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .btn-cetak:hover { background-color: #003d47; transform: translateY(-2px); }
+
+    /* Tombol Kembali */
+    .btn-kembali {
+      background-color: #00828C;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 25px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .btn-kembali:hover { background-color: #006870; transform: translateY(-2px); }
+
+    /* =========================================
+       4. FOOTER & GAMBAR DOKTER
+       ========================================= */
+    .footer-wrapper {
+      position: relative;
+      margin-top: auto; /* Otomatis dorong footer ke paling bawah layarmu */
+    }
+
+    .footer-banner {
+      background: linear-gradient(to right, #3BC1A8, #005461);
+      border-top-left-radius: 40px;
+      border-top-right-radius: 40px;
+      text-align: center;
+      padding: 40px 20px 40px 20px;
+      color: white;
+      font-weight: 500;
+      font-size: 14px;
+      height: 80px; /* Tinggi warna hijaunya */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-left: 200px; /* Biar teksnya agak geser menghindari dokter */
+    }
+
+    .doctor-img {
+      position: absolute;
+      bottom: 0;
+      left: 3%;
+      height: 480px; /* Tinggi dokter, dibuat menyembul dari bawah */
+      z-index: 5;
+    }
+
+/* =========================================
+       JURUS SAKTI BUAT MODE CETAK (PRINT)
+       ========================================= */
+    @media print {
+      /* 1. Sembunyiin semua elemen yang gak penting */
+      .header-logo, 
+      .stepper, 
+      .action-buttons, 
+      .footer-wrapper,
+      .doctor-img {
+        display: none !important;
+      }
+
+      /* 2. Atur body biar bersih putih tanpa margin aneh */
+      body {
+        background-color: white !important;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* 3. Paksa kotak tiket ada di paling atas dan tengah kertas */
+      .content-wrapper {
+        margin: 0 !important;
+        padding: 20px 0 !important;
+        display: block !important;
+      }
+
+      .ticket-card {
+        margin: 0 auto !important;
+        border: 1px solid #000 !important; /* Biar garisnya jelas pas diprint */
+        box-shadow: none !important;
+        width: 300px !important; /* Sesuaikan lebar kertas printer termal */
+      }
+      
+      /* 4. Munculin warna background (opsional, tergantung printer) */
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+    }
