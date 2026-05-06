@@ -5,85 +5,433 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard Pasien - Rumah Sakit Viamedika</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../css/style.css" />
-  <link rel="stylesheet" href="../../css/homescreen.css" />
+  
+  <style>
+    /* =========================================
+       1. PENGATURAN DASAR & LAYOUT
+       ========================================= */
+    body {
+      background-color: #ffffff;
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .dashboard-container {
+      display: flex;
+      height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+      gap: 20px;
+    }
+
+    /* --- SIDEBAR KIRI --- */
+    .sidebar-dashboard {
+      background-color: #ffffff;
+      width: 280px;
+      border-radius: 20px;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 50px;
+    }
+
+    .sidebar-logo img { width: 45px; }
+    .sidebar-logo span {
+      font-weight: 500;
+      color: #000000;
+      font-size: 14px;
+      line-height: 1.2;
+    }
+    .sidebar-logo small { font-weight: 300; }
+
+    .menu-item {
+      width: 100%;
+      background-color: #f0f0f0;
+      padding: 12px 20px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      color: #0E6B63;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      box-sizing: border-box;
+      transition: 0.3s;
+    }   
+    .menu-item:hover { background-color: #e2e2e2; }
+    .menu-item.active { background-color: #E0E4E8; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); }
+
+    /* =========================================
+       2. AREA KONTEN UTAMA
+       ========================================= */
+    .main-content {
+      flex: 1;
+      background-color: #ECECEC; /* Warna abu-abu terang sesuai gambar */
+      border-radius: 30px;
+      padding: 40px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      overflow-y: auto;
+    }
+
+    /* --- HEADER (PROFIL KANAN ATAS) --- */
+    .top-profile {
+      position: absolute;
+      top: 30px;
+      right: 40px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 10;
+    }
+    .top-profile img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
+    .info-user { display: flex; flex-direction: column; text-align: right; }
+    .info-user .role { font-size: 13px; font-weight: 700; color: #111; }
+    .info-user .name { font-size: 12px; color: #666; }
+
+    /* =========================================
+       3. BARIS 1: STATISTIK CARD
+       ========================================= */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+      margin-top: 40px; /* Jarak untuk profil di atas */
+    }
+
+    .stat-card {
+      background-color: #fff;
+      border-radius: 20px;
+      padding: 25px;
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+
+    /* Icon Box Setup */
+    .icon-box {
+      width: 55px; height: 55px; border-radius: 15px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .icon-green { background-color: #D6F0E9; color: #005461; }
+    .icon-purple { background-color: #F3E5F5; color: #8E24AA; }
+    .icon-orange { background-color: #FFF3E0; color: #E65100; }
+
+    /* Teks dalam Card */
+    .stat-info { display: flex; flex-direction: column; }
+    .stat-info p { margin: 0; font-size: 13px; color: #888; }
+    .stat-info h3 { margin: 5px 0; font-size: 22px; font-weight: 700; color: #111; }
+    .stat-info span { font-size: 12px; color: #888; margin-top: 5px;}
+    
+    .badge-menunggu {
+      background-color: #D6F0E9; color: #005461; padding: 4px 12px;
+      border-radius: 15px; font-size: 11px; font-weight: 600; display: inline-block; margin-top: 5px; width: max-content;
+    }
+
+    /* =========================================
+       4. BARIS 2: BANNER SELAMAT DATANG
+       ========================================= */
+    .banner-card {
+      background: linear-gradient(to right, #3BC1A8, #005461);
+      border-radius: 20px;
+      padding: 100px;
+      position: relative;
+      color: white;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      min-height: 140px;
+      box-shadow: 0 8px 20px rgba(0,84,97,0.2);
+    }
+
+    .banner-content { position: relative; z-index: 2; max-width: 60%; }
+    .banner-content h2 { margin: 0 0 10px 0; font-size: 26px; font-weight: 700; line-height: 1.3;}
+    .banner-content h2 span { font-weight: 400; font-size: 20px; display: block;}
+    .banner-content p { margin: 0; font-size: 13px; font-weight: 400; opacity: 0.9; line-height: 1.5;}
+
+    .doctor-img {
+      position: absolute;
+      right:15%;
+      bottom: 0;
+      height: 100%; /* Biar dokternya agak menyembul */
+      z-index: 1;
+    }
+
+    /* =========================================
+       5. BARIS 3: RIWAYAT & TIPS KESEHATAN
+       ========================================= */
+    .bottom-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 25px;
+    }
+
+    /* Card Riwayat Medis */
+    .history-card {
+      background-color: #fff;
+      border-radius: 20px;
+      padding: 35px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+    .history-card h3 { margin: 0 0 20px 0; font-size: 16px; font-weight: 700; color: #111; }
+
+    .history-box {
+      background-color: #eeebebaa;
+      border-radius: 15px;
+      padding: 20px 25px;
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+    
+    .hb-icon { background-color: #D6F0E9; padding: 15px; border-radius: 12px; color: #005461; }
+    
+    .hb-doctor { flex: 1; border-right: 2px solid #ddd; padding-right: 15px; }
+    .hb-doctor p { margin: 0 0 5px 0; font-size: 12px; color: #888; }
+    .hb-doctor h4 { margin: 0; font-size: 14px; color: #111; }
+    .hb-doctor span { font-size: 12px; color: #888; }
+
+    .hb-diagnosa { width: 120px; border-right: 2px solid #ddd; padding-right: 15px; }
+    .hb-diagnosa h4 { margin: 0 0 5px 0; font-size: 13px; color: #111; }
+    .hb-diagnosa p { margin: 0; font-size: 14px; font-weight: 600; color: #3BC1A8; }
+
+    .hb-tindakan { flex: 1.5; }
+    .hb-tindakan h4 { margin: 0 0 5px 0; font-size: 13px; color: #111; }
+    .hb-tindakan p { margin: 0; font-size: 12px; color: #888; line-height: 1.5; }
+
+    /* --- SLIDER TIPS KESEHATAN (Dari revisi sebelumnya) --- */
+    .health-tips-card {
+      background-color: #ffffff;
+      border-radius: 20px;
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+    .ht-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .ht-header h3 { margin: 0; font-size: 16px; font-weight: 700; color: #111; }
+    .ht-carousel-wrapper { flex: 1; position: relative; overflow: hidden; min-height: 100px;}
+    .ht-slide { display: none; align-items: center; gap: 15px; animation: fadeMasuk 0.6s ease; }
+    .ht-slide.active { display: flex; }
+    .ht-img { width: 50px; height: auto; object-fit: contain; }
+    .ht-text h4 { margin: 0 0 5px 0; font-size: 13px; font-weight: 700; color: #111; line-height: 1.3; }
+    .ht-text p { margin: 0; font-size: 11px; color: #666; line-height: 1.4; }
+    .ht-dots { display: flex; justify-content: center; gap: 6px; margin-top: 15px; }
+    .ht-dots .dot { width: 6px; height: 6px; background-color: #bbb; border-radius: 50%; cursor: pointer; transition: all 0.3s ease; }
+    .ht-dots .dot.active { background-color: #005461; width: 15px; border-radius: 10px; }
+
+    @keyframes fadeMasuk {
+      from { opacity: 0; transform: translateX(10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+  </style>
 </head>
 <body>
 
   <div class="dashboard-container">
     
-    <!-- 1. SIDEBAR KIRI -->
+    <!-- SIDEBAR -->
     <aside class="sidebar-dashboard">
       <div class="sidebar-logo">
-        <img src="../../assets/logo/Logors.png" alt="Logo" />
+        <!-- Path logo sesuaikan dgn punyamu -->
+        <img src="../../assets/logo/Logors.png" alt="Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3063/3063206.png'" />
         <span>Rumah Sakit<br><small>Viamedika</small></span>
       </div>
 
-      <!-- Menu Items -->
-      <a href="" class="menu-item active">
-        <img src="../../assets/icons/beranda.png" alt="Home" width="27">
-        <span>Dashboard</span>
+      <a href="#" class="menu-item active">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        Dashboard
       </a>
-      <a href="pendaftaran_pasien.html" class="menu-item"> <!-- Arahkan ke HTML Pendaftaranmu -->
-        <img src="../../assets/icons/pendaftaran.png" alt="Daftar" width="20">
-        <span>Pendaftaran</span>
+      <a href="pendaftaran.html" class="menu-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        Pendaftaran
       </a>
-      <a href="" class="menu-item">
-        <img src="../../assets/icons/panggill.png" alt="Antrian" width="20">
-        <span>Lihat Antrian</span>
+      <a href="lihat_antrian.html" class="menu-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+        Lihat Antrian
       </a>
     </aside>
 
-    <!-- 2. KONTEN KANAN -->
+    <!-- KONTEN UTAMA -->
     <main class="main-content">
       
-      <!-- Header Profil (Klik untuk Pop Up) -->
-      <div class="top-profile" onclick="toggleProfilePopup()">
-        <img src="../../assets/images/zahra.png" alt="Zahra Kaliope" />
+      <!-- PROFIL POJOK KANAN ATAS -->
+      <div class="top-profile">
         <div class="info-user">
           <span class="role">Pasien</span>
-          <span class="name">Zahra Kaliope</span>
+          <span class="name">Zahra Kaliape</span>
+        </div>
+        <img src="https://i.pravatar.cc/100?img=5" alt="Profile">
+      </div>
+
+      <!-- BARIS 1: STATISTIK -->
+      <div class="stats-row">
+        <!-- Card 1: Antrian -->
+        <div class="stat-card">
+          <div class="icon-box icon-green">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          </div>
+          <div class="stat-info">
+            <p>Nomor Antrian</p>
+            <h3>A-001</h3>
+            <span>Unit</span>
+            <div class="badge-menunggu">Menunggu</div>
+          </div>
+        </div>
+
+        <!-- Card 2: Riwayat Kunjungan -->
+        <div class="stat-card">
+          <div class="icon-box icon-purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M16 13H8"></path><path d="M16 17H8"></path><path d="M10 9H8"></path></svg>
+          </div>
+          <div class="stat-info">
+            <p>Riwayat Kunjungan</p>
+            <h3>5 Kali</h3>
+            <span>Kunjungan Terakhir 01<br>Mei 2026</span>
+          </div>
+        </div>
+
+        <!-- Card 3: Notifikasi -->
+        <div class="stat-card">
+          <div class="icon-box icon-orange">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          </div>
+          <div class="stat-info">
+            <p>Notifikasi Baru</p>
+            <h3>2</h3>
+            <span>Lihat Notifikasi</span>
+          </div>
         </div>
       </div>
 
-      <!-- Banner Selamat Datang -->
-      <div class="welcome-banner">
-        <img src="../../assets/images/dokter.png" alt="Dokter 3D" /> <!-- Pastikan nama file gambar dokternya bener ya -->
-        <h1>Selamat Datang Di Rumah Sakit Viamedika</h1>
+      <!-- BARIS 2: BANNER SELAMAT DATANG -->
+      <div class="banner-card">
+        <div class="banner-content">
+          <h2><span>Selamat Datang</span> Di Rumah Sakit Viamedika</h2>
+          <p>Kami Siap Memberikan Pelayanan Kesehatan<br>Terbaik untuk Anda dan Keluarga</p>
+        </div>
+        <!-- Pastikan path gambarnya bener ya -->
+        <img src="../../assets/images/dokter.png" alt="Dokter 3D" class="doctor-img" onerror="this.style.display='none'">
+      </div>
+
+      <!-- BARIS 3: BAWAH -->
+      <div class="bottom-row">
+        
+        <!-- Kiri: Riwayat Medis -->
+        <div class="history-card">
+          <h3>Riwayat Medis Terakhir</h3>
+          <div class="history-box">
+            <div class="hb-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            </div>
+            <div class="hb-doctor">
+              <p>01 Mei 2026</p>
+              <h4>dr. Andi Wijaya, Sp.PD</h4>
+              <span>Poli Penyakit Dalam</span>
+            </div>
+            <div class="hb-diagnosa">
+              <h4>Diagnosa</h4>
+              <p>Gerd</p>
+            </div>
+            <div class="hb-tindakan">
+              <h4>Tindakan & Catatan</h4>
+              <p>Keluhan nyeri ulu hati, mual, diberikan obat dan saran pola makan.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Kanan: Tips Kesehatan (Slider) -->
+        <div class="health-tips-card">
+          <div class="ht-header">
+            <h3>Tips Kesehatan</h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#005461" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </div>
+
+          <div class="ht-carousel-wrapper">
+            <div class="ht-slide active">
+              <!-- Cek path gambarnya -->
+              <img src="../../assets/images/gelas.png" alt="Air Putih" class="ht-img" onerror="this.style.display='none'">
+              <div class="ht-text">
+                <h4>Minum air putih yang cukup</h4>
+                <p>Minimal 8 gelas per hari untuk menjaga tubuh tetap sehat dan segar.</p>
+              </div>
+            </div>
+            <div class="ht-slide">
+              <img src="../../assets/images/tidur.png" alt="Tidur" class="ht-img" onerror="this.style.display='none'">
+              <div class="ht-text">
+                <h4>Tidur Cukup 8 Jam</h4>
+                <p>Istirahat yang cukup membantu regenerasi sel tubuh dan fokus otak.</p>
+              </div>
+            </div>
+            <div class="ht-slide">
+              <img src="../../assets/images/sayur.png" alt="Makan Sehat" class="ht-img" onerror="this.style.display='none'">
+              <div class="ht-text">
+                <h4>Perbanyak Sayur & Buah</h4>
+                <p>Tingkatkan serat harian agar pencernaan lancar dan imun kuat.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="ht-dots">
+            <span class="dot active" onclick="pindahSlide(0)"></span>
+            <span class="dot" onclick="pindahSlide(1)"></span>
+            <span class="dot" onclick="pindahSlide(2)"></span>
+          </div>
+        </div>
+
       </div>
 
     </main>
-
   </div>
 
-  <!-- 3. POP UP PROFIL (Disembunyikan secara default) -->
-  <div id="profilePopupOverlay" class="popup-overlay" style="display: none;">
-    <div class="profile-popup-card">
-      <button class="btn-close-popup" onclick="toggleProfilePopup()">✖</button>
-      
-      <img src="../../assets/images/zahra.png" alt="Zahra Kaliope" class="popup-avatar" />
-      <h3 class="popup-name">Zahra Kaliope</h3>
-      <p class="popup-role">Pasien</p>
-      
-      <div class="popup-actions">
-        <button class="btn-edit-profil">✏ Edit Profil</button>
-        <!-- Nanti ini bisa diarahin ke halaman Login lagi -->
-        <button class="btn-keluar" onclick="window.location.href='auth/masuk.html'">Keluar</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCRIPT JS UNTUK BUKA/TUTUP POP UP -->
+  <!-- SCRIPT SLIDER TIPS KESEHATAN -->
   <script>
-    function toggleProfilePopup() {
-      const popup = document.getElementById("profilePopupOverlay");
-      if (popup.style.display === "none") {
-        popup.style.display = "flex";
-      } else {
-        popup.style.display = "none";
-      }
-    }
-  </script>
+    let slideSekarang = 0;
+    let timerSlider;
 
+    const semuaSlide = document.querySelectorAll('.ht-slide');
+    const semuaTitik = document.querySelectorAll('.ht-dots .dot');
+
+    function tampilkanSlide(index) {
+      semuaSlide.forEach(slide => slide.classList.remove('active'));
+      semuaTitik.forEach(titik => titik.classList.remove('active'));
+
+      slideSekarang = (index + semuaSlide.length) % semuaSlide.length;
+
+      semuaSlide[slideSekarang].classList.add('active');
+      semuaTitik[slideSekarang].classList.add('active');
+    }
+
+    function slideSelanjutnya() {
+      tampilkanSlide(slideSekarang + 1);
+    }
+
+    function pindahSlide(index) {
+      tampilkanSlide(index);
+      resetOtomatis();
+    }
+
+    function resetOtomatis() {
+      clearInterval(timerSlider);
+      timerSlider = setInterval(slideSelanjutnya, 4000);
+    }
+
+    resetOtomatis();
+  </script>
 </body>
 </html>

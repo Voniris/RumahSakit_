@@ -35,11 +35,6 @@
             <div class="step-line"></div>
             <div class="step">
               <div class="step-circle">3</div>
-              <p>Verifikasi Kode OTP</p>
-            </div>
-            <div class="step-line"></div>
-            <div class="step">
-              <div class="step-circle">4</div>
               <p>Pengambilan Kartu<br>Rekam Medis</p>
             </div>
           </div>
@@ -89,7 +84,7 @@
             
             <div class="form-action">
            <button type="button" class="btn-kembali" onclick="window.location.href='pendaftaran_pasien.html'">Kembali</button>
-           <button type="button" class="btn-selanjutnya" onclick="simpanLanjutOTP()">Selanjutnya</button>
+           <button type="button" class="btn-selanjutnya" onclick="window.location.href='pengambilan_rm.html'">Selanjutnya</button>
             </div>
           </form>
 
@@ -100,17 +95,5 @@
   </div>
 
   <script src="../../js/main.js"></script>
-  <script>
-  function simpanLanjutOTP() {
-    // 1. Ambil nomor yang diketik pasien
-    const nomorWA = document.getElementById('noWhatsApp').value;
-    
-    // 2. Simpan di memori browser sementara (sessionStorage)
-    sessionStorage.setItem('nomorPasien', nomorWA);
-    
-    // 3. Pindah ke halaman OTP
-    window.location.href = 'otp.html';
-  }
-</script>
 </body>
 </html>

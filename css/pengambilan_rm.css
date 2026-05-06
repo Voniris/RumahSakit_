@@ -1,11 +1,15 @@
- /* Reset & Global */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { 
-      font-family: 'Poppins', sans-serif; 
-      background-color: #ffffff; 
-      min-height: 100vh;
+  /* =========================================
+       1. PENGATURAN DASAR & LAYOUT
+       ========================================= */
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #ffffff;
       display: flex;
       flex-direction: column;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
     }
 
     /* Logo Kiri Atas */
@@ -13,124 +17,133 @@
       position: absolute;
       top: 30px;
       left: 50px;
-      z-index: 10;
       display: flex;
       align-items: center;
       gap: 10px;
+      z-index: 10;
     }
-    .header-logo img { height: 40px; }
-    .header-logo .logo-name { font-size: 14px; font-weight: 600; color: #005461; line-height: 1.2; }
-    .header-logo .logo-name small { font-size: 11px; font-weight: 400; color: #888; }
+    .header-logo img { width: 45px; }
+    .header-logo span { font-weight: 0; color: #000000; font-size: 14px; line-height: 1.2; }
 
-    /* --- BAGIAN ATAS (PUTIH) --- */
-    .top-section {
-      background-color: #ffffff;
-      padding-top: 60px;
-      padding-bottom: 20px;
-      display: flex;
-      justify-content: center;
-    }
-
-    /* --- STEPPER KHUSUS 4 STEP --- */
+    /* =========================================
+       2. STEPPER (Indikator 4 Langkah)
+       ========================================= */
     .stepper {
       display: flex;
       align-items: flex-start;
       justify-content: center;
-      width: 800px;
+      margin-top: 80px;
+      margin-bottom: 40px;
+      z-index: 10;
     }
+    
     .step {
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      font-size: 11px;
-      width: 150px;
+      font-size: 13px;
+      width: 170px;
       flex-shrink: 0;
     }
+
     .step-circle {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: #ddd;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 14px;
-      margin-bottom: 8px;
+      width: 50px; height: 50px; border-radius: 50%; color: white;
+      display: flex; align-items: center; justify-content: center; 
+      font-weight: 600; font-size: 18px; margin-bottom: 12px; 
     }
+
+    /* Warna Step 1, 2, 3 (Hijau Terang - Selesai) */
+    .step.light .step-circle { background: #3BC1A8; }
+    .step.light span { color: #005461; font-weight: 600; }
+
+    /* Warna Step 4 (Hijau Gelap - Aktif) */
+    .step.dark .step-circle { background: #005461; }
+    .step.dark span { color: #005461; font-weight: 600; }
+
     .step-line {
+      flex: 1; height: 3px; background: #999; margin-top: 24px; 
+      min-width: 30px; max-width: 70px;
+    }
+
+    /* =========================================
+       3. AREA CARD TERIMA KASIH & TOMBOL
+       ========================================= */
+    .content-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 10;
       flex: 1;
-      height: 2px;
-      background: #ddd;
-      margin-top: 18px;
-      min-width: 20px;
-    }
-    
-    /* Warna Step */
-    .step.done .step-circle { background: #3BC1A8; }
-    .step.done { color: #3BC1A8; font-weight: 500; }
-    
-    .step.active .step-circle { background: #005461; }
-    .step.active { color: #005461; font-weight: 700; }
-
-
-    /* --- KOTAK TERIMA KASIH (OVERLAPPING) --- */
-    .success-box {
-    background-color: #005461;
-    color: #ffffff;
-    width: 75%;
-    max-width: 850px;
-    
-    /* Ini urutan margin yang benar biar kotaknya turun tapi tetap di tengah */
-    margin-top:150px;       /* Mendorong kotak ke bawah */
-    margin-left: auto;      /* Menjaga kotak tetap di tengah layar */
-    margin-right: auto;     /* Menjaga kotak tetap di tengah layar */
-    margin-bottom: -70px;   /* Efek tumpuk/overlap ke area hijau di bawahnya */
-    
-    border-radius: 30px;
-    padding: 60px 20px;
-    text-align: center;
-    position: relative;
-    z-index: 10;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      margin-bottom: 40px;
     }
 
-    .success-box h1 {
-      font-size: 32px;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-    .success-box h2 {
-      font-size: 16px;
-      font-weight: 400;
-      letter-spacing: 0.5px;
-    }
-
-    /* --- BAGIAN BAWAH (TOSCA TERANG) --- */
-    .bottom-section {
-      background: linear-gradient(90deg, #3BC1A8 0%, #006D77 100%);
-      border-top-left-radius: 40px;
-      border-top-right-radius: 40px;
-      
-      /* BARIS INI YANG DIUBAH JADI 0 BIAR OVERLAP-NYA JALAN */
-      margin-top: 0; 
-      
-      padding-top: 120px; /* Padding besar biar teksnya gak ketutup kotak gelap */
-      padding-bottom: 40px;
-      padding-left: 10%;
-      padding-right: 10%;
+    /* Kotak Terima Kasih yang Lebar */
+    .thank-you-card {
+      background-color: #005461; /* Hijau Tua */
+      border-radius: 40px; /* Ujungnya sangat membulat */
+      padding: 60px 40px;
       text-align: center;
-      color: #ffffff;
-      flex-grow: 1; /* Biar ngisi sisa layar sampai mentok bawah */
+      color: white;
+      width: 800px;
+      max-width: 90%;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+      margin-top: 50px;
     }
-    .bottom-section p {
-      font-size: 12px;
-      line-height: 1.8;
-      margin-bottom: 8px;
+
+    .thank-you-card h1 {
+      font-size: 46px;
+      font-weight: 700;
+      margin: 0 0 10px 0;
     }
-    .bottom-section .bold-text {
+
+    .thank-you-card p {
+      font-size: 20px;
       font-weight: 600;
-      font-size: 13px;
+      margin: 0;
+    }
+
+    /* Tombol Buat Nomor Antrian */
+    .btn-buat-antrian {
+      background-color: #005461; /* Hijau Tua */
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      border-radius: 8px; /* Lengkungan standar */
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+    
+    .btn-buat-antrian:hover { 
+      background-color: #003d47; 
+      transform: translateY(-2px); 
+    }
+
+    /* =========================================
+       4. FOOTER BANNER (Bawah Sendiri)
+       ========================================= */
+    .footer-wrapper {
+      margin-top: auto; /* Otomatis nempel di bawah */
+      width: 100%;
+    }
+
+    .footer-banner {
+      background: linear-gradient(135deg, #3BC1A8 0%, #005461 100%);
+      border-top-left-radius: 50px;
+      border-top-right-radius: 50px;
+      text-align: center;
+      padding: 40px 20px;
+      color: white;
+    }
+
+    .footer-banner p {
+      margin: 5px 0;
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.6;
     }

@@ -1,0 +1,118 @@
+    /* =========================================
+       1. CSS DASAR & SIDEBAR
+       ========================================= */
+    body { margin: 0; font-family: 'Poppins', sans-serif; background-color: #ffffff; } /* Background luar gelap */
+
+    .dashboard-container {
+      display: flex; height: 100vh; box-sizing: border-box; padding: 20px; gap: 20px;
+    }
+
+    .sidebar-dashboard {
+      background-color: #ffffff; width: 260px; border-radius: 20px; padding: 30px 20px;
+      display: flex; flex-direction: column; align-items: center;
+    }
+
+    .sidebar-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 50px; }
+    .sidebar-logo img { width: 40px; }
+    .sidebar-logo span { font-weight: 500; color: #000; font-size: 14px; line-height: 1.2; }
+    .sidebar-logo small { font-weight: 300; }
+
+    .menu-item {
+      width: 100%; background-color: #f0f0f0; padding: 12px 20px; border-radius: 10px;
+      margin-bottom: 20px; display: flex; align-items: center; gap: 15px;
+      color: #0E6B63; text-decoration: none; font-weight: 700; font-size: 14px;
+      box-sizing: border-box; transition: 0.3s;
+    }
+    .menu-item.active { box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15); background-color: #E0E4E8;}
+
+    /* =========================================
+       2. AREA KONTEN UTAMA
+       ========================================= */
+    .main-content {
+      flex: 1; background-color: #EFEFEF; border-radius: 30px; padding: 40px 50px;
+      display: flex; flex-direction: column; position: relative; overflow: hidden;
+    }
+
+    /* Header & Profile */
+    .header-area { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .page-title { font-size: 28px; font-weight: 700; color: #111; margin: 0; }
+    
+    .profile-area { display: flex; align-items: center; gap: 10px; }
+    .profile-img { width: 45px; height: 45px; border-radius: 50%; background-color: #ccc; object-fit: cover;}
+    .profile-text { display: flex; flex-direction: column; }
+    .profile-text strong { font-size: 13px; color: #000; }
+    .profile-text span { font-size: 12px; color: #666; }
+
+    /* =========================================
+       3. KOTAK ANTRIAN (KIRI & KANAN)
+       ========================================= */
+    .queue-container { display: flex; gap: 30px; height: 100%; }
+
+    /* --- KIRI: PASIEN BERLANGSUNG --- */
+    .current-card {
+      flex: 1; background-color: #fff; border-radius: 20px; padding: 40px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04); text-align: center;
+    }
+    
+    .badge-berlangsung {
+      background-color: #D6F0E9; color: #005461; padding: 8px 20px; border-radius: 20px;
+      font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; margin-bottom: 40px;
+    }
+    .badge-berlangsung::before {
+      content: ''; display: block; width: 8px; height: 8px; background-color: #005461; border-radius: 50%;
+    }
+
+    .current-no { font-size: 70px; font-weight: 700; color: #000; margin: 0 0 10px 0; line-height: 1; letter-spacing: 2px;}
+    .current-name { font-size: 22px; font-weight: 700; color: #111; margin: 0 0 5px 0; }
+    .current-unit { font-size: 15px; color: #888; margin: 0 0 30px 0; }
+
+    .timer-badge {
+      background-color: #f6f6f6; border: 1px solid #ddd; padding: 10px 30px; border-radius: 25px;
+      font-size: 22px; font-weight: 600; color: #005461; display: flex; align-items: center; gap: 10px;
+    }
+
+    /* --- KANAN: DAFTAR TUNGGU --- */
+    .waiting-card {
+      flex: 1.2; background-color: #fff; border-radius: 20px; padding: 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04); display: flex; flex-direction: column;
+    }
+
+    .waiting-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 15px;}
+    .waiting-title-area { display: flex; align-items: center; gap: 15px; }
+    .icon-box { background-color: #D6F0E9; padding: 10px; border-radius: 10px; color: #005461; display: flex; }
+    .waiting-title h3 { margin: 0; font-size: 18px; color: #111; font-weight: 700; }
+    .waiting-title span { font-size: 13px; color: #888; }
+    
+    .badge-tertunda { background-color: #EAEAEA; color: #666; padding: 6px 15px; border-radius: 15px; font-size: 13px; font-weight: 600; }
+
+    /* List Pasien */
+    .waiting-list { display: flex; flex-direction: column; gap: 15px; overflow-y: auto; flex: 1; padding-right: 5px; }
+    
+    /* Scrollbar minimalis */
+    .waiting-list::-webkit-scrollbar { width: 6px; }
+    .waiting-list::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
+
+    .list-item {
+      background-color: #F6F6F6; border-radius: 12px; padding: 15px 20px; display: flex; align-items: center; gap: 20px;
+      transition: all 0.3s ease; animation: slideUp 0.5s ease;
+    }
+    .list-item:hover { transform: translateX(5px); background-color: #f0f0f0; }
+    
+    .item-no { background-color: #fff; padding: 10px 15px; border-radius: 8px; text-align: center; min-width: 50px; }
+    .item-no span { display: block; font-size: 11px; color: #888; }
+    .item-no strong { font-size: 15px; color: #000; font-weight: 700; }
+
+    .item-info h4 { margin: 0 0 5px 0; font-size: 16px; color: #111; }
+    .item-info p { margin: 0; font-size: 13px; color: #888; display: flex; align-items: center; gap: 5px; }
+
+    /* Animasi pergerakan pasien naik */
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes fadeOut {
+      from { opacity: 1; transform: scale(1); }
+      to { opacity: 0; transform: scale(0.9); }
+    }
