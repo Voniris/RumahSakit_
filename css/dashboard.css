@@ -1,414 +1,244 @@
+/* =========================================
+       1. PENGATURAN DASAR & LAYOUT
+       ========================================= */
+    body {
+      background-color: #ffffff;
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    
+   /* --- SIDEBAR KIRI --- */
+    .dashboard-container {
+      display: flex;
+      height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+      gap: 20px;
+    }
 
-.dashboard-container {
-  display: flex;
-  height: 100vh;
-  font-family: 'Poppins', sans-serif;
-  background: #ffffff;
-}
+    /* --- SIDEBAR KIRI --- */
+       .sidebar-dashboard {
+      background-color: #ffffff;
+      width: 310px;
+      border-radius: 20px;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 70px;
+    }
 
-/* 2. SIDEBAR */
+    .sidebar-logo img { width: 40px; }
+    .sidebar-logo span {
+      font-weight: 0;
+      color: #000000;
+      font-size: 14px;
+      line-height: 1.2;
+    }
+    .sidebar-logo small { font-weight: 300; }
 
-.sidebar {
-  width: 350px;
-  background: #fff;
-  display: flex;
-  flex-direction: column;
-  padding: 24px 16px;
-  flex-shrink: 0;
-  height: 100vh;
-}
+   .menu-item {
+      /* 👇 1. UBAH DUA BARIS INI 👇 */
+      width: 210px; /* Ganti dari 100% jadi angka segini biar memendek */
+      margin: 0 auto 20px auto; /* Jurus sakti biar posisinya ke tengah! */
+      /* 👆 ---------------------- 👆 */
 
-.sidebar .logo {
-  display: flex; 
-  margin-top: 25px;
-  align-items: center;     
-  text-align: center;
-}
+      /* Sisa kodingan di bawahnya biarin aja persis kayak sebelumnya: */
+      background-color: #f0f0f0;
+      padding: 12px 20px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      color: #0E6B63;
+      text-decoration: none;
+      font-weight: 650;
+      font-size: 16px;
+      box-sizing: border-box;
+      transition: 0.3s;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    }  
 
-.sidebar-menu {
-  display: flex;
-  flex-direction: column;
-  gap: 15px; /* Jarak antar kotak menu */
-  flex: 1;
-  margin-top: 50px; /* Jarak dari logo ke menu pertama */
-}
+    .menu-item:hover{
+        background-color: #e2e2e2;
+    }
+    
+    .menu-item.active {
+      background-color: #d8dbdb;
+    }
 
-/* KODE PERBAIKAN LEBAR MENU ADA DI SINI */
-.menu-item {
-  width: 195px; /* Lebar dibatasi agar tidak kepanjangan */
-  margin: 0 auto; /* Supaya posisinya di tengah-tengah sidebar */
-  padding: 12px 20px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  gap: 15px; /* Jarak antara ikon dan teks */
-  text-decoration: none;
-  font-size: 14px; /* Sedikit dikecilkan agar pas dengan lebar kotak */
-  color: #555;
-  transition: background 0.2s, color 0.2s;
-}
+    /* =========================================
+       2. AREA KONTEN UTAMA
+       ========================================= */
+    .main-content {
+      flex: 1;
+      background-color: #ECECEC; /* Warna abu-abu terang sesuai gambar */
+      border-radius: 30px;
+      padding: 40px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      overflow-y: auto;
+    }
 
-/* Membatasi ukuran ikon agar rapi */
-/* Memaksa semua ikon punya ukuran tinggi yang sama biar seragam */
-.menu-item img {
-  width: 25px;   /* Lebar tetap 25px sesuai maumu */
-  height: 25px;  /* Paksa tinggi juga 25px biar gak ada yang lonjong/kegedean */
-  object-fit: contain; /* Jurus sakti biar gambar gak gepeng walau dipaksa ukurannya */
-}
+    /* --- HEADER (PROFIL KANAN ATAS) --- */
+    .top-profile {
+      position: absolute;
+      top: 15px;
+      right: 40px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 10;
+    }
+    .top-profile img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
+    .info-user { display: flex; flex-direction: column; text-align: right; }
+    .info-user .role { font-size: 13px; font-weight: 700; color: #111; }
+    .info-user .name { font-size: 12px; color: #666; }
 
-.menu-item.active {
-  background: #ECECEC;
-  color: #005461;
-  font-weight: 600;
-}
+    /* =========================================
+       3. BARIS 1: STATISTIK CARD
+       ========================================= */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+      margin-top: 40px; /* Jarak untuk profil di atas */
+    }
 
-.menu-item:hover:not(.active) {
-  background: #f5f5f5;
-}
+    .stat-card {
+      background-color: #fff;
+      border-radius: 20px;
+      padding: 25px;
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
 
-/* Jarak sebelum tombol logout */
-.btn-logout {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 195px; /* Disamakan dengan lebar menu-item */
-  margin: 0 auto; /* Ditengahkan */
-  padding: 10px 20px;
-  background: #e53935;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-  box-shadow: 0 2px 6px rgba(229, 57, 53, 0.35);
-}
+    /* Icon Box Setup */
+    .icon-box {
+      width: 55px; height: 55px; border-radius: 15px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .icon-green { background-color: #D6F0E9; color: #005461; }
+    .icon-purple { background-color: #F3E5F5; color: #8E24AA; }
+    .icon-orange { background-color: #FFF3E0; color: #E65100; }
 
-.btn-logout:hover {
-  background: #c62828;
-}
+    /* Teks dalam Card */
+    .stat-info { display: flex; flex-direction: column; }
+    .stat-info p { margin: 0; font-size: 13px; color: #888; }
+    .stat-info h3 { margin: 5px 0; font-size: 22px; font-weight: 700; color: #111; }
+    .stat-info span { font-size: 12px; color: #888; margin-top: 5px;}
+    
+    .badge-menunggu {
+      background-color: #D6F0E9; color: #005461; padding: 4px 12px;
+      border-radius: 15px; font-size: 11px; font-weight: 600; display: inline-block; margin-top: 5px; width: max-content;
+    }
 
+    /* =========================================
+       4. BARIS 2: BANNER SELAMAT DATANG
+       ========================================= */
+    .banner-card {
+      background: linear-gradient(to right, #3BC1A8, #005461);
+      border-radius: 20px;
+      padding: 100px;
+      position: relative;
+      color: white;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      min-height: 140px;
+      box-shadow: 0 8px 20px rgba(0,84,97,0.2);
+    }
 
-/* ─────────────────────────────────────────
-   3. MAIN CONTENT
-   ───────────────────────────────────────── */
+    .banner-content { position: relative; z-index: 2; max-width: 60%; }
+    .banner-content h2 { margin: 0 0 10px 0; font-size: 26px; font-weight: 700; line-height: 1.3;}
+    .banner-content h2 span { font-weight: 400; font-size: 20px; display: block;}
+    .banner-content p { margin: 0; font-size: 13px; font-weight: 400; opacity: 0.9; line-height: 1.5;}
 
-.main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background: #ECECEC;
-  border-radius: 24px;
-  margin: 12px 12px 12px 0;
-  overflow-y: auto;
-  padding: 28px 32px;
-}
+    .doctor-img {
+      position: absolute;
+      right:15%;
+      bottom: 0;
+      height: 100%; /* Biar dokternya agak menyembul */
+      z-index: 1;
+    }
 
+    /* =========================================
+       5. BARIS 3: RIWAYAT & TIPS KESEHATAN
+       ========================================= */
+    .bottom-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 25px;
+    }
 
-/* ─────────────────────────────────────────
-   4. HEADER
-   ───────────────────────────────────────── */
+    /* Card Riwayat Medis */
+    .history-card {
+      background-color: #fff;
+      border-radius: 20px;
+      padding: 35px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+    .history-card h3 { margin: 0 0 20px 0; font-size: 16px; font-weight: 700; color: #111; }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 28px;
-}
+    .history-box {
+      background-color: #eeebebaa;
+      border-radius: 15px;
+      padding: 20px 25px;
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+    
+    .hb-icon { background-color: #D6F0E9; padding: 15px; border-radius: 12px; color: #005461; }
+    
+    .hb-doctor { flex: 1; border-right: 2px solid #ddd; padding-right: 15px; }
+    .hb-doctor p { margin: 0 0 5px 0; font-size: 12px; color: #888; }
+    .hb-doctor h4 { margin: 0; font-size: 14px; color: #111; }
+    .hb-doctor span { font-size: 12px; color: #888; }
 
-.header-left h2 {
-  font-size: 40px;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin-bottom: 2px;
-}
+    .hb-diagnosa { width: 120px; border-right: 2px solid #ddd; padding-right: 15px; }
+    .hb-diagnosa h4 { margin: 0 0 5px 0; font-size: 13px; color: #111; }
+    .hb-diagnosa p { margin: 0; font-size: 14px; font-weight: 600; color: #3BC1A8; }
 
-.header-left p {
-  font-size: 23px;
-  color: #999;
-}
+    .hb-tindakan { flex: 1.5; }
+    .hb-tindakan h4 { margin: 0 0 5px 0; font-size: 13px; color: #111; }
+    .hb-tindakan p { margin: 0; font-size: 12px; color: #888; line-height: 1.5; }
 
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+    /* --- SLIDER TIPS KESEHATAN --- */
+    .health-tips-card {
+      background-color: #E8F0F2;
+      border-radius: 25px; 
+      border: 8px solid #ffffff; 
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+    .ht-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .ht-header h3 { margin: 0; font-size: 16px; font-weight: 700; color: #111; }
+    .ht-carousel-wrapper { flex: 1; position: relative; overflow: hidden; min-height: 100px;}
+    .ht-slide { display: none; align-items: center; gap: 15px; animation: fadeMasuk 0.6s ease; }
+    .ht-slide.active { display: flex; }
+    .ht-img { width: 100px; height: auto; object-fit: contain; }
+    .ht-text h4 { margin: 0 0 5px 0; font-size: 13px; font-weight: 700; color: #111; line-height: 1.3; }
+    .ht-text p { margin: 0; font-size: 11px; color: #666; line-height: 1.4; }
+    .ht-dots { display: flex; justify-content: center; gap: 6px; margin-top: 15px; }
+    .ht-dots .dot { width: 6px; height: 6px; background-color: #bbb; border-radius: 50%; cursor: pointer; transition: all 0.3s ease; }
+    .ht-dots .dot.active { background-color: #005461; width: 15px; border-radius: 10px; }
 
-.user-avatar {
-  width: 38px;
-  height: 38px;
-  background: #005461;
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 15px;
-  flex-shrink: 0;
-}
-
-.user-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin-bottom: 1px;
-}
-
-.user-role {
-  font-size: 11px;
-  color: #999;
-}
-
-
-/* ─────────────────────────────────────────
-   5. CONTENT AREA
-   ───────────────────────────────────────── */
-
-.content-area {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-
-/* ─────────────────────────────────────────
-   6. CARD PILIH JENIS PASIEN (dashboard)
-   ───────────────────────────────────────── */
-
-.card-pilih {
-  background: linear-gradient(135deg, #3BC1A8 0%, #1F9E9C 40%, #0C6C74 75%, #084C57 100%);
-  border-radius: 20px;
-  padding: 40px 44px;
-  display: flex;
-  align-items: center;
-  gap: 30px;
-  color: white;
-  width: 75%;
-  max-width: 700px;
-  position: relative;
-}
-
-.card-left h2 {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.card-left p {
-  font-size: 13px;
-  opacity: 0.75;
-  margin-bottom: 20px;
-}
-
-/* --- Wrapper Utama Dropdown --- */
-.custom-dropdown {
-  position: relative;
-  width: 100%;
-  max-width: 280px;
-  font-family: 'Poppins', sans-serif;
-}
-
-/* --- Tombol Pemicu Dropdown --- */
-.dropdown-trigger {
-  padding: 12px 40px 12px 20px;
-  border-radius: 20px;
-  background-color: #f5f5f5;
-  color: #005461;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  
-  /* Ikon Segitiga dari Assets Kamu */
-  background-image: url('../assets/icons/segitiga.png');
-  background-repeat: no-repeat;
-  background-position: right 20px center;
-  background-size: 12px;
-  
-  /* Supaya teks tidak bisa diblok/highlight */
-  user-select: none; 
-}
-
-/* --- Kotak Pembungkus Pilihan (Tersembunyi secara default) --- */
-.dropdown-options {
-  position: absolute;
-  top: 105%; /* Jarak jatuhnya dari tombol utama */
-  left: 0;
-  width: 100%;
-  background-color: transparent; /* Ini yang bikin kotak putihnya hilang! */
-  box-shadow: none; /* Hilangkan bayangan kotak pembungkus */
-  padding: 0;
-  display: none; 
-  z-index: 10;
-}
-
-/* Class tambahan untuk memunculkan dropdown via JS */
-.dropdown-options.show {
-  display: block;
-}
-
-/* --- Desain Pilihan "Pasien Baru" & "Pasien Lama" (BEBAS DIMODIF) --- */
-.option-item {
-  padding: 12px 20px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #ffffff; /* Teks warna putih */
-  background-color: #005461; /* Background warna hijau khas RS-mu */
-  border-radius: 20px; /* Bentuk kapsul membulat penuh */
-  margin-top: 10px; /* Jarak melayang antar tombol */
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: left;
-}
-
-/* Hapus garis bawah di opsi paling akhir */
-.option-item:last-child {
-  margin-bottom: 0;
-}
-
-/* Efek saat mouse diarahkan ke pilihan (Hover) */
-.option-item:hover {
-  background-color: #06363d; /* Warna hijaunya sedikit lebih gelap saat disorot */
-}
-
-.pilihan-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.btn-pilihan {
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: 2px solid rgba(255, 255, 255, 0.45);
-  background: transparent;
-  color: white;
-  font-size: 13px;
-  font-family: 'Poppins', sans-serif;
-  cursor: pointer;
-  text-align: left;
-  transition: all 0.2s;
-  width: 185px;
-}
-
-.btn-pilihan.active,
-.btn-pilihan:hover {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: white;
-  font-weight: 600;
-}
-
-.card-right {
-  flex-shrink: 0;
-  
-}
-
-.dokter-img {
-  height: 500px;        /* bebas mau gede */
-  margin-left: -67px;
-  margin-top: -100px;   /* keluar kiri */
-  margin-bottom: -48px; /* turun dikit */
-}
-
-
-/* ─────────────────────────────────────────
-   7. FORM CARD (form pasien baru / lama)
-   ───────────────────────────────────────── */
-
-.form-card {
-  background: #fff;
-  border-radius: 20px;
-  padding: 40px 44px;
-  width: 75%;
-  max-width: 720px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-}
-
-
-/* ─────────────────────────────────────────
-   8. STEPPER
-   ───────────────────────────────────────── */
-
-.stepper {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  margin-bottom: 36px;
-}
-
-.step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  font-size: 11px;
-  color: #bbb;
-  width: 110px;
-  flex-shrink: 0;
-}
-
-.step-circle {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: #ddd;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 14px;
-  margin-bottom: 8px;
-  transition: background 0.2s;
-}
-
-.step.active .step-circle,
-.step.done .step-circle {
-  background: #005461;
-}
-
-.step.active {
-  color: #005461;
-  font-weight: 600;
-}
-
-.step.done {
-  color: #005461;
-}
-
-.step-line {
-  flex: 1;
-  height: 2px;
-  background: #ddd;
-  margin-top: 17px;
-  min-width: 24px;
-}
-
-
-/* ─────────────────────────────────────────
-   9. FORM INPUT (dalam form card)
-   ───────────────────────────────────────── */
-
-.form-title {
-  font-size: 22px;
-  font-weight: 700;
-  color: #005461;
-  margin-bottom: 24px;
-}
-
-.form-action {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-}
-
-.form-action .btn-primary {
-  width: auto;
-  padding: 10px 32px;
-  font-size: 13px;
-}
+    @keyframes fadeMasuk {
+      from { opacity: 0; transform: translateX(10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }

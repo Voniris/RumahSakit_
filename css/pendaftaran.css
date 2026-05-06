@@ -16,7 +16,7 @@
     /* --- SIDEBAR KIRI --- */
        .sidebar-dashboard {
       background-color: #ffffff;
-      width: 340px;
+      width: 310px;
       border-radius: 20px;
       padding: 30px 20px;
       display: flex;
@@ -69,7 +69,7 @@
     .menu-item.active {
       background-color: #d8dbdb;
     }
-
+    
     /* --- KONTEN KANAN (MAIN) --- */
     .main-content {
       flex: 1; background-color: #EFEFEF; border-radius: 20px; padding: 30px;

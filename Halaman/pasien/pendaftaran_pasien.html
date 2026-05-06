@@ -3,73 +3,300 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pendaftaran - Rumah Sakit Viamedika</title>
+  <title>Pembuatan Tiket - Rumah Sakit Viamedika</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../css/pendaftaran.css" />
+  
+  <style>
+    /* =========================================
+       1. PENGATURAN DASAR & LAYOUT
+       ========================================= */
+    body {
+      background-color: #ffffff;
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .dashboard-container {
+      display: flex;
+      height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+      gap: 20px;
+    }
+
+    /* =========================================
+       2. SIDEBAR KIRI (TEMPLATE CUSTOM AII)
+       ========================================= */
+    .sidebar-dashboard {
+      background-color: #ffffff;
+      width: 380px;
+      border-radius: 20px;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 70px;
+    }
+    .sidebar-logo img { width: 45px; }
+    .sidebar-logo span { font-weight: 500; color: #000; font-size: 14px; line-height: 1.2; }
+    .sidebar-logo small { font-weight: 300; }
+
+    .menu-item {
+      width: 210px; /* Ukuran pas di tengah */
+      margin: 0 auto 20px auto; 
+      background-color: #f0f0f0;
+      padding: 12px 20px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      color: #0E6B63;
+      text-decoration: none;
+      font-weight: 650;
+      font-size: 16px;
+      box-sizing: border-box;
+      transition: 0.3s;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.08);
+    }   
+
+    .menu-item:hover { background-color: #e2e2e2; }
+    .menu-item.active { background-color: #E0E4E8; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15); }
+
+    /* =========================================
+       3. AREA KONTEN UTAMA & HEADER
+       ========================================= */
+    .main-content {
+      flex: 1;
+      background-color: #F0F2F5; 
+      border-radius: 30px;
+      padding: 40px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Profil Kanan Atas (Udah dinaikin) */
+    .top-profile {
+      position: absolute;
+      top: 15px; 
+      right: 40px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 10;
+      background: rgba(255,255,255,0.4);
+      padding: 5px 15px 5px 5px;
+      border-radius: 30px;
+    }
+    .top-profile img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
+    .info-user { display: flex; flex-direction: column; text-align: right; }
+    .info-user .role { font-size: 13px; font-weight: 700; color: #111; }
+    .info-user .name { font-size: 12px; color: #666; }
+
+    .page-title { font-size: 26px; font-weight: 700; color: #111; margin: 0; z-index: 5; }
+
+    /* =========================================
+       4. KOTAK PEMBUATAN TIKET & DOKTER
+       ========================================= */
+    .center-wrapper {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .ticket-card {
+      background: linear-gradient(to right, #2ab19d, #005461); 
+      border-radius: 25px;
+      width: 750px;
+      height: 360px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end; 
+      padding: 40px 50px;
+      box-sizing: border-box;
+      box-shadow: 0 10px 30px rgba(0, 84, 97, 0.2);
+    }
+
+    .doctor-ticket-img {
+      position: absolute;
+      left: -40px; 
+      bottom: 0;
+      height: 115%; 
+      z-index: 5;
+    }
+
+    /* =========================================
+       KONTEN TEKS & DROPDOWN 
+       ========================================= */
+    .ticket-content {
+      width: 55%; 
+      color: white;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      /* 👇 INI JURUSNYA BIAR TEKS DIAM DI ATAS 👇 */
+      align-self: flex-start; 
+      margin-top: 15px; /* Bisa kamu ganti angkanya kalau kurang turun */
+    }
+
+    .ticket-content h2 { margin: 0 0 5px 0; font-size: 26px; font-weight: 700; letter-spacing: 0.5px;}
+    .ticket-content p { margin: 0 0 25px 0; font-size: 13px; font-weight: 400; opacity: 0.9; line-height: 1.4;}
+
+    .custom-dropdown {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .btn-dropdown-header {
+      background-color: #DDE8E8;
+      color: #005461;
+      padding: 14px 20px;
+      border-radius: 20px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: none;
+      width: 100%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .btn-dropdown-header:hover { background-color: #c9dada; }
+
+    /* Animasi Panah Dropdown */
+    #dropdown-icon { transition: transform 0.3s ease; }
+    .rotate-icon { transform: rotate(180deg); }
+
+    /* Pilihan Pasien Baru & Lama (BALIK NORMAL, DORONG KE BAWAH) */
+    .dropdown-options {
+      display: none; 
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      /* (Udah nggak pakai position: absolute lagi) */
+    }
+
+    .dropdown-options.show {
+      display: flex;
+      animation: turunMulus 0.3s ease forwards;
+    }
+
+    .btn-option {
+      background-color: #003F4A; 
+      color: white;
+      padding: 14px 20px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: 'Poppins', sans-serif;
+      text-align: left;
+      border: none;
+      width: 100%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-option:hover {
+      background-color: #002C34;
+      transform: translateX(5px);
+    }
+
+    @keyframes turunMulus {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
 
   <div class="dashboard-container">
     
-    <!-- 1. SIDEBAR KIRI -->
+    <!-- SIDEBAR KIRI -->
     <aside class="sidebar-dashboard">
       <div class="sidebar-logo">
-        <img src="../../assets/logo/Logors.png" alt="Logo" />
+        <img src="../../assets/logo/Logors.png" alt="Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3063/3063206.png'" />
         <span>Rumah Sakit<br><small>Viamedika</small></span>
       </div>
 
-      <!-- Link balik ke Homescreen -->
+      <!-- Menu Dashboard (Mati) -->
       <a href="dashboard_pasien.html" class="menu-item">
         <img src="../../assets/icons/beranda.png" alt="Home" width="27">
         <span>Dashboard</span>
       </a>
 
-      <!-- Menu Pendaftaran (Posisi Nyala/Aktif) -->
-      <a href="pendaftaran_pasien.html" class="menu-item active">
+      <!-- Menu Pendaftaran (AKTIF / NYALA) -->
+      <a href="#" class="menu-item active">
         <img src="../../assets/icons/pendaftaran.png" alt="Daftar" width="20">
         <span>Pendaftaran</span>
       </a>
 
+      <!-- Menu Lihat Antrian (Mati) -->
       <a href="lihat_antrian.html" class="menu-item">
         <img src="../../assets/icons/panggill.png" alt="Antrian" width="20">
         <span>Lihat Antrian</span>
       </a>
     </aside>
 
-    <!-- 2. KONTEN KANAN -->
+    <!-- KONTEN UTAMA -->
     <main class="main-content">
       
-      <!-- Header Profil Kanan Atas -->
-      <div class="top-profile" onclick="toggleProfilePopup()">
-        <img src="../../assets/images/zahra.png" alt="Zahra Kaliope" />
+      <!-- PROFIL -->
+      <div class="top-profile">
         <div class="info-user">
           <span class="role">Pasien</span>
-          <span class="name">Zahra Kaliope</span>
+          <span class="name">Zahra Kaliape</span>
         </div>
+        <img src="https://i.pravatar.cc/100?img=5" alt="Profile">
       </div>
 
-      <!-- AREA TENGAH: CARD PILIH PASIEN -->
-      <div class="content-area">
-        <div class="card-pilih">
+      <h1 class="page-title">Pembuatan Tiket</h1>
+
+      <!-- KOTAK TENGAH -->
+      <div class="center-wrapper">
+        <div class="ticket-card">
           
-          <!-- Gambar Dokter Kiri -->
-          <img src="../../assets/images/dokter.png" alt="Dokter 3D" class="dokter-img" />
+          <!-- GAMBAR DOKTER -->
+          <img src="../../assets/images/dokterpendaftaran.png" alt="Dokter Mikir" class="doctor-ticket-img" onerror="this.style.display='none'">
           
-          <!-- Teks & Dropdown Kanan -->
-          <div class="card-right">
+          <!-- KONTEN KANAN -->
+          <div class="ticket-content">
             <h2>Pilih Jenis Pasien</h2>
-            <p>Silakan pilih salah satu jenis pasien di bawah ini</p>
+            <p>Silakan pilih salah satu jenis pasien dibawah ini</p>
             
+            <!-- DROPDOWN -->
             <div class="custom-dropdown">
-              <!-- Tombol Putih -->
-              <div class="dropdown-trigger" onclick="toggleDropdown()">
-                <span id="dropdown-text">Pilih Jenis Pasien</span>
-              </div>
+              <!-- Tombol Pemicu -->
+              <button class="btn-dropdown-header" onclick="toggleDropdown()">
+                Pilih Jenis Pasien
+                <svg id="dropdown-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
               
               <!-- Pilihan Dropdown -->
-              <div class="dropdown-options" id="dropdown-options">
-                <div class="option-item" onclick="pilihJenis('baru')">Pasien Baru</div>
-                <div class="option-item" onclick="pilihJenis('lama')">Pasien Lama</div>
+              <div class="dropdown-options" id="dropdownMenu">
+                <button class="btn-option" onclick="window.location.href='form_pasien_baru.html'">
+                  Pasien Baru
+                </button>
+                <button class="btn-option" onclick="window.location.href='form_pasien_lama.html'">
+                  Pasien Lama
+                </button>
               </div>
             </div>
 
@@ -78,67 +305,17 @@
       </div>
 
     </main>
-
   </div>
 
-  <!-- 3. POP UP PROFIL -->
-  <div id="profilePopupOverlay" class="popup-overlay" style="display: none;">
-    <div class="profile-popup-card">
-      <button class="btn-close-popup" onclick="toggleProfilePopup()">✖</button>
-      <img src="../../assets/images/zahra.png" alt="Zahra Kaliope" class="popup-avatar" />
-      <h3 class="popup-name">Zahra Kaliope</h3>
-      <p class="popup-role">Pasien</p>
-      <div class="popup-actions">
-        <button class="btn-edit-profil">✏ Edit Profil</button>
-        <button class="btn-keluar" onclick="window.location.href='auth/masuk.html'">Keluar</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCRIPT JS GABUNGAN -->
+  <!-- SCRIPT LOGIKA DROPDOWN -->
   <script>
-    // 1. Fungsi Pop Up Profil (Dari Homescreen)
-    function toggleProfilePopup() {
-      const popup = document.getElementById("profilePopupOverlay");
-      if (popup.style.display === "none") {
-        popup.style.display = "flex";
-      } else {
-        popup.style.display = "none";
-      }
-    }
-
-    // 2. Fungsi Buka Tutup Dropdown (Dari Kodingan Kamu)
     function toggleDropdown() {
-      const options = document.getElementById("dropdown-options");
-      options.classList.toggle("show");
-    }
-
-    // 3. Fungsi Pindah Halaman Pas Klik Pilihan
-    function pilihJenis(jenis) {
-      document.getElementById("dropdown-options").classList.remove("show");
+      const menu = document.getElementById("dropdownMenu");
+      const icon = document.getElementById("dropdown-icon");
       
-      setTimeout(() => {
-        if (jenis === 'baru') {
-          window.location.href = 'form_pasien_baru.html';
-        } else if (jenis === 'lama') {
-          window.location.href = 'form_pasien_lama.html';
-        }
-      }, 150);
-    }
-
-    // 4. Otomatis nutup dropdown kalau klik area kosong di luar
-    window.onclick = function(event) {
-      if (!event.target.matches('.dropdown-trigger') && !event.target.matches('#dropdown-text')) {
-        const dropdowns = document.getElementsByClassName("dropdown-options");
-        for (let i = 0; i < dropdowns.length; i++) {
-          let openDropdown = dropdowns[i];
-          if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
-          }
-        }
-      }
+      menu.classList.toggle("show");
+      icon.classList.toggle("rotate-icon");
     }
   </script>
-
 </body>
 </html>
