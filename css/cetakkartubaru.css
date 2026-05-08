@@ -55,16 +55,12 @@
     .tc-number { color: #005461; font-weight: 700; font-size: 38px; margin: 5px 0 15px 0; }
     .tc-grey { color: #888; font-size: 14px; margin-bottom: 15px; }
     
-    /* Tombol-tombol */
-  /* Tombol-tombol */
     .action-buttons { display: flex; flex-direction: column; gap: 12px; width: 260px; }
     
-    /* --- TOMBOL CETAK --- */
     .btn-cetak {
       background-color: #005461; color: white; border: none; padding: 12px;
       border-radius: 25px; font-family: 'Poppins', sans-serif; font-weight: 600;
       cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-      /* 👇 Ini tambahan bumbunya biar mulus 👇 */
       transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
     
@@ -104,7 +100,7 @@
     .footer-banner {
       background: linear-gradient(to right, #3BC1A8, #005461);
       border-top-left-radius: 40px; border-top-right-radius: 40px;
-      text-align: center; color: white; height: 80px;
+      text-align: center; color: white; height: 130px;
       display: flex; align-items: center; justify-content: center; padding-left: 200px;
     }
-    .doctor-img { position: absolute; bottom: 0; left: 3%; height: 480px; z-index: 5; }
+    .doctor-img { position: absolute; bottom: 0; left: 1%; height: 500px; z-index: 5; }
