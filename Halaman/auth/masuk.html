@@ -74,15 +74,29 @@
             });
             const data = await response.json();
 
-            if(response.status === 200 || data.success) {
-                // Simpan token ke localStorage browser agar bisa dipakai di halaman selanjutnya
-                localStorage.setItem('rs_token', data.data.token);
-                alert("Login berhasil!");
-                // Arahkan ke dashboard pasien yang ada di folder pasien/
-                window.location.href = "../pasien/dashboard_pasien.html"; 
+        if(response.status === 200 || data.success) {
+            // 1. Simpan token buat "tiket masuk"
+            localStorage.setItem('rs_token', data.data.token);
+            
+            // 2. Ambil data role dari jawaban backend
+            // Biasanya di Laravel: data.data.user.role 
+            // Pastikan di database/backend isinya tulisan 'pasien' atau 'petugas'
+            const userRole = data.data.user.role; 
+
+            alert("Login berhasil! Selamat datang, " + data.data.user.nama_lengkap);
+
+            // 3. Alur lempar halaman (Redirect)
+            if (userRole === 'pasien') {
+                window.location.href = "../pasien/dashboard_pasien.html";
+            } else if (userRole === 'petugas') {
+                window.location.href = "../petugas/dashboard_petugas.html";
             } else {
-                alert("Gagal Login: " + (data.message || "Username atau Password salah"));
+                alert("Peringatan: Role tidak dikenal (" + userRole + ")");
             }
+
+        } else {
+            alert("Gagal Login: " + (data.message || "Username atau Password salah"));
+        }
         } catch (error) {
             alert("Error: Tidak dapat terhubung ke server Backend.");
         } finally {
