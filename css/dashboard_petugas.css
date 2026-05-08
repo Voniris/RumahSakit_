@@ -1,118 +1,178 @@
-/* =========================================
-   CSS KHUSUS DASHBOARD PETUGAS
-   Digunakan oleh: dashboard_petugas.html
-   ========================================= */
+body {
+            background-color: #ffffff;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden; /* MENGUNCI LAYAR BIAR GAK SCROLL */
+            color: #333;
+        }
 
-/* 1. Mengubah Card Hijau agar layoutnya cocok untuk form */
-.card-pilih.petugas-layout {
-  width: 195%; 
-  max-width: 1050px;
-  justify-content: space-between;
-  padding: 35px 100px;
-}
+        .dashboard-container {
+            display: flex;
+            height: 100vh;
+            padding: 20px; 
+            box-sizing: border-box;
+            gap: 20px; 
+        }
 
-/* 2. Membesarkan gambar dokter KHUSUS di layout petugas */
-.petugas-layout .dokter-img {
-  height: 650px; 
-  margin-top: -153px; 
-  margin-left: -40px; 
-}
+        /* --- SIDEBAR KIRI --- */
+        .sidebar-dashboard {
+            background-color: #ffffff;
+            width: 280px; 
+            border-radius: 20px;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-/* 3. Styling Kotak Putih Form di Kanan */
-.form-box-petugas {
-  background-color: #ffffff;
-  border-radius: 20px;
-  padding: 25px 30px;
-  width: 350px;
-  color: #333;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  z-index: 10;
-}
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 50px; 
+        }
 
-.form-box-petugas h2 {
-  font-size: 16px;
-  color: #1a1a1a;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 700;
-}
+        .sidebar-logo img { width: 40px; }
+        .sidebar-logo span { font-weight: 700; color: #000000; font-size: 14px; line-height: 1.2; }
+        .sidebar-logo small { font-weight: 300; }
 
-/* 4. Styling Input Group & Ikon di dalamnya */
-.input-group {
-  margin-bottom: 12px;
-}
+        .menu-item {
+            width: 100%; 
+            margin: 0 auto 12px auto; 
+            background-color: #f0f0f0;
+            padding: 12px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #0E6B63;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            box-sizing: border-box;
+            box-shadow: 0px 2px 1px rgba(0, 0, 0, 0.15);
+            transition: 0.3s;
+        } 
 
-.input-group label {
-  display: block;
-  font-size: 11px;
-  color: #666;
-  margin-bottom: 5px;
-}
+        .menu-item:hover{ background-color: #e2e2e2; }
+        .menu-item.active { background-color: #d8dbdb; }
 
-/* Bungkusan agar ikon bisa masuk ke dalam input */
-.input-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
+        /* =========================================
+           2. AREA KONTEN UTAMA
+           ========================================= */
+        .main-content {
+            flex: 1;
+            background-color: #ECECEC; 
+            border-radius: 30px;
+            padding: 30px 40px; /* Bantalan dikembalikan biar lega */
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* INI KUNCINYA: Menyebar kotak rata dari atas sampai bawah */
+            overflow: hidden; /* ANTI SCROLL */
+        }
 
-/* Posisi Ikon */
-.input-icon {
-  position: absolute;
-  left: 12px;
-  width: 16px;
-  opacity: 0.4;
-  pointer-events: none;
-}
+        /* --- HEADER --- */
+        .header-area { margin-bottom: 0; }
+        .header-area .welcome-text { font-size: 13px; color: #666; margin-bottom: 0; }
+        .header-area .user-name { font-size: 24px; font-weight: 700; color: #111; margin: 0; line-height: 1.2; }
+        .header-area .user-role { font-size: 12px; color: #666; margin-top: 2px;}
 
-/* Styling Input Box */
-.input-group input {
-  width: 100%;
-  padding: 10px 15px 10px 38px; /* Padding kiri 38px agar teks tidak nabrak ikon */
-  border: 1px solid #e0e0e0;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  font-size: 11px;
-  color: #333;
-  outline: none;
-  font-family: 'Poppins', sans-serif;
-}
+        .top-profile {
+            position: absolute;
+            top: 35px; /* Sejajar nama Jani */
+            right: 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 10;
+            cursor: pointer;
+        }
+        .top-profile img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
+        .info-user { display: flex; flex-direction: column; text-align: right; }
+        .info-user .role { font-size: 13px; font-weight: 700; color: #111; }
+        .info-user .name { font-size: 12px; color: #666; }
 
-.input-group input:focus {
-  border-color: #005461;
-}
+        /* --- POPUP MELAYANG --- */
+        .profile-popup {
+            display: none; position: absolute; top: 60px; right: 0; width: 260px;
+            background: white; border-radius: 20px; padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); z-index: 100; text-align: center;
+            cursor: default;
+        }
+        .profile-popup.show { display: block; animation: popIn 0.2s ease-out; }
+        @keyframes popIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .close-popup { position: absolute; top: 15px; right: 20px; font-size: 20px; cursor: pointer; color: #94a3b8; }
+        .img-large { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; }
+        .profile-popup h4 { color: #1e293b; font-weight: 700; font-size: 16px; margin-bottom: 2px; }
+        .profile-popup .popup-role { color: #64748b; font-size: 13px; margin-bottom: 20px; }
+        .popup-btns { display: flex; gap: 10px; justify-content: center; }
+        .btn-edit { background: white; border: 1px solid #e2e8f0; padding: 8px 12px; border-radius: 25px; font-size: 11px; font-weight: 600; cursor: pointer; }
+        .btn-logout { background: #ef4444; color: white; border: none; padding: 8px 18px; border-radius: 25px; font-size: 11px; font-weight: 600; cursor: pointer; }
 
-/* Memaksa input tanggal bawaan browser selalu terang/putih */
-input[type="date"] {
-  color-scheme: light;
-}
+        /* =========================================
+           3. KARTU STATISTIK PETUGAS
+           ========================================= */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        .stat-card-petugas {
+            background: #FFFFFF; padding: 20px 15px; border-radius: 16px;
+            display: flex; align-items: center; gap: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        .stat-icon {
+            width: 45px; height: 45px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center; font-size: 20px;
+        }
+        .stat-info .label { font-size: 11px; color: #888; font-weight: 500; display: block; margin-bottom: 2px;}
+        .stat-info .val { display: block; font-size: 20px; font-weight: 700; color: #111; line-height: 1.1; margin-bottom: 2px;}
+        .stat-info .sub-label { font-size: 9px; color: #9CA3AF; }
 
-/* 5. Tombol Cetak Antrian */
-.btn-cetak-antrian {
-  width: 100%;
-  background-color: #005461;
-  color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  transition: 0.3s;
-  font-family: 'Poppins', sans-serif;
-}
+        .ic-green { background-color: #E0F2F1; color: #00897B; }
+        .ic-blue { background-color: #E3F2FD; color: #1E88E5; }
+        .ic-yellow { background-color: #FFF8E1; color: #FFB300; }
+        .ic-purple { background-color: #F3E5F5; color: #AB47BC; }
 
-.btn-cetak-antrian:hover {
-  background-color: #003d47;
-}
+        /* =========================================
+           4. MIDDLE GRID (TABEL KIRI & BANNER KANAN)
+           ========================================= */
+        .middle-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 15px; }
 
-.btn-cetak-antrian img {
-  filter: brightness(0) invert(1);
-  width: 18px;
-}
+        .card-tabel { background: #FFFFFF; padding: 20px 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .card-tabel h3 { font-size: 14px; color: #111; font-weight: 700; margin: 0 0 15px 0; }
+
+        table { width: 100%; border-collapse: collapse; }
+        table th { text-align: left; padding: 10px 5px; font-size: 11px; color: #888; border-bottom: 1px solid #E5E7EB; font-weight: 600; }
+        table td { padding: 10px 5px; font-size: 11px; color: #111; border-bottom: 1px solid #F3F4F6; font-weight: 600;}
+        table tr:last-child td { border-bottom: none; }
+        .fw-normal { font-weight: 500; color: #666; } 
+
+        .text-teal { color: #00897B !important; }
+        .text-blue { color: #1E88E5 !important; }
+        .text-orange { color: #F59E0B !important; }
+        .text-red { color: #EF4444 !important; }
+
+        .btn-outline-teal {
+            display: block; width: 100%; margin-top: 15px; padding: 12px;
+            background: transparent; color: #0E6B63; border: 1px solid #0E6B63;
+            border-radius: 8px; font-weight: 600; font-size: 12px; cursor: pointer; transition: 0.3s;
+        }
+        .btn-outline-teal:hover { background: #D6F0E9; }
+
+        /* Banner Dokter */
+        .banner-card {
+            background: linear-gradient(135deg, #3BC1A8 0%, #005461 100%);
+            border-radius: 16px; padding: 0 20px; color: white;
+            display: flex; align-items: center; justify-content: space-between;
+            overflow: hidden; box-shadow: 0 8px 20px rgba(0,84,97,0.2);
+        }
+        .banner-img { width: 150px; align-self: flex-end; margin-bottom: -10px; z-index: 2;}
+        .banner-text { flex: 1; text-align: left; padding: 20px 0 20px 15px; z-index: 2;}
+        .banner-text p.small-text { font-size: 10px; margin: 0 0 5px 0; opacity: 0.9; }
+        .banner-text h2 { font-size: 16px; margin: 0 0 8px 0; font-weight: 700; line-height: 1.3; }
+        .banner-text p.desc { font-size: 9px; opacity: 0.8; line-height: 1.5; margin: 0;}
+
+        /* =========================================
+           5. TABEL BAWAH FULL WIDTH
+           ========================================= */
+        .badge-yellow { background: #FEF3C7; color: #D97706; padding: 4px 10px; border-radius: 20px; font-size: 9px; font-weight: 600; border: 1px solid #FDE68A;}
+        .badge-green { background: #D6F0E9; color: #0E6B63; padding: 4px 10px; border-radius: 20px; font-size: 9px; font-weight: 600; }
