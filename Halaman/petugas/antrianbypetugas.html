@@ -1,56 +1,210 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cetak Nomor Antrian</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../css/style.css">
-  <link rel="stylesheet" href="../../css/cetakkartubypetugas.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendaftaran Petugas - RS Viamedika</title>
+
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* =========================================
+           CSS KHUSUS HALAMAN PENDAFTARAN
+           ========================================= */
+        .form-card {
+            background: #FFFFFF;
+            padding: 30px 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            flex: 1; /* Biar ngisi sisa ruang ke bawah */
+            margin-top: 20px; /* Jarak dari judul */
+        }
+
+        .form-title {
+            font-size: 16px; font-weight: 700; color: #111;
+            margin-top: 0; margin-bottom: 25px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        
+        .form-title i { color: #0E6B63; font-size: 18px; } 
+
+        .form-grid {
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 35px 25px;
+        }
+
+        .input-group label {
+            display: block; font-size: 12px; font-weight: 600;
+            color: #555; margin-bottom: 8px;
+        }
+        
+        .input-group label span { color: #EF4444; } 
+
+        .input-wrapper { position: relative; display: flex; align-items: center; }
+
+        .input-wrapper i {
+            position: absolute; left: 15px; color: #9CA3AF; font-size: 14px;
+        }
+
+        .input-wrapper input, .input-wrapper select {
+            width: 100%;
+            padding: 16px 15px 16px 40px;
+            border: 1px solid #E5E7EB;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px; 
+            color: #333;
+            box-sizing: border-box;
+            outline: none;
+            transition: 0.3s;
+            background-color: #fff;
+        }
+
+        .input-wrapper input.no-icon-left, .input-wrapper select.no-icon-left {
+            padding-left: 15px;
+        }
+
+        .input-wrapper input:focus, .input-wrapper select:focus {
+            border-color: #0E6B63; box-shadow: 0 0 0 3px rgba(14, 107, 99, 0.1);
+        }
+
+        .btn-submit {
+            width: 100%; 
+            margin-top: 50px; /* INI YANG DIGANTI: Jarak dari form diperlebar */
+            padding: 18px;    /* INI YANG DIGANTI: Tombolnya dibikin lebih montok */
+            background: linear-gradient(to right, #007F93, #005461); 
+            color: white;
+            border: none; border-radius: 10px;
+            font-size: 15px; font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer; transition: 0.3s;
+        }
+
+        .btn-submit:hover { 
+          background: linear-gradient(to right, #005461, #007F93); 
+            box-shadow: 0 6px 15px rgba(0, 84, 97, 0.3);
+        }
+    </style>
 </head>
 <body>
 
-  <div class="header-logo">
-    <img src="../../assets/logo/Logors.png" alt="Logo">
-    <span class="logo-name">Rumah Sakit<br><small>Viamedika</small></span>
-  </div>
-
-  <div class="top-section">
-    <div class="ticket-wrapper">
-        
-        <h2 class="judul-tiket">Tiket Antrian Anda</h2>
-        
-        <div class="ticket-box">
-          <h3>Nomor Antrian</h3>
-          <div class="nomor" id="nomorAntrian">A-001</div>
-          
-          <div class="jadwal-title">Jadwal Antrian</div>
-          <div class="jadwal-waktu">
-            <span id="tanggalAntrian">Senin, 27 April 2026</span><br>
-            <span id="waktuAntrian">Pukul 10.00</span>
-          </div>
-          
-          <div class="info-antrian" id="infoSisa">Ada 10 Antrian Didepan</div>
-          
-          <div class="terima-kasih">-Terima Kasih-</div>
+<div class="dashboard-container">
+    <aside class="sidebar-dashboard">
+        <div class="sidebar-logo">
+            <img src="../../assets/logo/Logors.png" alt="Logo" onerror="this.src='https://placehold.co/100/005461/white?text=VM'">
+            <span>Rumah Sakit<br><small>Viamedika</small></span>
         </div>
         
-        <button class="btn-ambil" onclick="cetakTiket()">Ambil Antrian</button>
-      </div>
-  </div> <div class="bottom-section">
-    <img src="../../assets/images/Dokter.png" alt="Dokter 3D" class="doctor-img">
-    
-    <p class="bottom-text">Silakan Datang Sesuai dengan Jadwal yang diberikan untuk menghindari keterlambatan.</p>
-  </div>
+              <a href="dashboard_petugas.html" class="menu-item">
+        <img src="../../assets/icons/beranda.png" alt="Home" width="27">
+        <span>Dashboard</span>
+      </a>
 
-  <script>
-    // Fungsi sementara untuk tombol Ambil Antrian
-    function cetakTiket() {
-      alert("Tiket sedang diunduh/dicetak...");
-      // Nanti bisa diarahkan kembali ke dashboard atau pop-up sukses
-      // window.location.href = "dashboard_pasien.html";
-    }
-  </script>
+      <!-- Menu Pendaftaran (Mati) -->
+      <a href="antrianbypetugas.html" class="menu-item active">
+        <img src="../../assets/icons/pendaftaran.png" alt="Daftar" width="20">
+        <span>Pendaftaran</span>
+      </a>
 
-</body>
+      <!-- Menu Lihat Antrian (Mati) -->
+      <a href="panggil_antrian.html" class="menu-item">
+        <img src="../../assets/icons/panggill.png" alt="Antrian" width="20">
+        <span>Lihat Antrian</span>
+      </a>
+    </aside>
+
+    <div class="main-content">
+        
+        <div class="top-profile">
+            <div class="info-user">
+                <span class="role">Admin Perawat</span>
+                <span class="name">Jani</span>
+            </div>
+            <img src="https://ui-avatars.com/api/?name=Jani&background=005461&color=fff" alt="Profile">
+        </div>
+
+        <div class="header-area">
+            <h1 class="user-name">Pembuatan Tiket</h1>
+        </div>
+
+        <div class="form-card">
+            <h2 class="form-title">
+                <i class="fa-regular fa-id-card"></i> Biodata Pasien
+            </h2>
+
+            <form action="#">
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Nomor Induk Kependudukan (NIK) <span>*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fa-regular fa-user"></i>
+                            <input type="text" placeholder="Masukkan NIK">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Nama Lengkap <span>*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fa-regular fa-user"></i>
+                            <input type="text" placeholder="Masukkan Nama Lengkap">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Tanggal Lahir <span>*</span></label>
+                        <div class="input-wrapper">
+                            <input type="date" class="no-icon-left"> 
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Jenis Kelamin <span>*</span></label>
+                        <div class="input-wrapper">
+                            <select class="no-icon-left">
+                                <option value="" disabled selected>Pilih Jenis Kelamin</option>
+                                <option value="L">Laki-laki</option>
+                                <option value="P">Perempuan</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Alamat <span>*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <input type="text" placeholder="Masukkan Alamat Lengkap">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Nomor Telepon / WhatsApp <span>*</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" placeholder="08xxxxxxxx" class="no-icon-left">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group full-width" style="margin-top: 20px;">
+                    <label>Pilih Unit <span>*</span></label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-building"></i>
+                        <select>
+                            <option value="" disabled selected>Pilih Unit</option>
+                            <option value="umum">Poli Umum</option>
+                            <option value="gigi">Poli Gigi</option>
+                            <option value="anak">Poli Anak</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-submit" onclick="window.location.href='cetakbypetugas.html'">Buat Nomor Antrian</button>
+
+            </form>
+        </div>
+
+    </div> </div> </body>
 </html>
