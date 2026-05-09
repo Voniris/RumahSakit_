@@ -24,7 +24,7 @@
       <form id="formLogin">
         <div class="form-group">
           <label>Alamat Email / NIK</label>
-          <input type="text" id="username" placeholder="Masukkan Email atau NIK Anda" required />
+          <input type="email" id="email" placeholder="Masukkan Email atau NIK Anda" required />
         </div>
 
         <div class="form-group password-group">
@@ -61,7 +61,7 @@
         btnSubmit.disabled = true;
 
         const payload = {
-            username: document.getElementById('username').value, // API butuh field username
+            email: document.getElementById('email').value, // API butuh field email 
             password: document.getElementById('password').value,
             remember_me: document.getElementById('remember_me').checked
         };

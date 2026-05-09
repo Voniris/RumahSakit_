@@ -95,12 +95,14 @@
       <div class="form-group">
         <label>Pilih Unit</label>
         <div class="input-wrapper">
-          <select class="form-control pad-right">
-            <option value="" disabled selected>Pilih Unit</option>
-            <option value="umum">Poli Umum</option>
-            <option value="gigi">Poli Gigi</option>
-            <option value="anak">Poli Anak</option>
-          </select>
+            <select id="unit_id" name="unit_id" class="form-control pad-right" required>
+        <option value="" disabled selected hidden>Pilih Unit</option>
+        <option value="1" style="color: #333;">Poli Mata</option>
+        <option value="2" style="color: #333;">Poli Gigi</option>
+        <option value="3" style="color: #333;">Poli Penyakit Dalam</option>
+        <option value="6" style="color: #333;">Poli KIA (Ibu & Anak)</option>
+        <option value="7" style="color: #333;">Poli Anak</option>
+    </select>
           <svg class="icon-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </div>
       </div>
