@@ -6,179 +6,8 @@
   <title>Form Pasien Baru - Rumah Sakit Viamedika</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <style>
-    /* =========================================
-       1. PENGATURAN DASAR & BACKGROUND
-       ========================================= */
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #2ab19d 0%, #005461 100%);
-      height: 100vh; 
-      display: flex;
-      justify-content: center; 
-      align-items: center; 
-      box-sizing: border-box;
-      overflow: hidden; 
-    }
+  <link rel="stylesheet" href="../../css/formpasienbaru.css" />
 
-    .logo-container {
-      position: absolute;
-      top: 25px; 
-      left: 40px;
-    }
-
-    .logo-container img { height: 45px; width: auto; }
-
-    /* =========================================
-       2. KOTAK FORM
-       ========================================= */
-    .form-card {
-      background-color: #F4F6F6; 
-      border-radius: 25px;
-      padding: 40px 60px; 
-      width: 90%; 
-      max-width: 800px; /* Dipersempit dikit biar manjang ke bawahnya pas */
-      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-      box-sizing: border-box;
-    }
-
-    /* =========================================
-       3. STEPPER
-       ========================================= */
-    .stepper-wrapper {
-      display: flex;
-      justify-content: space-between; 
-      position: relative;
-      margin-bottom: 35px; 
-      padding: 0 30px;
-    }
-
-    .stepper-wrapper::before {
-      content: '';
-      position: absolute;
-      top: 24px; 
-      left: 90px;
-      right: 90px;
-      height: 3px;
-      background-color: #9e9e9e;
-      z-index: 1;
-    }
-
-    .step {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 170px;
-      text-align: center;
-      z-index: 2; 
-    }
-
-    .circle {
-      width: 50px; 
-      height: 50px;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 18px;
-      font-weight: 600;
-      color: white;
-      margin-bottom: 10px; 
-    }
-
-    .step.done .circle { background-color: #3BC1A8; } 
-    .step.active .circle { background-color: #004F5C; } 
-    .step.pending .circle { background-color: #8C9696; } 
-
-    .step p { font-size: 13px; font-weight: 500; margin: 0; color: #004F5C; line-height: 1.3; }
-
-    /* =========================================
-       4. INPUT FORM (KEMBALI KE 1 KOLOM FULL WIDTH)
-       ========================================= */
-    .form-group {
-      margin-bottom: 15px; /* Jarak antar tumpukan ke bawah */
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 13px;
-      color: #666;
-      margin-bottom: 6px; 
-      font-weight: 500;
-    }
-
-    .input-wrapper { position: relative; display: flex; align-items: center; }
-
-    .icon-left { 
-      position: absolute; 
-      left: 15px; 
-      color: #888; 
-      width: 18px; 
-      height: 18px; 
-    }
-
-    .icon-right { 
-      position: absolute; 
-      right: 15px; 
-      width: 18px; 
-      height: auto;
-      pointer-events: none; 
-    }
-    svg.icon-right { color: #888; width: 18px; height: 18px; }
-
-    .form-control {
-      width: 100%;
-      padding: 12px 15px; 
-      border: 1.5px solid #ccc;
-      border-radius: 8px; 
-      background-color: transparent;
-      font-family: 'Poppins', sans-serif;
-      font-size: 13px;
-      color: #333;
-      box-sizing: border-box;
-      outline: none;
-      transition: border-color 0.3s ease;
-      appearance: none; 
-      -webkit-appearance: none;
-      -moz-appearance: none;
-    }
-
-    .form-control:focus { border-color: #004F5C; }
-    .form-control::placeholder { color: #aaa; }
-    
-    .pad-left { padding-left: 42px; }
-    .pad-right { padding-right: 42px; }
-
-    /* =========================================
-       5. TOMBOL BAWAH (KIRI KANAN)
-       ========================================= */
-    .action-buttons {
-      display: flex;
-      justify-content: space-between; /* Ini yang bikin misah ke ujung! */
-      margin-top: 30px; 
-    }
-
-    .btn {
-      background-color: #004F5C; 
-      color: white;
-      border: none;
-      padding: 10px 40px;
-      border-radius: 25px; /* Oval Pill */
-      font-family: 'Poppins', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0, 79, 92, 0.3); 
-      transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-
-    .btn:hover {
-      background-color: #00363F;
-      transform: translateY(-2px);
-    }
-
-  </style>
 </head>
 <body>
 
@@ -222,12 +51,19 @@
       </div>
 
       <div class="form-group">
-        <label>Tanggal Lahir</label>
-        <div class="input-wrapper">
-          <input type="text" class="form-control pad-right" placeholder="Pilih Tanggal Lahir" onfocus="(this.type='date')" onblur="(this.type='text')">
-          <img src="../../assets/icons/tanggalabu.png" alt="Kalender" class="icon-right" onerror="this.style.display='none'">
-        </div>
-      </div>
+  <label>Tanggal Lahir</label>
+  <div class="input-wrapper">
+    <input 
+      type="text" 
+      class="form-control pad-right" 
+      placeholder="Pilih Tanggal Lahir"
+      onfocus="(this.type='date')" 
+      onblur="if(!this.value) this.type='text'"
+      onclick="if(this.type==='date' && this.showPicker) this.showPicker();"
+    >
+    <img src="../../assets/icons/tanggalabu.png" alt="Kalender" class="icon-right">
+  </div>
+</div>
 
       <div class="form-group">
         <label>Alamat</label>
