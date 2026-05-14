@@ -8,8 +8,107 @@
   <link rel="stylesheet" href="../../css/lihatantrian.css" />
   <link rel="stylesheet" href="../../css/dashboard.css" />  
 
+  <style>
+    /* =========================================
+       TOMBOL AKSI (LEWATI, RECALL, BERIKUTNYA)
+       ========================================= */
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-action {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 14px 24px;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      min-width: 90px;
+    }
+
+    .btn-action:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    }
+
+    .btn-action:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn-action:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-lewati {
+      background-color: #F3F4F6;
+      color: #374151;
+    }
+
+    .btn-recall {
+      background-color: #FEF9C3;
+      color: #92400E;
+    }
+
+    .btn-berikutnya {
+      background-color: #005461;
+      color: #ffffff;
+    }
+
+    .btn-berikutnya svg {
+      stroke: #ffffff;
+    }
+
+    /* Toast Notifikasi */
+    #toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .toast {
+      min-width: 260px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+      animation: toastIn 0.3s ease;
+    }
+
+    .toast.success { background: #ECFDF5; border-left: 4px solid #10B981; color: #065F46; }
+    .toast.error   { background: #FEF2F2; border-left: 4px solid #EF4444; color: #991B1B; }
+    .toast.info    { background: #EFF6FF; border-left: 4px solid #3B82F6; color: #1E40AF; }
+
+    @keyframes toastIn {
+      from { transform: translateX(80px); opacity: 0; }
+      to   { transform: translateX(0);    opacity: 1; }
+    }
+  </style>
 </head>
 <body>
+
+<!-- Toast Container -->
+<div id="toast-container"></div>
 
   <div class="dashboard-container">
     
@@ -20,7 +119,6 @@
         <span>Rumah Sakit<br><small>Viamedika</small></span>
       </div>
 
-      <!-- Menu Items -->
       <a href="dashboard_petugas.html" class="menu-item">
         <img src="../../assets/icons/beranda.png" alt="Home" width="27">
         <span>Dashboard</span>
@@ -64,6 +162,38 @@
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
             <span id="timerText">00:10</span>
           </div>
+
+          <!-- 3 TOMBOL AKSI -->
+          <div class="action-buttons">
+
+            <!-- LEWATI → PUT /antrian/{id}/selesai -->
+            <button class="btn-action btn-lewati" id="btnLewati" onclick="lewatiAntrian()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="5 4 15 12 5 20 5 4"></polygon>
+                <line x1="19" y1="5" x2="19" y2="19"></line>
+              </svg>
+              <span>Lewati</span>
+            </button>
+
+            <!-- RECALL → POST /antrian/{id}/panggil -->
+            <button class="btn-action btn-recall" id="btnRecall" onclick="recallAntrian()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="1 4 1 10 7 10"></polyline>
+                <path d="M3.51 15a9 9 0 1 0 .49-3.15"></path>
+              </svg>
+              <span>Recall</span>
+            </button>
+
+            <!-- BERIKUTNYA → POST /antrian/unit/{unitId}/panggil-berikutnya -->
+            <button class="btn-action btn-berikutnya" id="btnBerikutnya" onclick="berikutnyaAntrian()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+              <span>Berikutnya</span>
+            </button>
+
+          </div>
         </div>
 
         <!-- KOTAK KANAN (DAFTAR TUNGGU) -->
@@ -81,9 +211,8 @@
             <div class="badge-tertunda" id="jumlahTertunda">4 Tertunda</div>
           </div>
 
-          <!-- LIST DAFTAR TUNGGU -->
           <div class="waiting-list" id="waitingListContainer">
-            <!-- Isi list akan dimuat otomatis oleh JavaScript -->
+            <!-- Diisi oleh JS -->
           </div>
         </div>
 
@@ -92,103 +221,247 @@
     </main>
   </div>
 
-  <!-- SCRIPT LOGIKA ANTRIAN LOOPING -->
   <script>
-    // 1. DATA DATABASE PALSU (Bisa ditambah sampai panjang)
-    // Cia, Budi, Siti disiapkan di antrian paling belakang
+    // =============================================
+    // KONFIGURASI
+    // =============================================
+    const API_BASE = 'http://localhost:8000/api/antrian/unit'; // Ganti dengan base URL API kamu
+    const UNIT_ID  = 1; // Ganti sesuai unit petugas yang login
+
+    // Ambil token dari localStorage (disimpan saat login)
+    function getToken() {
+      return localStorage.getItem('token') || '';
+    }
+
+    function authHeader() {
+      const token = getToken();
+      return token ? { 'Authorization': `Bearer ${token}` } : {};
+    }
+
+    // =============================================
+    // DATA LOKAL (fallback / tampilan awal)
+    // =============================================
     let dataAntrian = [
-      { no: "A-001", name: "Mr. Rajwa Shahifa", time: "Sedang Dilayani" },
-      { no: "A-002", name: "Mr. Maulana", time: "Menunggu 15m" },
-      { no: "A-003", name: "Mr. Ivan Adinata", time: "Menunggu 22m" },
-      { no: "A-004", name: "Mr. Akhmad Saputra", time: "Menunggu 28m" },
-      { no: "A-005", name: "Mr. Firdaus", time: "Menunggu 35m" },
-      { no: "A-006", name: "Ms. Cia", time: "Menunggu 42m" },
-      { no: "A-007", name: "Mr. Budi Santoso", time: "Menunggu 50m" },
-      { no: "A-008", name: "Ms. Siti Aminah", time: "Menunggu 58m" }
+      { id: 1, no: "A-001", name: "Mr. Rajwa Shahifa",   time: "Sedang Dilayani" },
+      { id: 2, no: "A-002", name: "Mr. Maulana",         time: "Menunggu 15m" },
+      { id: 3, no: "A-003", name: "Mr. Ivan Adinata",    time: "Menunggu 22m" },
+      { id: 4, no: "A-004", name: "Mr. Akhmad Saputra",  time: "Menunggu 28m" },
+      { id: 5, no: "A-005", name: "Mr. Firdaus",         time: "Menunggu 35m" },
+      { id: 6, no: "A-006", name: "Ms. Cia",             time: "Menunggu 42m" },
+      { id: 7, no: "A-007", name: "Mr. Budi Santoso",    time: "Menunggu 50m" },
+      { id: 8, no: "A-008", name: "Ms. Siti Aminah",     time: "Menunggu 58m" }
     ];
 
-    // Waktu mundur per pasien (Aku set 10 detik biar kamu bisa liat geraknya cepat)
-    // Kalau mau normal misal 5 menit, ganti jadi: let waktuSisa = 300;
-    let waktuSisa = 10; 
+    let waktuSisa = 10;
     let timerInterval;
 
-    // FUNGSI RENDER TAMPILAN
+    // =============================================
+    // RENDER TAMPILAN
+    // =============================================
     function updateTampilanAntrian() {
-      // Jika antrian habis
       if (dataAntrian.length === 0) {
-        document.getElementById("berlangsungNo").innerText = "-";
+        document.getElementById("berlangsungNo").innerText   = "-";
         document.getElementById("berlangsungName").innerText = "Tidak ada antrian";
-        document.getElementById("jumlahTertunda").innerText = "0 Tertunda";
-        document.getElementById("waitingListContainer").innerHTML = "<center><p style='color:#888; margin-top:50px;'>Antrian Kosong</p></center>";
+        document.getElementById("jumlahTertunda").innerText  = "0 Tertunda";
+        document.getElementById("waitingListContainer").innerHTML =
+          "<center><p style='color:#888; margin-top:50px;'>Antrian Kosong</p></center>";
         clearInterval(timerInterval);
         document.getElementById("timerText").innerText = "00:00";
+        setButtonsDisabled(true);
         return;
       }
 
-      // 1. Update Pasien Berlangsung (Data pertama di Array, index 0)
-      let pasienSekarang = dataAntrian[0];
-      
-      // Kasih efek kedip halus pas pergantian nama
-      let cardBerlangsung = document.getElementById("cardBerlangsung");
-      cardBerlangsung.style.animation = 'none';
-      cardBerlangsung.offsetHeight; /* trigger reflow */
-      cardBerlangsung.style.animation = 'slideUp 0.5s ease';
+      const pasienSekarang = dataAntrian[0];
 
-      document.getElementById("berlangsungNo").innerText = pasienSekarang.no;
+      // Animasi kartu kiri
+      const card = document.getElementById("cardBerlangsung");
+      card.style.animation = 'none';
+      card.offsetHeight;
+      card.style.animation = 'slideUp 0.5s ease';
+
+      document.getElementById("berlangsungNo").innerText   = pasienSekarang.no;
       document.getElementById("berlangsungName").innerText = pasienSekarang.name;
 
-      // 2. Update Daftar Tunggu (Data index 1 sampai maksimal 4 orang ke bawah)
-      let listContainer = document.getElementById("waitingListContainer");
-      listContainer.innerHTML = ""; // Bersihkan list lama
+      // Daftar tunggu
+      const listContainer = document.getElementById("waitingListContainer");
+      listContainer.innerHTML = "";
 
-      let tertundaCount = dataAntrian.length - 1;
+      const tertundaCount = dataAntrian.length - 1;
       document.getElementById("jumlahTertunda").innerText = tertundaCount + " Tertunda";
 
-      // Loop sisa pasien untuk ditampilkan di kanan (maksimal 4 orang di layar)
       for (let i = 1; i < Math.min(dataAntrian.length, 5); i++) {
-        let p = dataAntrian[i];
-        let div = document.createElement("div");
+        const p   = dataAntrian[i];
+        const div = document.createElement("div");
         div.className = "list-item";
         div.innerHTML = `
           <div class="item-no"><span>No.</span><strong>${p.no}</strong></div>
           <div class="item-info">
             <h4>${p.name}</h4>
             <p>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
               ${p.time} • Unit
             </p>
           </div>
         `;
         listContainer.appendChild(div);
       }
+
+      setButtonsDisabled(false);
     }
 
-    // FUNGSI JALANIN TIMER
+    function setButtonsDisabled(state) {
+      ['btnLewati','btnRecall','btnBerikutnya'].forEach(id => {
+        document.getElementById(id).disabled = state;
+      });
+    }
+
+    // =============================================
+    // TIMER
+    // =============================================
     function mulaiTimer() {
+      clearInterval(timerInterval);
       timerInterval = setInterval(() => {
         waktuSisa--;
-
-        // Format waktu jadi MM:SS
-        let menit = Math.floor(waktuSisa / 60);
-        let detik = waktuSisa % 60;
-        document.getElementById("timerText").innerText = 
+        const menit  = Math.floor(waktuSisa / 60);
+        const detik  = waktuSisa % 60;
+        document.getElementById("timerText").innerText =
           (menit < 10 ? "0" : "") + menit + ":" + (detik < 10 ? "0" : "") + detik;
 
-        // Kalau waktu habis
         if (waktuSisa <= 0) {
-          // Hapus pasien pertama (Rajwa selesai!)
-          dataAntrian.shift(); 
-          
-          // Reset timer ke 10 detik lagi untuk pasien berikutnya
-          waktuSisa = 10; 
-          
-          // Perbarui layar (Maulana akan naik ke kiri, Cia akan muncul di kanan)
-          updateTampilanAntrian(); 
+          dataAntrian.shift();
+          waktuSisa = 10;
+          updateTampilanAntrian();
         }
-      }, 1000); // Jalan setiap 1000ms = 1 detik
+      }, 1000);
     }
 
-    // JALANKAN SAAT HALAMAN DIBUKA
+    // =============================================
+    // AKSI TOMBOL + INTEGRASI API
+    // =============================================
+
+    // LEWATI → PUT /antrian/{id}/selesai
+    async function lewatiAntrian() {
+      if (dataAntrian.length === 0) return;
+      const pasien = dataAntrian[0];
+      setButtonsDisabled(true);
+
+      try {
+        const res = await fetch(`${API_BASE}/antrian/${pasien.id}/selesai`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', ...authHeader() }
+        });
+
+        if (res.ok) {
+          showToast('info', `Antrian ${pasien.no} dilewati.`);
+          dataAntrian.shift();
+          waktuSisa = 10;
+          updateTampilanAntrian();
+        } else {
+          const err = await res.json().catch(() => ({}));
+          showToast('error', err.message || 'Gagal melewati antrian.');
+          setButtonsDisabled(false);
+        }
+      } catch (e) {
+        showToast('error', 'Koneksi gagal. Coba lagi.');
+        setButtonsDisabled(false);
+      }
+    }
+
+    // RECALL → POST /antrian/{id}/panggil
+    async function recallAntrian() {
+      if (dataAntrian.length === 0) return;
+      const pasien = dataAntrian[0];
+      setButtonsDisabled(true);
+
+      try {
+        const res = await fetch(`${API_BASE}/antrian/${pasien.id}/panggil`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...authHeader() }
+        });
+
+        if (res.ok) {
+          showToast('success', `Memanggil ulang ${pasien.no} — ${pasien.name}`);
+          waktuSisa = 10; // Reset timer
+          document.getElementById("timerText").innerText = "00:10";
+        } else {
+          const err = await res.json().catch(() => ({}));
+          showToast('error', err.message || 'Gagal recall antrian.');
+        }
+      } catch (e) {
+        showToast('error', 'Koneksi gagal. Coba lagi.');
+      } finally {
+        setButtonsDisabled(false);
+      }
+    }
+
+    // BERIKUTNYA → POST /antrian/unit/{unitId}/panggil-berikutnya
+    async function berikutnyaAntrian() {
+      if (dataAntrian.length === 0) return;
+      const pasienSekarang = dataAntrian[0];
+      setButtonsDisabled(true);
+
+      try {
+        const res = await fetch(`${API_BASE}/antrian/unit/${UNIT_ID}/panggil-berikutnya`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...authHeader() }
+        });
+
+        if (res.ok) {
+          const data = await res.json().catch(() => ({}));
+          showToast('success', `Memanggil antrian berikutnya.`);
+
+          // Update dataAntrian dari response API jika tersedia
+          if (data && data.no_antrian) {
+            dataAntrian[0] = {
+              id:   data.id   || pasienSekarang.id,
+              no:   data.no_antrian,
+              name: data.nama_pasien || data.name || '-',
+              time: 'Sedang Dilayani'
+            };
+          } else {
+            // Fallback: geser lokal
+            dataAntrian.shift();
+          }
+
+          waktuSisa = 10;
+          updateTampilanAntrian();
+        } else {
+          const err = await res.json().catch(() => ({}));
+          showToast('error', err.message || 'Gagal memanggil antrian berikutnya.');
+          setButtonsDisabled(false);
+        }
+      } catch (e) {
+        showToast('error', 'Koneksi gagal. Coba lagi.');
+        setButtonsDisabled(false);
+      }
+    }
+
+    // =============================================
+    // TOAST NOTIFIKASI
+    // =============================================
+    function showToast(type, msg) {
+      const icons = {
+        success: '✅',
+        error:   '❌',
+        info:    'ℹ️'
+      };
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `<span>${icons[type]}</span><span>${msg}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.transition = 'opacity 0.4s';
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 400);
+      }, 3500);
+    }
+
+    // =============================================
+    // INIT
+    // =============================================
     window.onload = () => {
       updateTampilanAntrian();
       mulaiTimer();

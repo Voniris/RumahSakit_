@@ -38,7 +38,7 @@ function switchTab(role) {
 // KONFIGURASI UTAMA
 // ==========================================
 // Sesuaikan BASE_URL dengan alamat backend di komputermu
-const BASE_URL = 'http://kelompok1-rs.test/api'; 
+const BASE_URL = 'http://localhost:8000/api'; // contoh: 'https://api.vamedika.id/api'
 
 // ==========================================
 // 1. FUNGSI LOGIN PASIEN (Untuk masuk.html)
@@ -47,8 +47,8 @@ async function loginPasien(event) {
     event.preventDefault(); // Mencegah halaman reload saat tombol diklik
 
     // Ambil nilai dari inputan form (Pastikan ID di input HTML-mu sesuai)
-    const nikInput = document.getElementById('nik_login').value;
-    const passwordInput = document.getElementById('password_login').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
     try {
         // Tembak API Login (berdasarkan docx: /auth/login)
@@ -59,8 +59,8 @@ async function loginPasien(event) {
                 'Accept': 'application/json'
             },
             body: JSON.stringify({
-                username: nikInput, // Di API Backend minta 'username' (yang diisi NIK)
-                password: passwordInput,
+                email: email, // Di API Backend minta 'email'
+                password: password,
                 remember_me: false
             })
         });

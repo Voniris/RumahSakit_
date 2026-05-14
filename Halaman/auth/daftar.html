@@ -16,37 +16,40 @@
             </div>
             <h1>Daftar</h1>
 
-            <div class="tab-switch">
-                <button class="tab active" onclick="switchTab('pasien')">Pasien</button>
-                <button class="tab" onclick="switchTab('petugas')">Petugas</button>
-            </div>
 
-            <form id="formDaftar">
-                <div id="field-nik" class="form-group">
-                    <label>NIK</label>
-                    <input type="text" id="nik" placeholder="Maukkan NIK Anda" required />
-                </div>
-                <div class="form-group">
-                    <label>Nama</label>
-                    <input type ="text" id="nama_lengkap" placeholder="Masukkan Nama Anda" required />
-                </div>
-                <div class="form-group">
-                    <label>Nomor Telepon</label>
-                    <input type="tel" id="no_telepon" placeholder="Masukkan nomor Anda" required />
-                </div>
+                        <form id="formDaftar">
+               
                 <div class="form-group">
                     <label>Alamat Email</label>
-                    <input type="email" id="email" placeholder="Masukkan Alamat Email" required />
+                    <input type="email" id="email" name="email" placeholder="Masukkan Alamat Email" required />
                 </div>
+
+                <div class="form-group">
+                    <label>Kode Verifikasi</label>
+                    <div class="verify-wrapper">
+                        <input type="text" id="kode_verifikasi" name="kode_verifikasi" placeholder="Masukkan Kode" required />
+                        <button type="button" class="btn-kirim">Kirim Kode</button>
+                    </div>
+                </div>
+
                 <div class="form-group password-group">
                     <label>Kata Sandi</label>
-                    <input type="password" id="password" placeholder="Masukkan Kata Sandi" required />
+                    <input type="password" id="password" name="password" placeholder="Masukkan Kata Sandi" required />
                     <span class="toggle-password" onclick="togglePassword('password', this)">
                         <img src="../../assets/icons/closedeyes.png" width="20" />
                     </span>
                 </div>
+
+                <div class="form-group password-group">
+                    <label>Konfirmasi Kata Sandi</label>
+                    <input type="password" id="password_confirm" name="password_confirm" placeholder="Konfirmasi Kata Sandi" required />
+                    <span class="toggle-password" onclick="togglePassword('password_confirm', this)">
+                        <img src="../../assets/icons/closedeyes.png" width="20" />
+                    </span>
+                </div>
+
                 <div class="form-group checkbox-group">
-                    <input type="checkbox" id="agree" required />
+                    <input type="checkbox" id="agree" name="agree" required />
                     <label for="agree">Saya menyetujui syarat & ketentuan</label>
                 </div>
 
@@ -64,42 +67,99 @@
     <script src="../../js/main.js"></script>
 
     <script>
-        document.getElementById('formDaftar').addEventListener('submit', async function(e) {
-            e.preventDefault(); // Mencegah reload halaman
-            const btnSubmit = document.getElementById('btnSubmitDaftar');
-            btnSubmit.innerText = "Memproses...";
-            btnSubmit.disabled = true;
+        // ==========================================
+        // 1. LOGIKA TOMBOL "KIRIM KODE" (Tahap 1)
+        // ==========================================
+        document.querySelector('.btn-kirim').addEventListener('click', async function() {
+            const btnKirim = this;
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const passwordConfirm = document.getElementById('password_confirm').value;
 
-            // Kumpulkan data dari input
-            const payload = {
-                nik: document.getElementById('nik').value,
-                nama_lengkap: document.getElementById('nama_lengkap').value,
-                no_telepon: document.getElementById('no_telepon').value,
-                email: document.getElementById('email').value,
-                password: document.getElementById('password').value,
-                password_confirmation: document.getElementById('password').value, // Backend mewajibkan ini
-                tanggal_lahir: "2000-01-01", // Default wajib API
-                jenis_kelamin: "L", // Default wajib API
-                jenis_pasien: "umum" // Default wajib API
+            if (!email || !password || !passwordConfirm) {
+                alert("Isi Email dan Kata Sandi dulu ya sebelum minta kode!");
+                return;
+            }
+
+            if (password !== passwordConfirm) {
+                alert("Kata Sandi dan Konfirmasi Kata Sandi tidak cocok!");
+                return;
+            }
+
+            btnKirim.innerText = "Mengirim...";
+            btnKirim.disabled = true;
+
+            // Kita cuma kirim Email & Password sesuai desain UI kamu
+            const payloadRegister = {
+                email: email,
+                password: password,
+                password_confirmation: passwordConfirm
             };
 
             try {
-                // Tembak API Register
                 const response = await fetch('http://localhost:8000/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify(payloadRegister)
                 });
+                
                 const data = await response.json();
 
-                if(response.status === 201 || data.success) {
-                    alert("Registrasi berhasil! Cek email kamu untuk verifikasi akun."); // Sesuai pesan backend
-                    window.location.href = "masuk.html"; // Lempar ke halaman login
+                if(response.status === 201 || response.ok || data.success) {
+                    alert("Kode OTP berhasil dikirim! Cek email kamu.");
                 } else {
-                    alert("Gagal Daftar: " + (data.message || "Periksa kembali data Anda"));
+                    // Kalau Backend protes minta NIK/Nama, error-nya bakal muncul di sini
+                    alert("Gagal kirim kode: " + (data.message || "Pastikan API sudah disesuaikan dengan desain form"));
                 }
             } catch (error) {
-                alert("Error: Tidak dapat terhubung ke server Backend. Pastikan server sudah jalan!");
+                alert("Error: Server Backend belum jalan atau link salah!");
+            } finally {
+                btnKirim.innerText = "Kirim Kode";
+                btnKirim.disabled = false;
+            }
+        });
+
+
+        // ==========================================
+        // 2. LOGIKA TOMBOL "DAFTAR" (Tahap 2)
+        // ==========================================
+        document.getElementById('formDaftar').addEventListener('submit', async function(e) {
+            e.preventDefault(); 
+            const btnSubmit = document.getElementById('btnSubmitDaftar');
+            
+            if(!document.getElementById('agree').checked) return alert("Centang dulu syarat & ketentuannya ya!");
+            
+            const otp = document.getElementById('kode_verifikasi').value;
+            if(!otp) return alert("Masukkan kode verifikasi yang dikirim ke emailmu!");
+
+            btnSubmit.innerText = "Memproses...";
+            btnSubmit.disabled = true;
+
+            const payloadVerify = {
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                password_confirmation: document.getElementById('password_confirm').value, 
+                otp: otp
+            };
+
+            try {
+                const response = await fetch('http://localhost:8000/api/auth/verify-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify(payloadVerify)
+                });
+                
+                const data = await response.json();
+
+                if(response.status === 200 || response.ok || data.success) {
+                    alert("Pendaftaran Berhasil! Silakan masuk.");
+                    window.location.href = "masuk.html"; 
+                } else {
+                    alert("Pendaftaran Gagal: " + (data.message || "Kode OTP salah."));
+                }
+            } catch (error) {
+                alert("Error: Tidak dapat terhubung ke server.");
             } finally {
                 btnSubmit.innerText = "Daftar";
                 btnSubmit.disabled = false;

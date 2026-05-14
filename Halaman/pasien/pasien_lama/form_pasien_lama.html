@@ -3,79 +3,169 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Form Pasien Lama - Rumah Sakit Viamedika</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <title>Form Pasien Lama - Rumah Sakit</title>
-  <link rel="stylesheet" href="../../css/style.css" />
-  <link rel="stylesheet" href="../../css/pasien2.css" />
+  <link rel="stylesheet" href="../../../css/formpasien.css" />
 </head>
 <body>
 
-  <div class="dashboard-container">
+  <div class="logo-container">
+    <img src="../../../assets/logo/logoputih.png" alt="Logo Viamedika" onerror="this.style.display='none'">
+  </div>
 
-    <!-- MAIN CONTENT -->
-    <div class="main-content">
+  <div class="form-card">
 
-      <!-- AREA KONTEN -->
-      <div class="content-area">
-        <div class="form-card">
+    <div class="stepper-wrapper">
+      <div class="step done">
+        <div class="circle">1</div>
+        <p>Memilih Jenis Pasien</p>
+      </div>
+      <div class="step active">
+        <div class="circle">2</div>
+        <p>Mengisi Form<br>Pasien Lama</p>
+      </div>
+      <div class="step pending">
+        <div class="circle">3</div>
+        <p>Cetak Nomor<br>Antrian</p>
+      </div>
+    </div>
 
-          <!-- STEPPER -->
-          <div class="stepper">
-            <div class="step done">
-              <div class="step-circle">1</div>
-              <p>Memilih Jenis Pasien</p>
-            </div>
-            <div class="step-line"></div>
-            <div class="step active">
-              <div class="step-circle">2</div>
-              <p>Mengisi Form<br>Pasien Lama</p>
-            </div>
-            <div class="step-line"></div>
-            <div class="step">
-              <div class="step-circle">3</div>
-              <p>Cetak Nomor Antrian</p>
-            </div>
-          </div>
+    <form id="formPasienLama" onsubmit="return false;">
 
-          <!-- FORM -->
-          <h2 class="form-title">Pasien Lama</h2>
-
-          <form>
-            <div class="form-group">
-              <label>Nama Lengkap</label>
-              <input type="text" placeholder="" />
-            </div>
-            <div class="form-group">
-              <label>Nomor Induk Kependudukan (NIK)</label>
-              <input type="text" placeholder="" />
-            </div>
-            <div class="form-group">
-              <label>Nomor Rekam Medis</label>
-              <input type="text" placeholder="" />
-            </div>
-            <div class="form-group">
-            <select id="unit_id" name="unit_id" class="form-control pad-right" required>
-          <option value="" disabled selected hidden>Pilih Unit</option>
-          <option value="1" style="color: #333;">Poli Mata</option>
-          <option value="2" style="color: #333;">Poli Gigi</option>
-          <option value="3" style="color: #333;">Poli Penyakit Dalam</option>
-          <option value="6" style="color: #333;">Poli KIA (Ibu & Anak)</option>
-          <option value="7" style="color: #333;">Poli Anak</option>
-      </select>
-          </div>
-
-            <div class="form-action">
-           <button type="button" class="btn-kembali" onclick="window.location.href='pendaftaran_pasien.html'">Kembali</button>
-           <button type="button" class="btn-selanjutnya" onclick="window.location.href='cetak_antrian_lama.html'">Selanjutnya</button>
-            </div>
-          </form>
-
+      <div class="form-group">
+        <label>Nama Lengkap <span>*</span></label>
+        <div class="input-wrapper">
+          <img src="../../../assets/icons/nmalngkp.png" alt="Nama" class="icon-left" style="width:18px; height:18px; margin-left:4px;">
+          <input type="text" id="nama_lengkap" class="form-control pad-left" placeholder="Masukkan Nama Lengkap" required/>
         </div>
       </div>
 
-    </div>
+      <div class="form-group">
+        <label>Nomor Induk Kependudukan (NIK) <span>*</span></label>
+        <div class="input-wrapper">
+          <img src="../../../assets/icons/nmalngkp.png" alt="NIK" class="icon-left" style="width:18px; height:18px; margin-left:4px;">
+          <input type="text" id="nik" class="form-control pad-left" placeholder="Masukkan NIK" maxlength="16" required/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Nomor Rekam Medis <span>*</span></label>
+        <div class="input-wrapper">
+          <img src="../../../assets/icons/rekammedis.png" alt="RM" class="icon-left" style="width:18px; height:18px; margin-left:4px;">
+          <input type="text" id="nomor_rm" class="form-control pad-left" placeholder="Masukkan Nomor Rekam Medis" required/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Pilih Unit <span>*</span></label>
+        <div class="input-wrapper">
+          <select id="unit_id" name="unit_id" class="form-control pad-right" required>
+            <option value="" disabled selected hidden>Pilih Unit</option>
+            <option value="1" style="color:#333;">Poli Mata</option>
+            <option value="2" style="color:#333;">Poli Gigi</option>
+            <option value="3" style="color:#333;">Poli Penyakit Dalam</option>
+            <option value="6" style="color:#333;">Poli KIA (Ibu & Anak)</option>
+            <option value="7" style="color:#333;">Poli Anak</option>
+          </select>
+          <svg class="icon-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </div>
+
+      <div id="errorMsg" style="display:none;background:#fee2e2;border:1px solid #fca5a5;color:#b91c1c;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px;"></div>
+
+      <div class="action-buttons">
+        <button type="button" class="btn" onclick="window.location.href='../dashboard_pasien.html'">Kembali</button>
+        <button type="button" class="btn" id="btnSelanjutnya" onclick="submitPendaftaranLama()">Selanjutnya</button>
+      </div>
+
+    </form>
   </div>
 
-  <script src="../../js/main.js"></script>
+  <script>
+    // ── CONFIG API ──
+    // PASTIKAN TANYA KETUA BACKEND: "Endpoint untuk pendaftaran pasien lama URL-nya apa?"
+    const BASE_URL = 'http://localhost:8000/api/pendaftaran'; // <-- GANTI INI NANTI
+
+    function authHeaders() {
+      const token = localStorage.getItem('token') || '';
+      return {
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+      };
+    }
+
+    function showError(msg) {
+      const el = document.getElementById('errorMsg');
+      el.textContent = msg;
+      el.style.display = 'block';
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function hideError() {
+      document.getElementById('errorMsg').style.display = 'none';
+    }
+
+    async function submitPendaftaranLama() {
+      hideError();
+
+      // Ambil nilai field dari form pasien lama
+      const nama_lengkap = document.getElementById('nama_lengkap').value.trim();
+      const nik          = document.getElementById('nik').value.trim();
+      const nomor_rm     = document.getElementById('nomor_rm').value.trim();
+      const unit_id      = document.getElementById('unit_id').value;
+
+      // Validasi sederhana
+      if (!nama_lengkap || !nik || !nomor_rm || !unit_id) {
+        showError('Harap lengkapi semua field (Nama, NIK, No. RM, Unit) sebelum melanjutkan.');
+        return;
+      }
+
+      // Payload yang dikirim ke backend
+      const payload = {
+        nama_lengkap,
+        nik,
+        nomor_rm,
+        unit_id: parseInt(unit_id),
+      };
+
+      const btn = document.getElementById('btnSelanjutnya');
+      btn.disabled    = true;
+      btn.textContent = 'Memproses...';
+
+      try {
+        const res = await fetch(`${BASE_URL}`, {
+          method: 'POST',
+          headers: authHeaders(),
+          body: JSON.stringify(payload),
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          // Tampilkan error (Misal: NIK tidak ditemukan / Nomor RM salah)
+          const msg = data.message || data.error || `Terjadi kesalahan (HTTP ${res.status})`;
+          showError(msg);
+          return;
+        }
+
+        // Kalau berhasil, simpan data antriannya ke localStorage
+        if (data.data) {
+          localStorage.setItem('antrian_lama', JSON.stringify(data.data));
+        }
+
+        // Lanjut ke halaman cetak antrian pasien lama
+        window.location.href = '../../cetak_antrian_lama.html';
+
+      } catch (err) {
+        showError('Gagal terhubung ke server. Pastikan Backend sudah jalan.');
+      } finally {
+        btn.disabled    = false;
+        btn.textContent = 'Selanjutnya';
+      }
+    }
+  </script>
+
 </body>
 </html>

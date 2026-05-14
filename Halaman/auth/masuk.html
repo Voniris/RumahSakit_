@@ -16,10 +16,6 @@
       </div>
       <h1>Masuk</h1>
 
-        <div class="tab-switch">
-         <button class="tab active" onclick="switchTab('pasien')">Pasien</button>
-         <button class="tab" onclick="switchTab('petugas')">Petugas</button>
-        </div>
 
       <form id="formLogin">
         <div class="form-group">
@@ -81,17 +77,25 @@
             // 2. Ambil data role dari jawaban backend
             // Biasanya di Laravel: data.data.user.role 
             // Pastikan di database/backend isinya tulisan 'pasien' atau 'petugas'
-            const userRole = data.data.user.role; 
+            const userRole = data.data.user.role[0]; 
 
             alert("Login berhasil! Selamat datang, " + data.data.user.nama_lengkap);
 
             // 3. Alur lempar halaman (Redirect)
-            if (userRole === 'pasien') {
+            if (userRoles.includes('pasien')) {
+                // Diarahkan ke dashboard pasien
                 window.location.href = "../pasien/dashboard_pasien.html";
-            } else if (userRole === 'petugas') {
+            } else if (userRoles.includes('superadmin')) {
+                // Diarahkan ke dashboard super admin
+                window.location.href = "../super_admin/dashboard_superadmin.html";
+            } else if (userRoles.includes('admin_perawat') || userRoles.includes('petugas') || userRoles.includes('perawat')) {
+                // Role petugas dan admin_perawat diarahkan ke dashboard petugas
+                window.location.href = "../petugas/dashboard_petugas.html";
+            } else if (userRoles.includes('dokter')) {
+                // Tambahan untuk role dokter jika diperlukan
                 window.location.href = "../petugas/dashboard_petugas.html";
             } else {
-                alert("Peringatan: Role tidak dikenal (" + userRole + ")");
+                alert("Peringatan: Role tidak dikenal (" + userRoles.join(', ') + ")");
             }
 
         } else {

@@ -182,18 +182,25 @@
     #dropdown-icon { transition: transform 0.3s ease; }
     .rotate-icon { transform: rotate(180deg); }
 
-    /* Pilihan Pasien Baru & Lama (BALIK NORMAL, DORONG KE BAWAH) */
+    /* Pilihan Pasien Baru & Lama (DORONG KE BAWAH SUPER MULUS) */
     .dropdown-options {
-      display: none; 
+      display: flex; /* Jangan pakai none lagi */
       flex-direction: column;
       gap: 12px;
       width: 100%;
-      /* (Udah nggak pakai position: absolute lagi) */
+      
+      /* Trik Animasi Mulus */
+      max-height: 0; 
+      opacity: 0;
+      overflow: hidden; /* Sembunyikan elemen yang kelebihan */
+      margin-top: 0;
+      transition: max-height 0.4s ease, opacity 0.3s ease, margin-top 0.3s ease;
     }
 
     .dropdown-options.show {
-      display: flex;
-      animation: turunMulus 0.3s ease forwards;
+      max-height: 150px; /* Cukup untuk menampung tinggi 2 tombol */
+      opacity: 1;
+      margin-top: 12px; /* Jarak antara header dan tombol saat terbuka */
     }
 
     .btn-option {
@@ -225,5 +232,75 @@
     @keyframes turunMulus {
       from { opacity: 0; transform: translateY(-10px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+    /* =========================================
+       6. POPUP PROFILE SETTINGS
+       ========================================= */
+    .top-profile {
+        cursor: pointer; /* Ubah kursor jadi tangan biar keliatan bisa diklik */
+    }
+
+    .profile-popup {
+        display: none; /* Sembunyikan default */
+        position: absolute;
+        top: 60px; /* Jarak kotak dari foto profil */
+        right: 0;
+        background-color: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        padding: 20px;
+        width: 180px;
+        text-align: center;
+        z-index: 100;
+        border: 1px solid #f0f0f0;
+    }
+
+    /* Animasi muncul */
+    .profile-popup.show {
+        display: block;
+        animation: fadeInDown 0.3s ease;
+    }
+
+    .close-popup {
+        position: absolute;
+        top: 8px;
+        right: 15px;
+        font-size: 22px;
+        cursor: pointer;
+        color: #888;
+    }
+
+    .close-popup:hover { color: #333; }
+
+    .profile-popup .img-large {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        margin-bottom: 10px;
+        object-fit: cover;
+    }
+
+    .profile-popup h4 { margin: 0; font-size: 16px; color: #111; }
+    .profile-popup .popup-role { margin: 2px 0 15px 0; font-size: 12px; color: #888; }
+
+    .btn-logout {
+        background-color: #e53e3e;
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 8px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        width: 100%;
+    }
+
+    .btn-logout:hover { background-color: #c53030; }
+
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 

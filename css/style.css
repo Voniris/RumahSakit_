@@ -342,3 +342,14 @@ body {
   font-weight: 400;
   color: #888;
 }
+
+/* Styling Tombol Role */
+.role-switcher { display: flex; gap: 10px; margin-bottom: 20px; }
+.btn-role { flex: 1; padding: 10px 0; border-radius: 8px; border: 1px solid #005461; background: transparent; color: #005461; cursor: pointer; font-weight: 600; font-family: 'Poppins', sans-serif; transition: 0.3s; }
+.btn-role.active { background-color: #005461; color: white; }
+
+/* Styling Kode Verifikasi biar input dan tombolnya sejajar */
+.verify-wrapper { display: flex; gap: 10px; }
+.verify-wrapper input { flex: 1; }
+.btn-kirim { background-color: #005461; color: white; border: none; border-radius: 8px; padding: 0 15px; font-weight: 600; font-family: 'Poppins', sans-serif; font-size: 12px; cursor: pointer; white-space: nowrap; }
+.btn-kirim:hover { background-color: #003d47; }

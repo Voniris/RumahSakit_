@@ -41,14 +41,23 @@
     <main class="main-content">
       
       <!-- PROFIL POJOK KANAN ATAS -->
-      <div class="top-profile">
+      <div class="top-profile" onclick="toggleProfile()">
         <div class="info-user">
           <span class="role">Pasien</span>
           <span class="name">Nulla</span>
         </div>
         <img src="../../assets/images/my.jpg" alt="Profile">
-      </div>
 
+        <div class="profile-popup" id="profilePopup">
+            <span class="close-popup" onclick="toggleProfile(); event.stopPropagation();">&times;</span>
+            <img src="../../assets/images/my.jpg" class="img-large" alt="Profile">
+            <h4>Nulla</h4>
+            <p class="popup-role">Pasien</p>
+            <div class="popup-btns">
+                <button class="btn-logout" onclick="window.location.href='../auth/masuk.html'; event.stopPropagation();">Keluar</button>
+            </div>
+        </div>
+      </div>
       <!-- BARIS 1: STATISTIK -->
       <div class="stats-row">
         <!-- Card 1: Antrian -->
@@ -204,6 +213,21 @@
     }
 
     resetOtomatis();
+    // --- SCRIPT POPUP PROFILE ---
+    function toggleProfile() {
+      const popup = document.getElementById('profilePopup');
+      popup.classList.toggle('show');
+    }
+
+    // Biar kalau ngeklik di luar kotak profile, popup-nya otomatis nutup
+    window.addEventListener('click', function(event) {
+      if (!event.target.closest('.top-profile')) {
+        const popup = document.getElementById('profilePopup');
+        if (popup && popup.classList.contains('show')) {
+          popup.classList.remove('show');
+        }
+      }
+    });
   </script>
 </body>
 </html>

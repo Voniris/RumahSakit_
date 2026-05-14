@@ -41,12 +41,22 @@
     <main class="main-content">
       
       <!-- PROFIL -->
-      <div class="top-profile">
+      <div class="top-profile" onclick="toggleProfile()">
         <div class="info-user">
           <span class="role">Pasien</span>
-          <span class="name">Zahra Kaliape</span>
+          <span class="name">Nulla</span>
         </div>
-        <img src="https://i.pravatar.cc/100?img=5" alt="Profile">
+        <img src="../../assets/images/my.jpg" alt="Profile">
+
+        <div class="profile-popup" id="profilePopup">
+            <span class="close-popup" onclick="toggleProfile(); event.stopPropagation();">&times;</span>
+            <img src="../../assets/images/my.jpg" class="img-large" alt="Profile">
+            <h4>Nulla</h4>
+            <p class="popup-role">Pasien</p>
+            <div class="popup-btns">
+                <button class="btn-logout" onclick="window.location.href='../auth/masuk.html'; event.stopPropagation();">Keluar</button>
+            </div>
+        </div>
       </div>
 
       <h1 class="page-title">Pembuatan Tiket</h1>
@@ -78,7 +88,7 @@
                 <button class="btn-option" onclick="window.location.href='pasien_baru/form_pasien_baru.html'">
                   Pasien Baru
                 </button>
-                <button class="btn-option" onclick="window.location.href='/pasien_lama/form_pasien_lama.html'">
+                <button class="btn-option" onclick="window.location.href='pasien_lama/form_pasien_lama.html'">
                   Pasien Lama
                 </button>
               </div>
@@ -100,6 +110,21 @@
       menu.classList.toggle("show");
       icon.classList.toggle("rotate-icon");
     }
+     // --- SCRIPT POPUP PROFILE ---
+    function toggleProfile() {
+      const popup = document.getElementById('profilePopup');
+      popup.classList.toggle('show');
+    }
+
+    // Biar kalau ngeklik di luar kotak profile, popup-nya otomatis nutup
+    window.addEventListener('click', function(event) {
+      if (!event.target.closest('.top-profile')) {
+        const popup = document.getElementById('profilePopup');
+        if (popup && popup.classList.contains('show')) {
+          popup.classList.remove('show');
+        }
+      }
+    });
   </script>
 </body>
 </html>

@@ -6,91 +6,16 @@
     <title>Pendaftaran Petugas - RS Viamedika</title>
 
     <link rel="stylesheet" href="../../css/dashboard.css">
+    <link rel="stylesheet" href="../../css/panggilbypetugas.css">    
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <style>
-        /* =========================================
-           CSS KHUSUS HALAMAN PENDAFTARAN
-           ========================================= */
-        .form-card {
-            background: #FFFFFF;
-            padding: 30px 40px;
-            border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            flex: 1; /* Biar ngisi sisa ruang ke bawah */
-            margin-top: 20px; /* Jarak dari judul */
-        }
-
-        .form-title {
-            font-size: 16px; font-weight: 700; color: #111;
-            margin-top: 0; margin-bottom: 25px;
-            display: flex; align-items: center; gap: 10px;
-        }
-        
-        .form-title i { color: #0E6B63; font-size: 18px; } 
-
-        .form-grid {
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 35px 25px;
-        }
-
-        .input-group label {
-            display: block; font-size: 12px; font-weight: 600;
-            color: #555; margin-bottom: 8px;
-        }
-        
-        .input-group label span { color: #EF4444; } 
-
-        .input-wrapper { position: relative; display: flex; align-items: center; }
-
-        .input-wrapper i {
-            position: absolute; left: 15px; color: #9CA3AF; font-size: 14px;
-        }
-
-        .input-wrapper input, .input-wrapper select {
-            width: 100%;
-            padding: 16px 15px 16px 40px;
-            border: 1px solid #E5E7EB;
-            border-radius: 10px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 13px; 
-            color: #333;
-            box-sizing: border-box;
-            outline: none;
-            transition: 0.3s;
-            background-color: #fff;
-        }
-
-        .input-wrapper input.no-icon-left, .input-wrapper select.no-icon-left {
-            padding-left: 15px;
-        }
-
-        .input-wrapper input:focus, .input-wrapper select:focus {
-            border-color: #0E6B63; box-shadow: 0 0 0 3px rgba(14, 107, 99, 0.1);
-        }
-
-        .btn-submit {
-            width: 100%; 
-            margin-top: 50px; /* INI YANG DIGANTI: Jarak dari form diperlebar */
-            padding: 18px;    /* INI YANG DIGANTI: Tombolnya dibikin lebih montok */
-            background: linear-gradient(to right, #007F93, #005461); 
-            color: white;
-            border: none; border-radius: 10px;
-            font-size: 15px; font-weight: 600;
-            font-family: 'Poppins', sans-serif;
-            cursor: pointer; transition: 0.3s;
-        }
-
-        .btn-submit:hover { 
-          background: linear-gradient(to right, #005461, #007F93); 
-            box-shadow: 0 6px 15px rgba(0, 84, 97, 0.3);
-        }
-    </style>
 </head>
 <body>
+
+<!-- Toast Container -->
+<div id="toast-container"></div>
 
 <div class="dashboard-container">
     <aside class="sidebar-dashboard">
@@ -99,22 +24,20 @@
             <span>Rumah Sakit<br><small>Viamedika</small></span>
         </div>
         
-              <a href="dashboard_petugas.html" class="menu-item">
-        <img src="../../assets/icons/beranda.png" alt="Home" width="27">
-        <span>Dashboard</span>
-      </a>
+        <a href="dashboard_petugas.html" class="menu-item">
+            <img src="../../assets/icons/beranda.png" alt="Home" width="27">
+            <span>Dashboard</span>
+        </a>
 
-      <!-- Menu Pendaftaran (Mati) -->
-      <a href="antrianbypetugas.html" class="menu-item active">
-        <img src="../../assets/icons/pendaftaran.png" alt="Daftar" width="20">
-        <span>Pendaftaran</span>
-      </a>
+        <a href="antrianbypetugas.html" class="menu-item active">
+            <img src="../../assets/icons/pendaftaran.png" alt="Daftar" width="20">
+            <span>Pendaftaran</span>
+        </a>
 
-      <!-- Menu Lihat Antrian (Mati) -->
-      <a href="panggil_antrian.html" class="menu-item">
-        <img src="../../assets/icons/panggill.png" alt="Antrian" width="20">
-        <span>Lihat Antrian</span>
-      </a>
+        <a href="panggil_antrian.html" class="menu-item">
+            <img src="../../assets/icons/panggill.png" alt="Antrian" width="20">
+            <span>Lihat Antrian</span>
+        </a>
     </aside>
 
     <div class="main-content">
@@ -136,35 +59,39 @@
                 <i class="fa-regular fa-id-card"></i> Biodata Pasien
             </h2>
 
-            <form action="#">
+            <form id="formPendaftaran">
                 <div class="form-grid">
+                    <!-- NIK -->
                     <div class="input-group">
                         <label>Nomor Induk Kependudukan (NIK) <span>*</span></label>
                         <div class="input-wrapper">
-                            <i class="fa-regular fa-user"></i>
-                            <input type="text" placeholder="Masukkan NIK">
+                            <i class="fa-regular fa-id-card"></i>
+                            <input type="text" id="nik" name="nik" placeholder="Masukkan NIK" required>
                         </div>
                     </div>
 
+                    <!-- Nama Lengkap -->
                     <div class="input-group">
                         <label>Nama Lengkap <span>*</span></label>
                         <div class="input-wrapper">
                             <i class="fa-regular fa-user"></i>
-                            <input type="text" placeholder="Masukkan Nama Lengkap">
+                            <input type="text" id="nama_lengkap" name="nama_lengkap" placeholder="Masukkan Nama Lengkap" required>
                         </div>
                     </div>
 
+                    <!-- Tanggal Lahir -->
                     <div class="input-group">
                         <label>Tanggal Lahir <span>*</span></label>
                         <div class="input-wrapper">
-                            <input type="date" class="no-icon-left"> 
+                            <input type="date" id="tanggal_lahir" name="tanggal_lahir" class="no-icon-left" required>
                         </div>
                     </div>
 
+                    <!-- Jenis Kelamin -->
                     <div class="input-group">
                         <label>Jenis Kelamin <span>*</span></label>
                         <div class="input-wrapper">
-                            <select class="no-icon-left">
+                            <select id="jenis_kelamin" name="jenis_kelamin" class="no-icon-left" required>
                                 <option value="" disabled selected>Pilih Jenis Kelamin</option>
                                 <option value="L">Laki-laki</option>
                                 <option value="P">Perempuan</option>
@@ -172,41 +99,140 @@
                         </div>
                     </div>
 
+                    <!-- Alamat -->
                     <div class="input-group">
                         <label>Alamat <span>*</span></label>
                         <div class="input-wrapper">
                             <i class="fa-solid fa-location-dot"></i>
-                            <input type="text" placeholder="Masukkan Alamat Lengkap">
+                            <input type="text" id="alamat" name="alamat" placeholder="Masukkan Alamat Lengkap" required>
                         </div>
                     </div>
 
+                    <!-- No Telepon -->
                     <div class="input-group">
                         <label>Nomor Telepon / WhatsApp <span>*</span></label>
                         <div class="input-wrapper">
-                            <input type="text" placeholder="08xxxxxxxx" class="no-icon-left">
+                            <i class="fa-solid fa-phone"></i>
+                            <input type="text" id="no_telepon" name="no_telepon" placeholder="08xxxxxxxx" required>
                         </div>
                     </div>
                 </div>
 
+                <!-- Pilih Unit -->
                 <div class="input-group full-width" style="margin-top: 20px;">
                     <label>Pilih Unit <span>*</span></label>
                     <div class="input-wrapper">
                         <i class="fa-regular fa-building"></i>
-                        <select id="unit_id" name="unit_id" class="form-control pad-right" required>
+                        <select id="unit_id" name="unit_id" required>
                             <option value="" disabled selected hidden>Pilih Unit</option>
-                            <option value="1" style="color: #333;">Poli Mata</option>
-                            <option value="2" style="color: #333;">Poli Gigi</option>
-                            <option value="3" style="color: #333;">Poli Penyakit Dalam</option>
-                            <option value="6" style="color: #333;">Poli KIA (Ibu & Anak)</option>
-                            <option value="7" style="color: #333;">Poli Anak</option>
+                            <option value="1">Poli Mata</option>
+                            <option value="2">Poli Gigi</option>
+                            <option value="3">Poli Penyakit Dalam</option>
+                            <option value="6">Poli KIA (Ibu & Anak)</option>
+                            <option value="7">Poli Anak</option>
                         </select>
                     </div>
                 </div>
 
-                <button type="button" class="btn-submit" onclick="window.location.href='cetakbypetugas.html'">Buat Nomor Antrian</button>
-
+                <button type="submit" class="btn-submit" id="btnSubmit">
+                    <div class="spinner"></div>
+                    <span class="btn-text">
+                        <i class="fa-solid fa-ticket"></i>
+                        Buat Nomor Antrian
+                    </span>
+                </button>
             </form>
         </div>
 
-    </div> </div> </body>
+    </div>
+</div>
+
+<script>
+    const API_BASE = 'http://localhost:8000/api/pasien'; // Ganti dengan base URL API kamu
+
+    // Handle submit form
+    document.getElementById('formPendaftaran').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const btn = document.getElementById('btnSubmit');
+        btn.classList.add('loading');
+        btn.disabled = true;
+
+        // Kumpulkan data form
+        const payload = {
+            nik:           document.getElementById('nik').value.trim(),
+            nama_lengkap:  document.getElementById('nama_lengkap').value.trim(),
+            jenis_kelamin: document.getElementById('jenis_kelamin').value,
+            tanggal_lahir: document.getElementById('tanggal_lahir').value,
+            alamat:        document.getElementById('alamat').value.trim(),
+            no_telepon:    document.getElementById('no_telepon').value.trim(),
+        };
+
+        try {
+            const token = localStorage.getItem('token') || '';
+
+            const response = await fetch(`${API_BASE}/pasien`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token && { 'Authorization': `Bearer ${token}` }),
+                },
+                body: JSON.stringify(payload),
+            });
+
+            const data = await response.json();
+
+            if (response.ok || response.status === 201) {
+                showToast('success', 'Berhasil!', 'Pasien berhasil didaftarkan. Mengalihkan ke halaman cetak...');
+                
+                // Simpan data respons jika dibutuhkan halaman cetak
+                if (data) {
+                    sessionStorage.setItem('dataPasienBaru', JSON.stringify(data));
+                }
+
+                setTimeout(() => {
+                    window.location.href = 'cetakbypetugas.html';
+                }, 1800);
+            } else {
+                const pesan = data?.message || data?.error || 'Terjadi kesalahan pada server.';
+                showToast('error', 'Gagal!', pesan);
+                btn.classList.remove('loading');
+                btn.disabled = false;
+            }
+
+        } catch (err) {
+            console.error('Error:', err);
+            showToast('error', 'Koneksi Gagal', 'Tidak dapat menghubungi server. Periksa koneksi Anda.');
+            btn.classList.remove('loading');
+            btn.disabled = false;
+        }
+    });
+
+    // Fungsi tampilkan toast notifikasi
+    function showToast(type, title, desc) {
+        const container = document.getElementById('toast-container');
+        const icon = type === 'success'
+            ? '<i class="fa-solid fa-circle-check" style="color:#10B981;font-size:18px;"></i>'
+            : '<i class="fa-solid fa-circle-xmark" style="color:#EF4444;font-size:18px;"></i>';
+
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = `
+            ${icon}
+            <div class="toast-msg">
+                <div class="toast-title">${title}</div>
+                <div class="toast-desc">${desc}</div>
+            </div>
+        `;
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.transition = 'opacity 0.4s';
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 400);
+        }, 4000);
+    }
+</script>
+
+</body>
 </html>
