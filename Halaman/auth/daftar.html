@@ -14,10 +14,15 @@
                 <img src="../../assets/logo/Logors.png" alt="Logo" width="40" />
                 <span class="logo-name">Rumah Sakit<br><small>Viamedika</small></span>
             </div>
-            <h1>Daftar</h1>
+            <h1>Daftar Akun</h1>
+        
+            <div class="roles-toggle">
+                <button type="button" class="btn-roles active" id="btnPasien" onclick="setRoles('pasien')">Pasien</button>
+                <button type="button" class="btn-roles" id="btnPetugas" onclick="setRoles('petugas')">Petugas</button>
+            </div>
+            <input type="hidden" id="selectedroles" value="pasien" />
 
-
-                        <form id="formDaftar">
+            <form id="formDaftar">
                
                 <div class="form-group">
                     <label>Alamat Email</label>
@@ -66,105 +71,172 @@
 
     <script src="../../js/main.js"></script>
 
-    <script>
-        // ==========================================
-        // 1. LOGIKA TOMBOL "KIRIM KODE" (Tahap 1)
-        // ==========================================
-        document.querySelector('.btn-kirim').addEventListener('click', async function() {
-            const btnKirim = this;
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const passwordConfirm = document.getElementById('password_confirm').value;
+<script>
+    function setRoles(roles) {
+        document.getElementById('selectedroles').value = roles;
+        document.getElementById('btnPasien').classList.toggle('active', roles === 'pasien');
+        document.getElementById('btnPetugas').classList.toggle('active', roles === 'petugas');
+    }
 
-            if (!email || !password || !passwordConfirm) {
-                alert("Isi Email dan Kata Sandi dulu ya sebelum minta kode!");
-                return;
+    // Awalnya input password dikunci
+    let otpVerified = false;
+
+    function lockPasswordFields() {
+        document.getElementById('password').disabled = true;
+        document.getElementById('password_confirm').disabled = true;
+        document.getElementById('password').placeholder = "Verifikasi OTP dulu";
+        document.getElementById('password_confirm').placeholder = "Verifikasi OTP dulu";
+    }
+
+    function unlockPasswordFields() {
+        document.getElementById('password').disabled = false;
+        document.getElementById('password_confirm').disabled = false;
+        document.getElementById('password').placeholder = "Masukkan Kata Sandi";
+        document.getElementById('password_confirm').placeholder = "Konfirmasi Kata Sandi";
+    }
+
+    // Kunci password saat halaman pertama dibuka
+    window.addEventListener('DOMContentLoaded', () => lockPasswordFields());
+
+    // ==========================================
+    // KIRIM KODE OTP
+    // ==========================================
+    document.querySelector('.btn-kirim').addEventListener('click', async function() {
+        const btnKirim = this;
+        const email = document.getElementById('email').value;
+
+        if (!email) {
+            showAlert('warning', 'Email Kosong', 'Masukkan alamat email dulu ya!');
+            return;
+        }
+
+        // Reset OTP kalau kirim ulang
+        otpVerified = false;
+        lockPasswordFields();
+
+        btnKirim.innerText = "Mengirim...";
+        btnKirim.disabled = true;
+
+        try {
+            const response = await fetch('http://kelompok1-rs.test/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({ email: email })
+            });
+
+            const data = await response.json();
+
+            if (response.status === 201 || response.ok || data.success) {
+                showAlert('success', 'Kode Terkirim!', 'Kode OTP berhasil dikirim. Cek email kamu ya.');
+            } else {
+                showAlert('error', 'Gagal Mengirim Kode', data.message || 'Pastikan server sudah berjalan.');
             }
+        } catch (error) {
+            showAlert('error', 'Koneksi Gagal', 'Tidak dapat terhubung ke server.');
+        } finally {
+            btnKirim.innerText = "Kirim Kode";
+            btnKirim.disabled = false;
+        }
+    });
 
-            if (password !== passwordConfirm) {
-                alert("Kata Sandi dan Konfirmasi Kata Sandi tidak cocok!");
-                return;
+    // ==========================================
+    // VALIDASI OTP SAAT USER SELESAI KETIK
+    // ==========================================
+    document.getElementById('kode_verifikasi').addEventListener('blur', async function() {
+        const otp = this.value;
+        const email = document.getElementById('email').value;
+
+        if (!otp || !email) return;
+
+        try {
+            const response = await fetch('http://kelompok1-rs.test/api/auth/verify-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({ email: email, otp: otp })
+            });
+
+            const data = await response.json();
+
+            if (response.ok || data.success) {
+                otpVerified = true;
+                unlockPasswordFields();
+                showAlert('success', 'OTP Valid!', 'Kode benar. Silakan isi kata sandi.');
+            } else {
+                otpVerified = false;
+                lockPasswordFields();
+                showAlert('error', 'Kode Salah', data.message || 'Kode OTP salah atau sudah kadaluarsa.');
             }
+        } catch (error) {
+            // diam saja kalau gagal, biar user coba submit dulu
+        }
+    });
 
-            btnKirim.innerText = "Mengirim...";
-            btnKirim.disabled = true;
+    // ==========================================
+    // SUBMIT DAFTAR
+    // ==========================================
+    document.getElementById('formDaftar').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const btnSubmit = document.getElementById('btnSubmitDaftar');
 
-            // Kita cuma kirim Email & Password sesuai desain UI kamu
-            const payloadRegister = {
-                email: email,
-                password: password,
-                password_confirmation: passwordConfirm
-            };
+        if (!document.getElementById('email').value) {
+            showAlert('warning', 'Email Kosong', 'Masukkan alamat email dulu!');
+            return;
+        }
 
-            try {
-                const response = await fetch('http://localhost:8000/api/auth/register', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify(payloadRegister)
+        if (!document.getElementById('kode_verifikasi').value) {
+            showAlert('warning', 'Kode Kosong', 'Masukkan kode OTP yang dikirim ke emailmu!');
+            return;
+        }
+
+        if (!otpVerified) {
+            showAlert('warning', 'OTP Belum Diverifikasi', 'Masukkan kode OTP yang benar dulu ya!');
+            return;
+        }
+
+        if (!document.getElementById('agree').checked) {
+            showAlert('warning', 'Syarat & Ketentuan', 'Centang dulu syarat & ketentuannya!');
+            return;
+        }
+
+        const password = document.getElementById('password').value;
+        const passwordConfirm = document.getElementById('password_confirm').value;
+
+        if (password !== passwordConfirm) {
+            showAlert('warning', 'Kata Sandi Tidak Cocok', 'Kata Sandi dan Konfirmasi tidak cocok!');
+            return;
+        }
+
+        btnSubmit.innerText = "Memproses...";
+        btnSubmit.disabled = true;
+
+        try {
+            const response = await fetch('http://kelompok1-rs.test/api/auth/verify-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({
+                    email: document.getElementById('email').value,
+                    password: password,
+                    password_confirmation: passwordConfirm,
+                    otp: document.getElementById('kode_verifikasi').value
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.status === 200 || response.ok || data.success) {
+                showAlert('success', 'Pendaftaran Berhasil!', 'Akun kamu sudah aktif. Silakan masuk.', () => {
+                    window.location.href = 'masuk.html';
                 });
-                
-                const data = await response.json();
-
-                if(response.status === 201 || response.ok || data.success) {
-                    alert("Kode OTP berhasil dikirim! Cek email kamu.");
-                } else {
-                    // Kalau Backend protes minta NIK/Nama, error-nya bakal muncul di sini
-                    alert("Gagal kirim kode: " + (data.message || "Pastikan API sudah disesuaikan dengan desain form"));
-                }
-            } catch (error) {
-                alert("Error: Server Backend belum jalan atau link salah!");
-            } finally {
-                btnKirim.innerText = "Kirim Kode";
-                btnKirim.disabled = false;
+            } else {
+                showAlert('error', 'Pendaftaran Gagal', data.message || 'Terjadi kesalahan.');
             }
-        });
-
-
-        // ==========================================
-        // 2. LOGIKA TOMBOL "DAFTAR" (Tahap 2)
-        // ==========================================
-        document.getElementById('formDaftar').addEventListener('submit', async function(e) {
-            e.preventDefault(); 
-            const btnSubmit = document.getElementById('btnSubmitDaftar');
-            
-            if(!document.getElementById('agree').checked) return alert("Centang dulu syarat & ketentuannya ya!");
-            
-            const otp = document.getElementById('kode_verifikasi').value;
-            if(!otp) return alert("Masukkan kode verifikasi yang dikirim ke emailmu!");
-
-            btnSubmit.innerText = "Memproses...";
-            btnSubmit.disabled = true;
-
-            const payloadVerify = {
-                email: document.getElementById('email').value,
-                password: document.getElementById('password').value,
-                password_confirmation: document.getElementById('password_confirm').value, 
-                otp: otp
-            };
-
-            try {
-                const response = await fetch('http://localhost:8000/api/auth/verify-email', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify(payloadVerify)
-                });
-                
-                const data = await response.json();
-
-                if(response.status === 200 || response.ok || data.success) {
-                    alert("Pendaftaran Berhasil! Silakan masuk.");
-                    window.location.href = "masuk.html"; 
-                } else {
-                    alert("Pendaftaran Gagal: " + (data.message || "Kode OTP salah."));
-                }
-            } catch (error) {
-                alert("Error: Tidak dapat terhubung ke server.");
-            } finally {
-                btnSubmit.innerText = "Daftar";
-                btnSubmit.disabled = false;
-            }
-        });
-    </script>
+        } catch (error) {
+            showAlert('error', 'Koneksi Gagal', 'Tidak dapat terhubung ke server.');
+        } finally {
+            btnSubmit.innerText = "Daftar";
+            btnSubmit.disabled = false;
+        }
+    });
+</script>
 </body>
 </html>

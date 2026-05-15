@@ -16,7 +16,13 @@
       </div>
       <h1>Masuk</h1>
 
+        <!-- Tambahkan ini setelah <h1>Masuk</h1> -->
+      <div class="roles-toggle">
+          <button type="button" class="btn-roles active" id="btnPasien" onclick="setRoles('pasien')">Pasien</button>
+          <button type="button" class="btn-roles" id="btnPetugas" onclick="setRoles('petugas')">Petugas</button>
+      </div>
 
+      <input type="hidden" id="selectedRoles" value="pasien" />
       <form id="formLogin">
         <div class="form-group">
           <label>Alamat Email / NIK</label>
@@ -63,7 +69,7 @@
         };
 
         try {
-            const response = await fetch('http://localhost:8000/api/auth/login', {
+            const response = await fetch('http://kelompok1-rs.test/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                 body: JSON.stringify(payload)
@@ -77,7 +83,7 @@
             // 2. Ambil data role dari jawaban backend
             // Biasanya di Laravel: data.data.user.role 
             // Pastikan di database/backend isinya tulisan 'pasien' atau 'petugas'
-            const userRole = data.data.user.role[0]; 
+            const userRoles = data.data.user.roles[0]; 
 
             alert("Login berhasil! Selamat datang, " + data.data.user.nama_lengkap);
 
@@ -109,5 +115,17 @@
         }
     });
   </script>
+  <script>
+  // ✅ Taruh di LUAR form submit listener
+  function setRoles(roles) {
+    document.getElementById('selectedRoles').value = roles;
+    document.getElementById('btnPasien').classList.toggle('active', roles === 'pasien');
+    document.getElementById('btnPetugas').classList.toggle('active', roles === 'petugas');
+  }
+
+  document.getElementById('formLogin').addEventListener('submit', async function(e) {
+    // ... sisa kode login seperti biasa
+  });
+</script>
 </body>
 </html>

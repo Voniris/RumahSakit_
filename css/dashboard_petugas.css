@@ -16,7 +16,7 @@
         .header-area { margin-bottom: 0; }
         .header-area .welcome-text { font-size: 13px; color: #666; margin-bottom: 0; }
         .header-area .user-name { font-size: 24px; font-weight: 700; color: #111; margin: 0; line-height: 1.2; }
-        .header-area .user-role { font-size: 12px; color: #666; margin-top: 2px;}
+        .header-area .user-roles { font-size: 12px; color: #666; margin-top: 2px;}
 
         .top-profile {
       position: absolute;
@@ -29,7 +29,7 @@
     }
     .top-profile img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
     .info-user { display: flex; flex-direction: column; text-align: right; }
-    .info-user .role { font-size: 13px; font-weight: 700; color: #111; }
+    .info-user .roles { font-size: 13px; font-weight: 700; color: #111; }
     .info-user .name { font-size: 12px; color: #666; }
 
         /* --- POPUP MELAYANG --- */
@@ -78,7 +78,7 @@
     }
 
     .profile-popup h4 { margin: 0; font-size: 16px; color: #111; }
-    .profile-popup .popup-role { margin: 2px 0 15px 0; font-size: 12px; color: #888; }
+    .profile-popup .popup-roles { margin: 2px 0 15px 0; font-size: 12px; color: #888; }
 
     .btn-logout {
         background-color: #e53e3e;

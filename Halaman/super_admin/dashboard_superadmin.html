@@ -32,7 +32,7 @@
 <main class="main">
   <div class="top-profile">
     <div class="info-user">
-      <span class="role">Petugas</span>
+      <span class="roles">Petugas</span>
       <span class="name">Zanira Pahlevi</span>
     </div>
     <div class="avatar-circle">ZP</div>
@@ -42,7 +42,7 @@
     <div class="page-header">
       <div>
         <h1>Manajemen Pengguna</h1>
-        <p>Kelola akun pengguna dan berikan role sesuai jabatannya.</p>
+        <p>Kelola akun pengguna dan berikan roles sesuai jabatannya.</p>
       </div>
     </div>
 
@@ -76,9 +76,9 @@
             <line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/>
             <line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
           </svg>
-          <select id="roleFilter" onchange="filterTable()"
+          <select id="rolesFilter" onchange="filterTable()"
                   style="border:none;outline:none;font-family:inherit;font-size:13px;color:inherit;background:transparent;cursor:pointer;">
-            <option value="">Semua role</option>
+            <option value="">Semua roles</option>
             <option value="Dokter">Dokter</option>
             <option value="Perawat">Perawat</option>
             <option value="Apoteker">Apoteker</option>
@@ -127,7 +127,7 @@
             <th>No</th>
             <th>Nama Lengkap</th>
             <th>Email</th>
-            <th>Role</th>
+            <th>roles</th>
             <th>Status</th>
             <th>Aksi</th>
           </tr>
@@ -158,9 +158,9 @@
       <input type="email" id="formEmail" placeholder="email@vamedika.id"/>
     </div>
     <div class="form-group">
-      <label>Role</label>
-      <select id="formRole">
-        <option value="">-- Pilih Role --</option>
+      <label>roles</label>
+      <select id="formroles">
+        <option value="">-- Pilih roles --</option>
         <option>Dokter</option>
         <option>Perawat</option>
         <option>Apoteker</option>
@@ -199,7 +199,7 @@
   // ─────────────────────────────────────────────────────────────
   // CONFIG – ganti BASE_URL sesuai base URL backend Anda
   // ─────────────────────────────────────────────────────────────
-  const BASE_URL = 'http://localhost:8000/api/users'; // contoh: 'https://api.vamedika.id/api'
+  const BASE_URL = 'http://kelompok1-rs.test/api/users'; // contoh: 'https://api.vamedika.id/api'
 
   // Jika API butuh token, letakkan di sini
   // const TOKEN = localStorage.getItem('token') || '';
@@ -306,14 +306,14 @@
   }
 
   // ─────────────────────────────────────────────────────────────
-  // ROLE CONFIG
+  // roles CONFIG
   // ─────────────────────────────────────────────────────────────
-  const roleCfg = {
-    Dokter:   { cls:'role-dokter',   icon:'<path d="M12 2a1 1 0 0 1 1 1v8h8a1 1 0 0 1 0 2h-8v8a1 1 0 0 1-2 0v-8H3a1 1 0 0 1 0-2h8V3a1 1 0 0 1 1-1z"/>' },
-    Perawat:  { cls:'role-perawat',  icon:'<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>' },
-    Apoteker: { cls:'role-apoteker', icon:'<path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/>' },
-    Admin:    { cls:'role-admin',    icon:'<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>' },
-    Petugas:  { cls:'role-petugas',  icon:'<circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>' },
+  const rolesCfg = {
+    Dokter:   { cls:'roles-dokter',   icon:'<path d="M12 2a1 1 0 0 1 1 1v8h8a1 1 0 0 1 0 2h-8v8a1 1 0 0 1-2 0v-8H3a1 1 0 0 1 0-2h8V3a1 1 0 0 1 1-1z"/>' },
+    Perawat:  { cls:'roles-perawat',  icon:'<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>' },
+    Apoteker: { cls:'roles-apoteker', icon:'<path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/>' },
+    Admin:    { cls:'roles-admin',    icon:'<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>' },
+    Petugas:  { cls:'roles-petugas',  icon:'<circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>' },
   };
 
   function initials(name) {
@@ -326,15 +326,15 @@
   // ─────────────────────────────────────────────────────────────
   function getFiltered() {
     const q = (document.getElementById('searchInput').value || '').toLowerCase();
-    const r = document.getElementById('roleFilter').value;
+    const r = document.getElementById('rolesFilter').value;
 
     return allUsers.filter(u => {
-      // Sesuaikan key nama/email/role dengan response API Anda
+      // Sesuaikan key nama/email/roles dengan response API Anda
       const nama  = (u.nama  || u.name         || u.full_name || '').toLowerCase();
       const email = (u.email || u.email_address || '').toLowerCase();
-      const role  = (u.role  || u.jabatan       || u.position  || '');
-      const matchQ = !q || nama.includes(q) || email.includes(q) || role.toLowerCase().includes(q);
-      const matchR = !r || role === r;
+      const roles  = (u.roles  || u.jabatan       || u.position  || '');
+      const matchQ = !q || nama.includes(q) || email.includes(q) || roles.toLowerCase().includes(q);
+      const matchR = !r || roles === r;
       return matchQ && matchR;
     });
   }
@@ -353,11 +353,11 @@
       // Normalkan field dari API
       const nama   = u.nama   || u.name         || u.full_name || '-';
       const email  = u.email  || u.email_address || '-';
-      const role   = u.role   || u.jabatan       || u.position  || '-';
+      const roles   = u.roles   || u.jabatan       || u.position  || '-';
       const status = u.status || u.is_active === false ? 'Nonaktif' : (u.is_active === true ? 'Aktif' : (u.status || 'Aktif'));
       const id     = u.id     || u._id;
 
-      const cfg         = roleCfg[role] || {};
+      const cfg         = rolesCfg[roles] || {};
       const statusClass = status === 'Aktif' ? 'aktif' : 'nonaktif';
 
       return `
@@ -371,9 +371,9 @@
           </td>
           <td class="email">${email}</td>
           <td>
-            <span class="role-badge ${cfg.cls || ''}">
+            <span class="roles-badge ${cfg.cls || ''}">
               ${cfg.icon ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${cfg.icon}</svg>` : ''}
-              ${role}
+              ${roles}
             </span>
           </td>
           <td>
@@ -458,12 +458,12 @@
       const nama = u.nama || u.name || u.full_name || '';
       document.getElementById('formNama').value   = nama;
       document.getElementById('formEmail').value  = u.email || u.email_address || '';
-      document.getElementById('formRole').value   = u.role  || u.jabatan || u.position || '';
+      document.getElementById('formroles').value   = u.roles  || u.jabatan || u.position || '';
       document.getElementById('formStatus').value = u.status || (u.is_active === false ? 'Nonaktif' : 'Aktif');
     } else {
       document.getElementById('formNama').value   = '';
       document.getElementById('formEmail').value  = '';
-      document.getElementById('formRole').value   = '';
+      document.getElementById('formroles').value   = '';
       document.getElementById('formStatus').value = 'Aktif';
     }
     document.getElementById('modalOverlay').classList.add('show');
@@ -483,15 +483,15 @@
   async function saveUser() {
     const nama   = document.getElementById('formNama').value.trim();
     const email  = document.getElementById('formEmail').value.trim();
-    const role   = document.getElementById('formRole').value;
+    const roles   = document.getElementById('formroles').value;
     const status = document.getElementById('formStatus').value;
 
-    if (!nama || !email || !role) { alert('Harap lengkapi semua field.'); return; }
+    if (!nama || !email || !roles) { alert('Harap lengkapi semua field.'); return; }
 
     // Sesuaikan key payload dengan yang diharapkan API Anda
-    const payload = { nama, email, role, status };
+    const payload = { nama, email, roles, status };
     // Jika API Anda pakai key berbeda, ubah di sini, misal:
-    // const payload = { name: nama, email, role, is_active: status === 'Aktif' };
+    // const payload = { name: nama, email, roles, is_active: status === 'Aktif' };
 
     const btn = document.getElementById('btnSave');
     btn.disabled     = true;

@@ -97,7 +97,7 @@
     }
     .top-profile img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
     .info-user { display: flex; flex-direction: column; text-align: right; }
-    .info-user .role { font-size: 13px; font-weight: 700; color: #111; }
+    .info-user .roles { font-size: 13px; font-weight: 700; color: #111; }
     .info-user .name { font-size: 12px; color: #666; }
 
     /* =========================================
@@ -286,7 +286,7 @@
     }
 
     .profile-popup h4 { margin: 0; font-size: 16px; color: #111; }
-    .profile-popup .popup-role { margin: 2px 0 15px 0; font-size: 12px; color: #888; }
+    .profile-popup .popup-roles { margin: 2px 0 15px 0; font-size: 12px; color: #888; }
 
     .btn-logout {
         background-color: #e53e3e;

@@ -106,7 +106,7 @@
       flex-direction: column;
     }
 
-    .top-profile .info-user .role {
+    .top-profile .info-user .roles {
       font-size: 12px;
       font-weight: 700;
       color: #333;
@@ -187,7 +187,7 @@
     }
 
     .popup-name { color: #0E6B63; font-size: 18px; font-weight: 600; margin: 0; }
-    .popup-role { color: #0E6B63; font-size: 12px; font-weight: 500; margin-top: 2px; margin-bottom: 20px; }
+    .popup-roles { color: #0E6B63; font-size: 12px; font-weight: 500; margin-top: 2px; margin-bottom: 20px; }
     
     .popup-actions { display: flex; gap: 10px; }
     
