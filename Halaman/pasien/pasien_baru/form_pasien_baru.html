@@ -118,14 +118,22 @@
 
   <script>
     // ── CONFIG ──
-    const BASE_URL = 'http://kelompok1-rs.test/api'; // Ganti sesuai base URL backend, misal: 'https://api.vamedika.id/api'
+    const BASE_URL = 'http://kelompok1-rs.test/api/pendaftaran/online'; // Ganti sesuai base URL backend, misal: 'https://api.vamedika.id/api'
 
     function authHeaders() {
-      const token = localStorage.getItem('token') || '';
-      return {
+      // UBAH DISINI: Ganti 'token' menjadi 'rs_token' agar sesuai dengan halaman login
+      const token = localStorage.getItem('rs_token'); 
+      const headers = {
         'Content-Type': 'application/json',
-        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        'Accept': 'application/json'
       };
+    
+      if (token) {
+        const cleanToken = token.trim().replace(/^"|"$/g, '');
+        headers['Authorization'] = `Bearer ${cleanToken}`;
+      }
+    
+      return headers;
     }
 
     function showError(msg) {

@@ -38,7 +38,7 @@
         </div>
         <br>
         <div class="remember-row">
-            <label><input type="checkbox" id="remember_me" /> Ingatlah selama 30 hari</label>
+            <label><input type="checkbox" id="remember_me" /> Ingatlah selama 7 hari</label>
                 <a href="reset_password.html" style="margin-top: -50px;">Lupa Kata Sandi</a>
         </div>
         <br>
@@ -75,7 +75,6 @@
                 body: JSON.stringify(payload)
             });
             const data = await response.json();
-
         if(response.status === 200 || data.success) {
             // 1. Simpan token buat "tiket masuk"
             localStorage.setItem('rs_token', data.data.token);

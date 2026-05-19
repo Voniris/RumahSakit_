@@ -32,21 +32,23 @@
 
     <form id="formPasienLama" onsubmit="return false;">
 
-      <div class="form-group">
-        <label>Nama Lengkap <span>*</span></label>
-        <div class="input-wrapper">
-          <img src="../../../assets/icons/nmalngkp.png" alt="Nama" class="icon-left" style="width:18px; height:18px; margin-left:4px;">
-          <input type="text" id="nama_lengkap" class="form-control pad-left" placeholder="Masukkan Nama Lengkap" required/>
-        </div>
-      </div>
+      <!-- GANTI: form-group nama & nik di formPasienLama -->
 
-      <div class="form-group">
-        <label>Nomor Induk Kependudukan (NIK) <span>*</span></label>
-        <div class="input-wrapper">
-          <img src="../../../assets/icons/nmalngkp.png" alt="NIK" class="icon-left" style="width:18px; height:18px; margin-left:4px;">
-          <input type="text" id="nik" class="form-control pad-left" placeholder="Masukkan NIK" maxlength="16" required/>
+        <div class="form-group">
+          <label>Nomor Induk Kependudukan (NIK) <span>*</span></label>
+          <div class="input-wrapper">
+            <img src="../../../assets/icons/nmalngkp.png" alt="NIK" class="icon-left" style="width:18px; height:18px; margin-left:4px;">
+            <input type="text" id="nik" class="form-control pad-left" placeholder="Masukkan NIK" maxlength="16" required/>
+          </div>
         </div>
-      </div>
+
+        <div class="form-group">
+          <label>Nama Lengkap <span>*</span></label>
+          <div class="input-wrapper">
+            <img src="../../../assets/icons/nmalngkp.png" alt="Nama" class="icon-left" style="width:18px; height:18px; margin-left:4px;">
+            <input type="text" id="nama_lengkap" class="form-control pad-left" placeholder="Nama otomatis terisi" readonly/>
+          </div>
+        </div>
 
       <div class="form-group">
         <label>Nomor Rekam Medis <span>*</span></label>
@@ -86,7 +88,7 @@
   <script>
     // ── CONFIG API ──
     // PASTIKAN TANYA KETUA BACKEND: "Endpoint untuk pendaftaran pasien lama URL-nya apa?"
-    const BASE_URL = 'http://kelompok1-rs.test/api/pendaftaran'; // <-- GANTI INI NANTI
+    const BASE_URL = 'http://kelompok1-rs.test/api/pendaftaran/online'; // <-- GANTI INI NANTI
 
     function authHeaders() {
       const token = localStorage.getItem('token') || '';
@@ -107,6 +109,20 @@
       document.getElementById('errorMsg').style.display = 'none';
     }
 
+    // Auto-fill nama dari data pendaftaran pasien baru
+    window.addEventListener('DOMContentLoaded', () => {
+      const dataPendaftaran = localStorage.getItem('pendaftaran');
+      if (dataPendaftaran) {
+        const data = JSON.parse(dataPendaftaran);
+        if (data.nama_lengkap) {
+          document.getElementById('nama_lengkap').value = data.nama_lengkap;
+        }
+        if (data.nik) {
+          document.getElementById('nik').value = data.nik;
+        }
+      }
+    });
+    
     async function submitPendaftaranLama() {
       hideError();
 

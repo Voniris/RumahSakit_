@@ -78,25 +78,6 @@
         document.getElementById('btnPetugas').classList.toggle('active', roles === 'petugas');
     }
 
-    // Awalnya input password dikunci
-    let otpVerified = false;
-
-    function lockPasswordFields() {
-        document.getElementById('password').disabled = true;
-        document.getElementById('password_confirm').disabled = true;
-        document.getElementById('password').placeholder = "Verifikasi OTP dulu";
-        document.getElementById('password_confirm').placeholder = "Verifikasi OTP dulu";
-    }
-
-    function unlockPasswordFields() {
-        document.getElementById('password').disabled = false;
-        document.getElementById('password_confirm').disabled = false;
-        document.getElementById('password').placeholder = "Masukkan Kata Sandi";
-        document.getElementById('password_confirm').placeholder = "Konfirmasi Kata Sandi";
-    }
-
-    // Kunci password saat halaman pertama dibuka
-    window.addEventListener('DOMContentLoaded', () => lockPasswordFields());
 
     // ==========================================
     // KIRIM KODE OTP
@@ -140,38 +121,6 @@
     });
 
     // ==========================================
-    // VALIDASI OTP SAAT USER SELESAI KETIK
-    // ==========================================
-    document.getElementById('kode_verifikasi').addEventListener('blur', async function() {
-        const otp = this.value;
-        const email = document.getElementById('email').value;
-
-        if (!otp || !email) return;
-
-        try {
-            const response = await fetch('http://kelompok1-rs.test/api/auth/verify-otp', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                body: JSON.stringify({ email: email, otp: otp })
-            });
-
-            const data = await response.json();
-
-            if (response.ok || data.success) {
-                otpVerified = true;
-                unlockPasswordFields();
-                showAlert('success', 'OTP Valid!', 'Kode benar. Silakan isi kata sandi.');
-            } else {
-                otpVerified = false;
-                lockPasswordFields();
-                showAlert('error', 'Kode Salah', data.message || 'Kode OTP salah atau sudah kadaluarsa.');
-            }
-        } catch (error) {
-            // diam saja kalau gagal, biar user coba submit dulu
-        }
-    });
-
-    // ==========================================
     // SUBMIT DAFTAR
     // ==========================================
     document.getElementById('formDaftar').addEventListener('submit', async function(e) {
@@ -185,11 +134,6 @@
 
         if (!document.getElementById('kode_verifikasi').value) {
             showAlert('warning', 'Kode Kosong', 'Masukkan kode OTP yang dikirim ke emailmu!');
-            return;
-        }
-
-        if (!otpVerified) {
-            showAlert('warning', 'OTP Belum Diverifikasi', 'Masukkan kode OTP yang benar dulu ya!');
             return;
         }
 
