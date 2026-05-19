@@ -176,8 +176,8 @@
     }
 
     /* Di formpasien.css */
-.form-control[readonly] {
-  background-color: #e9ecef;
-  cursor: not-allowed;
-  color: #555;
-}
+    .form-control[readonly] {
+      background-color: #e9ecef;
+      cursor: not-allowed;
+      color: #555;
+    }

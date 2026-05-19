@@ -60,12 +60,7 @@
         <label>Pilih Unit <span>*</span></label>
         <div class="input-wrapper">
           <select id="unit_id" name="unit_id" class="form-control pad-right" required>
-            <option value="" disabled selected hidden>Pilih Unit</option>
-            <option value="1" style="color:#333;">Poli Mata</option>
-            <option value="2" style="color:#333;">Poli Gigi</option>
-            <option value="3" style="color:#333;">Poli Penyakit Dalam</option>
-            <option value="6" style="color:#333;">Poli KIA (Ibu & Anak)</option>
-            <option value="7" style="color:#333;">Poli Anak</option>
+            <option value="" disabled selected hidden>Memuat unit...</option>
           </select>
           <svg class="icon-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="6 9 12 15 18 9"></polyline>
@@ -84,24 +79,23 @@
   </div>
 
   <script>
-    const BASE_URL = 'http://kelompok1-rs.test/api/pendaftaran/online'; // Ganti sesuai base URL backend, misal: 'https://api.vamedika.id/api/pendaftaran/online'
+    const BASE_URL    = 'http://kelompok1-rs.test/api';
+    const UNITS_URL   = `${BASE_URL}/units`;
+    const DAFTAR_URL  = `${BASE_URL}/pendaftaran/online`;
+    const CEK_NIK_URL = (nik) => `${BASE_URL}/pasien/cek-nik/${nik}`;
 
-     function authHeaders() {
-      // UBAH DISINI: Ganti 'token' menjadi 'rs_token' agar sesuai dengan halaman login
-      const token = localStorage.getItem('rs_token'); 
+    function authHeaders() {
+      const token = localStorage.getItem('rs_token');
       const headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       };
-    
       if (token) {
         const cleanToken = token.trim().replace(/^"|"$/g, '');
         headers['Authorization'] = `Bearer ${cleanToken}`;
       }
-    
       return headers;
     }
-
 
     function showError(msg) {
       const el = document.getElementById('errorMsg');
@@ -114,26 +108,44 @@
       document.getElementById('errorMsg').style.display = 'none';
     }
 
+    // Fetch units dari API saat halaman load
+    async function loadUnits() {
+      const select = document.getElementById('unit_id');
+      try {
+        const res  = await fetch(UNITS_URL);
+        const json = await res.json();
+
+        select.innerHTML = '<option value="" disabled selected hidden>Pilih Unit</option>';
+        json.data.forEach(unit => {
+          const opt   = document.createElement('option');
+          opt.value   = unit.id;
+          opt.textContent = unit.nama_unit;
+          opt.style.color = '#333';
+          select.appendChild(opt);
+        });
+      } catch (err) {
+        select.innerHTML = '<option value="" disabled selected hidden>Gagal memuat unit</option>';
+        showError('Gagal memuat daftar unit. Periksa koneksi internet Anda.');
+      }
+    }
+
     // Auto-fill nama & nomor RM dari API saat NIK selesai diketik
     document.getElementById('nik').addEventListener('blur', async function () {
       const nik = this.value.trim();
 
-      // Reset field dulu
       document.getElementById('nama_lengkap').value = '';
-      document.getElementById('nomor_rm').value = '';
+      document.getElementById('nomor_rm').value     = '';
       hideError();
 
       if (nik.length !== 16) return;
 
       try {
-        const res = await fetch(`${BASE_URL}/pasien/cek-nik/${nik}`, {
-          headers: authHeaders()
-        });
+        const res  = await fetch(CEK_NIK_URL(nik), { headers: authHeaders() });
         const data = await res.json();
 
         if (data.terdaftar && data.data) {
           document.getElementById('nama_lengkap').value = data.data.nama_lengkap || '';
-          document.getElementById('nomor_rm').value     = data.data.nomor_rm || '';
+          document.getElementById('nomor_rm').value     = data.data.nomor_rm     || '';
         } else {
           showError('NIK tidak ditemukan. Pastikan Anda sudah terdaftar sebagai pasien lama.');
         }
@@ -167,7 +179,7 @@
       btn.textContent = 'Memproses...';
 
       try {
-        const res = await fetch(`${BASE_URL}/pendaftaran/online`, {
+        const res = await fetch(DAFTAR_URL, {
           method: 'POST',
           headers: authHeaders(),
           body: JSON.stringify(payload),
@@ -194,6 +206,9 @@
         btn.textContent = 'Selanjutnya';
       }
     }
+
+    // Jalankan saat halaman load
+    loadUnits();
   </script>
 
 </body>

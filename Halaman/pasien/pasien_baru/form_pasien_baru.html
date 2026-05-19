@@ -181,7 +181,7 @@
       btn.textContent = 'Memproses...';
 
       try {
-        const res = await fetch(`${BASE_URL}/pendaftaran/online`, {
+        const res = await fetch(`${BASE_URL}`, {
           method: 'POST',
           headers: authHeaders(),
           body: JSON.stringify(payload),
