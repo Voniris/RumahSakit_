@@ -118,7 +118,7 @@
 
   <script>
     // ── CONFIG ──
-    const BASE_URL = 'http://kelompok1-rs.test/api/pendaftaran/online'; // Ganti sesuai base URL backend, misal: 'https://api.vamedika.id/api'
+    const BASE_URL = 'http://kelompok1-rs.test/api/pendaftaran/online'; // Ganti sesuai base URL backend, misal: 'https://api.vamedika.id/api/pendaftaran/online'
 
     function authHeaders() {
       // UBAH DISINI: Ganti 'token' menjadi 'rs_token' agar sesuai dengan halaman login
@@ -181,7 +181,7 @@
       btn.textContent = 'Memproses...';
 
       try {
-        const res = await fetch(`${BASE_URL}/pendaftaran`, {
+        const res = await fetch(`${BASE_URL}/pendaftaran/online`, {
           method: 'POST',
           headers: authHeaders(),
           body: JSON.stringify(payload),

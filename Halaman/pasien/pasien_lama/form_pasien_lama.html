@@ -32,29 +32,27 @@
 
     <form id="formPasienLama" onsubmit="return false;">
 
-      <!-- GANTI: form-group nama & nik di formPasienLama -->
-
-        <div class="form-group">
-          <label>Nomor Induk Kependudukan (NIK) <span>*</span></label>
-          <div class="input-wrapper">
-            <img src="../../../assets/icons/nmalngkp.png" alt="NIK" class="icon-left" style="width:18px; height:18px; margin-left:4px;">
-            <input type="text" id="nik" class="form-control pad-left" placeholder="Masukkan NIK" maxlength="16" required/>
-          </div>
+      <div class="form-group">
+        <label>Nomor Induk Kependudukan (NIK) <span>*</span></label>
+        <div class="input-wrapper">
+          <img src="../../../assets/icons/nmalngkp.png" alt="NIK" class="icon-left" style="width:18px; height:18px; margin-left:4px;">
+          <input type="text" id="nik" class="form-control pad-left" placeholder="Masukkan NIK" maxlength="16" required/>
         </div>
+      </div>
 
-        <div class="form-group">
-          <label>Nama Lengkap <span>*</span></label>
-          <div class="input-wrapper">
-            <img src="../../../assets/icons/nmalngkp.png" alt="Nama" class="icon-left" style="width:18px; height:18px; margin-left:4px;">
-            <input type="text" id="nama_lengkap" class="form-control pad-left" placeholder="Nama otomatis terisi" readonly/>
-          </div>
+      <div class="form-group">
+        <label>Nama Lengkap <span>*</span></label>
+        <div class="input-wrapper">
+          <img src="../../../assets/icons/nmalngkp.png" alt="Nama" class="icon-left" style="width:18px; height:18px; margin-left:4px;">
+          <input type="text" id="nama_lengkap" class="form-control pad-left" placeholder="Otomatis terisi setelah NIK diisi" readonly/>
         </div>
+      </div>
 
       <div class="form-group">
         <label>Nomor Rekam Medis <span>*</span></label>
         <div class="input-wrapper">
           <img src="../../../assets/icons/rekammedis.png" alt="RM" class="icon-left" style="width:18px; height:18px; margin-left:4px;">
-          <input type="text" id="nomor_rm" class="form-control pad-left" placeholder="Masukkan Nomor Rekam Medis" required/>
+          <input type="text" id="nomor_rm" class="form-control pad-left" placeholder="Otomatis terisi setelah NIK diisi" readonly/>
         </div>
       </div>
 
@@ -86,17 +84,24 @@
   </div>
 
   <script>
-    // ── CONFIG API ──
-    // PASTIKAN TANYA KETUA BACKEND: "Endpoint untuk pendaftaran pasien lama URL-nya apa?"
-    const BASE_URL = 'http://kelompok1-rs.test/api/pendaftaran/online'; // <-- GANTI INI NANTI
+    const BASE_URL = 'http://kelompok1-rs.test/api/pendaftaran/online'; // Ganti sesuai base URL backend, misal: 'https://api.vamedika.id/api/pendaftaran/online'
 
-    function authHeaders() {
-      const token = localStorage.getItem('token') || '';
-      return {
+     function authHeaders() {
+      // UBAH DISINI: Ganti 'token' menjadi 'rs_token' agar sesuai dengan halaman login
+      const token = localStorage.getItem('rs_token'); 
+      const headers = {
         'Content-Type': 'application/json',
-        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        'Accept': 'application/json'
       };
+    
+      if (token) {
+        const cleanToken = token.trim().replace(/^"|"$/g, '');
+        headers['Authorization'] = `Bearer ${cleanToken}`;
+      }
+    
+      return headers;
     }
+
 
     function showError(msg) {
       const el = document.getElementById('errorMsg');
@@ -109,39 +114,50 @@
       document.getElementById('errorMsg').style.display = 'none';
     }
 
-    // Auto-fill nama dari data pendaftaran pasien baru
-    window.addEventListener('DOMContentLoaded', () => {
-      const dataPendaftaran = localStorage.getItem('pendaftaran');
-      if (dataPendaftaran) {
-        const data = JSON.parse(dataPendaftaran);
-        if (data.nama_lengkap) {
-          document.getElementById('nama_lengkap').value = data.nama_lengkap;
+    // Auto-fill nama & nomor RM dari API saat NIK selesai diketik
+    document.getElementById('nik').addEventListener('blur', async function () {
+      const nik = this.value.trim();
+
+      // Reset field dulu
+      document.getElementById('nama_lengkap').value = '';
+      document.getElementById('nomor_rm').value = '';
+      hideError();
+
+      if (nik.length !== 16) return;
+
+      try {
+        const res = await fetch(`${BASE_URL}/pasien/cek-nik/${nik}`, {
+          headers: authHeaders()
+        });
+        const data = await res.json();
+
+        if (data.terdaftar && data.data) {
+          document.getElementById('nama_lengkap').value = data.data.nama_lengkap || '';
+          document.getElementById('nomor_rm').value     = data.data.nomor_rm || '';
+        } else {
+          showError('NIK tidak ditemukan. Pastikan Anda sudah terdaftar sebagai pasien lama.');
         }
-        if (data.nik) {
-          document.getElementById('nik').value = data.nik;
-        }
+      } catch (err) {
+        showError('Gagal mengecek NIK. Periksa koneksi internet Anda.');
       }
     });
-    
+
     async function submitPendaftaranLama() {
       hideError();
 
-      // Ambil nilai field dari form pasien lama
       const nama_lengkap = document.getElementById('nama_lengkap').value.trim();
       const nik          = document.getElementById('nik').value.trim();
       const nomor_rm     = document.getElementById('nomor_rm').value.trim();
       const unit_id      = document.getElementById('unit_id').value;
 
-      // Validasi sederhana
       if (!nama_lengkap || !nik || !nomor_rm || !unit_id) {
         showError('Harap lengkapi semua field (Nama, NIK, No. RM, Unit) sebelum melanjutkan.');
         return;
       }
 
-      // Payload yang dikirim ke backend
       const payload = {
-        nama_lengkap,
         nik,
+        nama_lengkap,
         nomor_rm,
         unit_id: parseInt(unit_id),
       };
@@ -151,7 +167,7 @@
       btn.textContent = 'Memproses...';
 
       try {
-        const res = await fetch(`${BASE_URL}`, {
+        const res = await fetch(`${BASE_URL}/pendaftaran/online`, {
           method: 'POST',
           headers: authHeaders(),
           body: JSON.stringify(payload),
@@ -160,18 +176,15 @@
         const data = await res.json().catch(() => ({}));
 
         if (!res.ok) {
-          // Tampilkan error (Misal: NIK tidak ditemukan / Nomor RM salah)
           const msg = data.message || data.error || `Terjadi kesalahan (HTTP ${res.status})`;
           showError(msg);
           return;
         }
 
-        // Kalau berhasil, simpan data antriannya ke localStorage
         if (data.data) {
           localStorage.setItem('antrian_lama', JSON.stringify(data.data));
         }
 
-        // Lanjut ke halaman cetak antrian pasien lama
         window.location.href = '../../cetak_antrian_lama.html';
 
       } catch (err) {
