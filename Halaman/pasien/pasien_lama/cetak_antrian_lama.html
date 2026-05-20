@@ -5,11 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Cetak Nomor Antrian - Rumah Sakit Viamedika</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- LIBRARY UNTUK SIMPAN PNG -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <link rel="stylesheet" href="../../../css/cetakkartulama.css" />
-
 </head>
 <body>
 
@@ -26,13 +23,11 @@
       <span>Memilih Jenis Pasien</span>
     </div>
     <div class="step-line"></div>
-    
     <div class="step light">
       <div class="step-circle">2</div>
       <span>Mengisi Form<br>Pasien Lama</span>
     </div>
     <div class="step-line"></div>
-    
     <div class="step dark">
       <div class="step-circle">3</div>
       <span>Cetak Nomor Antrian</span>
@@ -44,21 +39,20 @@
     
     <!-- Kotak Tiket -->
     <div class="ticket-card" id="areaTiketLama">
-    <p class="tc-title">Nomor Antrian</p>
-    <h1 class="tc-number">A-001</h1>
-    
-    <p class="tc-title">Jadwal Antrian</p>
-    <p class="tc-grey">Senin, 27 April 2026<br>Pukul 10.00</p>
-    
-    <p class="tc-title" id="teksUnitLama">Unit APA</p>
-    <p class="tc-title" style="margin-top: 5px;" id="teksSisaAntrianLama">Ada 10 Antrian Didepan</p>
-    <p class="tc-grey" style="margin-top: 4px;" id="teksEstimasiLama">Estimasi Dipanggil: --:--</p>  <!-- ← tambah ini -->
-    <p class="tc-title" style="margin-top: 15px;">-Terima Kasih-</p>
+      <p class="tc-title">Nomor Antrian</p>
+      <h1 class="tc-number" id="teksNomorAntrianLama">A-001</h1>
+      
+      <p class="tc-title">Jadwal Antrian</p>
+      <p class="tc-grey" id="teksJadwalLama">Senin, 27 April 2026<br>Pukul 10.00</p>
+      
+      <p class="tc-title" id="teksUnitLama">Unit</p>
+      <p class="tc-title" style="margin-top: 5px;" id="teksSisaAntrianLama">Ada 0 Antrian Didepan</p>
+      <p class="tc-grey" style="margin-top: 4px;" id="teksEstimasiLama">Estimasi Dipanggil: --:--</p>
+      <p class="tc-title" style="margin-top: 15px;">-Terima Kasih-</p>
     </div>
 
     <!-- Tombol Aksi -->
     <div class="action-buttons">
-      <!-- MANGGIL FUNGSI SIMPAN PNG -->
       <button type="button" class="btn-cetak" onclick="simpanKePNGLama()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="6 9 6 2 18 2 18 9"></polyline>
@@ -68,7 +62,7 @@
         Cetak Nomor Antrian
       </button>
       
-      <button type="button" class="btn-kembali" onclick="window.location.href='dashboard_pasien.html'">
+      <button type="button" class="btn-kembali" onclick="window.location.href='../dashboard_pasien.html'">
         Kembali Ke Halaman Utama
       </button>
     </div>
@@ -84,38 +78,71 @@
   </div>
 
   <script>
-    // FUNGSI 1: Ambil Nama Poli dari halaman sebelumnya
-   document.addEventListener("DOMContentLoaded", function() {
-  const dataAntrian = JSON.parse(localStorage.getItem("antrian_lama"));
+    document.addEventListener("DOMContentLoaded", function() {
+      // Ambil data dari localStorage yang disimpan di form pasien lama
+      const dataAntrian = JSON.parse(localStorage.getItem("antrian_lama"));
 
-  if (dataAntrian) {
-    const tiket = dataAntrian.tiket;
+      if (dataAntrian) {
+        const tiket = dataAntrian.tiket;
 
-    // Nomor Antrian
-    document.querySelector(".tc-number").innerText = tiket.kode_antrian ?? "A-001";
+        // Nomor Antrian
+        document.getElementById("teksNomorAntrianLama").innerText = tiket.kode_antrian ?? "A-001";
 
-    // Nama Unit
-    document.getElementById("teksUnitLama").innerText = tiket.unit ?? "Unit";
+        // Nama Unit
+        document.getElementById("teksUnitLama").innerText = tiket.unit ?? "Unit";
 
-    // Antrian di depan
-    document.getElementById("teksSisaAntrianLama").innerText = `Ada ${tiket.antrian_di_depan ?? 0} Antrian Didepan`;
+        // Antrian di depan
+        document.getElementById("teksSisaAntrianLama").innerText =
+          `Ada ${tiket.antrian_di_depan ?? 0} Antrian Didepan`;
 
-    // Estimasi dari backend
-    const elEst = document.getElementById("teksEstimasiLama");
-    if (elEst) {
-      elEst.innerText = `Estimasi Dipanggil: ${tiket.estimasi?.perkiraan_jam ?? "--:--"}`;
+        // Estimasi dari backend
+        document.getElementById("teksEstimasiLama").innerText =
+          `Estimasi Dipanggil: ${tiket.estimasi?.perkiraan_jam ?? "--:--"}`;
+
+        // Tanggal (T00:00:00 biar tidak timezone offset)
+        const tgl = tiket.tanggal ? new Date(tiket.tanggal + "T00:00:00") : new Date();
+        const namaHari  = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+        const namaBulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli',
+                           'Agustus','September','Oktober','November','Desember'];
+
+        document.getElementById("teksJadwalLama").innerHTML =
+          `${namaHari[tgl.getDay()]}, ${tgl.getDate()} ${namaBulan[tgl.getMonth()]} ${tgl.getFullYear()}<br>Estimasi Pukul ${tiket.estimasi?.perkiraan_jam ?? "--:--"}`;
+      }
+    });
+
+    // Simpan Tiket Jadi PNG
+    function simpanKePNGLama() {
+      const element = document.getElementById("areaTiketLama");
+      
+      const wrapper = document.createElement("div");
+      wrapper.style.padding = "20px";
+      wrapper.style.backgroundColor = "white";
+      wrapper.style.display = "flex";
+      wrapper.style.flexDirection = "column";
+      wrapper.style.alignItems = "center";
+      
+      const judul = document.createElement("h2");
+      judul.innerText = "Tiket Antrian";
+      judul.style.color = "#005461";
+      judul.style.fontFamily = "'Poppins', sans-serif";
+      judul.style.marginTop = "0";
+      judul.style.marginBottom = "20px";
+      
+      wrapper.appendChild(judul);
+      wrapper.appendChild(element.cloneNode(true));
+      document.body.appendChild(wrapper);
+
+      html2canvas(wrapper, {
+        backgroundColor: "#ffffff",
+        scale: 2
+      }).then(canvas => {
+        const link = document.createElement("a");
+        link.download = "Antrian-Lama-Viamedika.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+        document.body.removeChild(wrapper);
+      });
     }
-
-    // Waktu daftar dari field tanggal backend
-    const tgl = tiket.tanggal ? new Date(tiket.tanggal) : new Date();
-    const namaHari  = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-    const namaBulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-
-    document.querySelector(".tc-grey").innerHTML =
-      `${namaHari[tgl.getDay()]}, ${tgl.getDate()} ${namaBulan[tgl.getMonth()]} ${tgl.getFullYear()}<br>Estimasi Pukul ${tiket.estimasi?.perkiraan_jam ?? "--:--"}`;
-  }
-});
-
   </script>
 </body>
 </html>
