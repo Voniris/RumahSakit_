@@ -49,64 +49,34 @@
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-  // ==========================================
-  // 1. AMBIL DATA API DARI FORM SEBELUMNYA
-  // ==========================================
+   document.addEventListener("DOMContentLoaded", function() {
   const dataAntrian = JSON.parse(localStorage.getItem("pendaftaran"));
 
   if (dataAntrian) {
     const tiket = dataAntrian.tiket;
 
     // Nomor Antrian
-    if (tiket?.kode_antrian) {
-      document.getElementById("teksNomorAntrian").innerText = tiket.kode_antrian;
-    }
+    document.getElementById("teksNomorAntrian").innerText = tiket.kode_antrian ?? "A-001";
 
     // Nama Unit
-    if (tiket?.unit) {
-      document.getElementById("teksUnit").innerText = tiket.unit;
-    }
+    document.getElementById("teksUnit").innerText = tiket.unit ?? "Unit";
 
     // Antrian di depan
-    const antrianDiDepan = tiket?.antrian_di_depan ?? 0;
-    document.getElementById("teksSisaAntrian").innerText = `Ada ${antrianDiDepan} Antrian Didepan`;
+    document.getElementById("teksSisaAntrian").innerText = `Ada ${tiket.antrian_di_depan ?? 0} Antrian Didepan`;
 
-    // ==========================================
-    // 2. WAKTU DAFTAR DARI created_at
-    // ==========================================
-    const createdAt = dataAntrian.tiket?.created_at
-      ? new Date(dataAntrian.tiket.created_at)
-      : new Date(); // fallback ke sekarang kalau tidak ada
-
-    const namaHari   = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-    const namaBulan  = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-
-    const hari    = namaHari[createdAt.getDay()];
-    const tanggal = createdAt.getDate();
-    const bulan   = namaBulan[createdAt.getMonth()];
-    const tahun   = createdAt.getFullYear();
-    const jam     = String(createdAt.getHours()).padStart(2, '0');
-    const menit   = String(createdAt.getMinutes()).padStart(2, '0');
-
-    document.getElementById("teksJadwal").innerHTML =
-      `${hari}, ${tanggal} ${bulan} ${tahun}<br>Pukul ${jam}.${menit}`;
-
-    // ==========================================
-    // 3. ESTIMASI WAKTU = antrian_di_depan x 5 menit
-    // ==========================================
-    const estimasiMenit = antrianDiDepan * 5;
-    const waktuEstimasi = new Date(createdAt.getTime() + estimasiMenit * 60000);
-
-    const jamEst   = String(waktuEstimasi.getHours()).padStart(2, '0');
-    const menitEst = String(waktuEstimasi.getMinutes()).padStart(2, '0');
-
-    // Tampilkan estimasi di bawah sisa antrian
-    // Pastikan ada elemen <p id="teksEstimasi"> di HTML-mu
+    // Estimasi dipanggil dari backend
     const elEst = document.getElementById("teksEstimasi");
     if (elEst) {
-      elEst.innerText = `Estimasi Dipanggil: ${jamEst}.${menitEst}`;
+      elEst.innerText = `Estimasi Dipanggil: ${tiket.estimasi?.perkiraan_jam ?? "--:--"}`;
     }
+
+    // Waktu daftar dari field tanggal backend
+    const tgl = tiket.tanggal ? new Date(tiket.tanggal) : new Date();
+    const namaHari  = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+    const namaBulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+
+    document.getElementById("teksJadwal").innerHTML =
+      `${namaHari[tgl.getDay()]}, ${tgl.getDate()} ${namaBulan[tgl.getMonth()]} ${tgl.getFullYear()}<br>Estimasi Pukul ${tiket.estimasi?.perkiraan_jam ?? "--:--"}`;
   }
 });
   </script>
