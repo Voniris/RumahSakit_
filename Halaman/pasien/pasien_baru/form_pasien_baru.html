@@ -88,16 +88,11 @@
         </div>
       </div>
 
-      <div class="form-group">
+            <div class="form-group">
         <label>Pilih Unit</label>
         <div class="input-wrapper">
           <select id="unit_id" name="unit_id" class="form-control pad-right" required>
-            <option value="" disabled selected hidden>Pilih Unit</option>
-            <option value="1" style="color:#333;">Poli Mata</option>
-            <option value="2" style="color:#333;">Poli Gigi</option>
-            <option value="3" style="color:#333;">Poli Penyakit Dalam</option>
-            <option value="6" style="color:#333;">Poli KIA (Ibu & Anak)</option>
-            <option value="7" style="color:#333;">Poli Anak</option>
+            <option value="" disabled selected hidden>Memuat unit...</option>
           </select>
           <svg class="icon-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="6 9 12 15 18 9"></polyline>
@@ -116,103 +111,118 @@
     </form>
   </div>
 
-  <script>
-    // ── CONFIG ──
-    const BASE_URL = 'http://kelompok1-rs.test/api/pendaftaran/online'; // Ganti sesuai base URL backend, misal: 'https://api.vamedika.id/api/pendaftaran/online'
+ <script>
+  // ── CONFIG ──
+  const BASE_URL  = 'http://kelompok1-rs.test/api/pendaftaran/online';
+  const UNITS_URL = 'http://kelompok1-rs.test/api/units';
 
-    function authHeaders() {
-      // UBAH DISINI: Ganti 'token' menjadi 'rs_token' agar sesuai dengan halaman login
-      const token = localStorage.getItem('rs_token'); 
-      const headers = {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      };
-    
-      if (token) {
-        const cleanToken = token.trim().replace(/^"|"$/g, '');
-        headers['Authorization'] = `Bearer ${cleanToken}`;
-      }
-    
-      return headers;
+  function authHeaders() {
+    const token = localStorage.getItem('rs_token'); 
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    };
+    if (token) {
+      const cleanToken = token.trim().replace(/^"|"$/g, '');
+      headers['Authorization'] = `Bearer ${cleanToken}`;
+    }
+    return headers;
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('errorMsg');
+    el.textContent = msg;
+    el.style.display = 'block';
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function hideError() {
+    document.getElementById('errorMsg').style.display = 'none';
+  }
+
+  // ── LOAD UNITS DARI API ──
+  async function loadUnits() {
+    const select = document.getElementById('unit_id');
+    try {
+      const res  = await fetch(UNITS_URL);
+      const json = await res.json();
+
+      select.innerHTML = '<option value="" disabled selected hidden>Pilih Unit</option>';
+      json.data.forEach(unit => {
+        const opt = document.createElement('option');
+        opt.value = unit.id;
+        opt.textContent = unit.nama_unit;
+        opt.style.color = '#333';
+        select.appendChild(opt);
+      });
+    } catch (err) {
+      select.innerHTML = '<option value="" disabled selected hidden>Gagal memuat unit</option>';
+      showError('Gagal memuat daftar unit. Periksa koneksi internet Anda.');
+    }
+  }
+
+  async function submitPendaftaran() {
+    hideError();
+
+    const nik           = document.getElementById('nik').value.trim();
+    const nama_lengkap  = document.getElementById('nama_lengkap').value.trim();
+    const tanggal_lahir = document.getElementById('tanggal_lahir').value;
+    const alamat        = document.getElementById('alamat').value.trim();
+    const jenis_kelamin = document.getElementById('jenis_kelamin').value;
+    const no_telepon    = document.getElementById('no_telepon').value.trim();
+    const unit_id       = document.getElementById('unit_id').value;
+
+    if (!nik || !nama_lengkap || !tanggal_lahir || !alamat || !jenis_kelamin || !no_telepon || !unit_id) {
+      showError('Harap lengkapi semua field sebelum melanjutkan.');
+      return;
     }
 
-    function showError(msg) {
-      const el = document.getElementById('errorMsg');
-      el.textContent = msg;
-      el.style.display = 'block';
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
+    const payload = {
+      nik,
+      nama_lengkap,
+      tanggal_lahir,
+      alamat,
+      jenis_kelamin,
+      no_telepon,
+      unit_id: parseInt(unit_id),
+    };
 
-    function hideError() {
-      document.getElementById('errorMsg').style.display = 'none';
-    }
+    const btn = document.getElementById('btnSelanjutnya');
+    btn.disabled    = true;
+    btn.textContent = 'Memproses...';
 
-    async function submitPendaftaran() {
-      hideError();
+    try {
+      const res = await fetch(`${BASE_URL}`, {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify(payload),
+      });
 
-      // Ambil nilai field
-      const nik           = document.getElementById('nik').value.trim();
-      const nama_lengkap  = document.getElementById('nama_lengkap').value.trim();
-      const tanggal_lahir = document.getElementById('tanggal_lahir').value;
-      const alamat        = document.getElementById('alamat').value.trim();
-      const jenis_kelamin = document.getElementById('jenis_kelamin').value;
-      const no_telepon    = document.getElementById('no_telepon').value.trim();
-      const unit_id       = document.getElementById('unit_id').value;
+      const data = await res.json().catch(() => ({}));
 
-      // Validasi sederhana
-      if (!nik || !nama_lengkap || !tanggal_lahir || !alamat || !jenis_kelamin || !no_telepon || !unit_id) {
-        showError('Harap lengkapi semua field sebelum melanjutkan.');
+      if (!res.ok) {
+        const msg = data.message || data.error || `Terjadi kesalahan (HTTP ${res.status})`;
+        showError(msg);
         return;
       }
 
-      // Payload — sesuaikan key dengan yang diharapkan API
-      const payload = {
-        nik,
-        nama_lengkap,
-        tanggal_lahir,
-        alamat,
-        jenis_kelamin,
-        no_telepon,
-        unit_id: parseInt(unit_id),
-      };
-
-      const btn = document.getElementById('btnSelanjutnya');
-      btn.disabled    = true;
-      btn.textContent = 'Memproses...';
-
-      try {
-        const res = await fetch(`${BASE_URL}`, {
-          method: 'POST',
-          headers: authHeaders(),
-          body: JSON.stringify(payload),
-        });
-
-        const data = await res.json().catch(() => ({}));
-
-        if (!res.ok) {
-          // Tampilkan pesan error dari server jika ada
-          const msg = data.message || data.error || `Terjadi kesalahan (HTTP ${res.status})`;
-          showError(msg);
-          return;
-        }
-
-        // Simpan data response jika dibutuhkan di halaman berikutnya
-        // Misal: no_rm atau id pendaftaran
-        if (data.data) {
-          localStorage.setItem('pendaftaran', JSON.stringify(data.data));
-        }
-
-        // Lanjut ke halaman berikutnya
-        window.location.href = 'pengambilan_rm.html';
-
-      } catch (err) {
-        showError('Gagal terhubung ke server. Periksa koneksi internet Anda.');
-      } finally {
-        btn.disabled    = false;
-        btn.textContent = 'Selanjutnya';
+      if (data.data) {
+        localStorage.setItem('pendaftaran', JSON.stringify(data.data));
       }
+
+      window.location.href = 'pengambilan_rm.html';
+
+    } catch (err) {
+      showError('Gagal terhubung ke server. Periksa koneksi internet Anda.');
+    } finally {
+      btn.disabled    = false;
+      btn.textContent = 'Selanjutnya';
     }
-  </script>
+  }
+
+  // ── JALANKAN SAAT HALAMAN LOAD ──
+  loadUnits();
+</script>
 
 </body>
 </html>

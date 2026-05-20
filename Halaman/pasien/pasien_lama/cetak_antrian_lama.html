@@ -44,15 +44,16 @@
     
     <!-- Kotak Tiket -->
     <div class="ticket-card" id="areaTiketLama">
-      <p class="tc-title">Nomor Antrian</p>
-      <h1 class="tc-number">A-001</h1>
-      
-      <p class="tc-title">Jadwal Antrian</p>
-      <p class="tc-grey">Senin, 27 April 2026<br>Pukul 10.00</p>
-      
-      <p class="tc-title" id="teksUnitLama">Unit APA</p>
-      <p class="tc-title" style="margin-top: 5px;">Ada 10 Antrian Didepan</p>
-      <p class="tc-title" style="margin-top: 15px;">-Terima Kasih-</p>
+    <p class="tc-title">Nomor Antrian</p>
+    <h1 class="tc-number">A-001</h1>
+    
+    <p class="tc-title">Jadwal Antrian</p>
+    <p class="tc-grey">Senin, 27 April 2026<br>Pukul 10.00</p>
+    
+    <p class="tc-title" id="teksUnitLama">Unit APA</p>
+    <p class="tc-title" style="margin-top: 5px;" id="teksSisaAntrianLama">Ada 10 Antrian Didepan</p>
+    <p class="tc-grey" style="margin-top: 4px;" id="teksEstimasiLama">Estimasi Dipanggil: --:--</p>  <!-- ← tambah ini -->
+    <p class="tc-title" style="margin-top: 15px;">-Terima Kasih-</p>
     </div>
 
     <!-- Tombol Aksi -->
@@ -84,53 +85,66 @@
 
   <script>
     // FUNGSI 1: Ambil Nama Poli dari halaman sebelumnya
-    document.addEventListener("DOMContentLoaded", function() {
-      var unitDisimpan = localStorage.getItem("unitDisimpan");
-      if (unitDisimpan) {
-        document.getElementById("teksUnitLama").innerText = unitDisimpan;
-      }
-    });
+   document.addEventListener("DOMContentLoaded", function() {
+  // ==========================================
+  // 1. AMBIL DATA DARI FORM PASIEN LAMA
+  // ==========================================
+  const dataAntrian = JSON.parse(localStorage.getItem("antrian_lama"));
 
-    // FUNGSI 2: Simpan Tiket Jadi Gambar PNG (Khusus Pasien Lama)
-    function simpanKePNGLama() {
-      const element = document.getElementById("areaTiketLama");
-      
-      // Kita bikin elemen bungkus sementara biar pas difoto ada judul "Tiket Antrian"
-      const wrapper = document.createElement("div");
-      wrapper.style.padding = "20px";
-      wrapper.style.backgroundColor = "white";
-      wrapper.style.display = "flex";
-      wrapper.style.flexDirection = "column";
-      wrapper.style.alignItems = "center";
-      
-      // Bikin teks judul buat di dalam fotonya
-      const judul = document.createElement("h2");
-      judul.innerText = "Tiket Antrian";
-      judul.style.color = "#005461";
-      judul.style.fontFamily = "'Poppins', sans-serif";
-      judul.style.marginTop = "0";
-      judul.style.marginBottom = "20px";
-      
-      wrapper.appendChild(judul);
-      wrapper.appendChild(element.cloneNode(true));
-      
-      // Tempel sementara di layar buat difoto
-      document.body.appendChild(wrapper);
+  if (dataAntrian) {
+    const tiket = dataAntrian.tiket;
 
-      // Proses jepret!
-      html2canvas(wrapper, {
-        backgroundColor: "#ffffff",
-        scale: 2 // Resolusi tinggi biar nggak buram
-      }).then(canvas => {
-        const link = document.createElement("a");
-        link.download = "Antrian-Lama-Viamedika.png";
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-        
-        // Hapus elemen sementaranya biar layarmu normal lagi
-        document.body.removeChild(wrapper);
-      });
+    // Nomor Antrian
+    if (tiket?.kode_antrian) {
+      document.querySelector(".tc-number").innerText = tiket.kode_antrian;
     }
+
+    // Nama Unit
+    if (tiket?.unit) {
+      document.getElementById("teksUnitLama").innerText = tiket.unit;
+    }
+
+    // Antrian di depan
+    const antrianDiDepan = tiket?.antrian_di_depan ?? 0;
+    document.querySelector(".tc-title[style*='margin-top: 5px']").innerText =
+      `Ada ${antrianDiDepan} Antrian Didepan`;
+
+    // ==========================================
+    // 2. WAKTU DAFTAR DARI created_at
+    // ==========================================
+    const createdAt = tiket?.created_at
+      ? new Date(tiket.created_at)
+      : new Date();
+
+    const namaHari  = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+    const namaBulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+
+    const hari    = namaHari[createdAt.getDay()];
+    const tanggal = createdAt.getDate();
+    const bulan   = namaBulan[createdAt.getMonth()];
+    const tahun   = createdAt.getFullYear();
+    const jam     = String(createdAt.getHours()).padStart(2, '0');
+    const menit   = String(createdAt.getMinutes()).padStart(2, '0');
+
+    document.querySelector(".tc-grey").innerHTML =
+      `${hari}, ${tanggal} ${bulan} ${tahun}<br>Pukul ${jam}.${menit}`;
+
+    // ==========================================
+    // 3. ESTIMASI = antrian_di_depan x 5 menit
+    // ==========================================
+    const estimasiMenit = antrianDiDepan * 5;
+    const waktuEstimasi = new Date(createdAt.getTime() + estimasiMenit * 60000);
+
+    const jamEst   = String(waktuEstimasi.getHours()).padStart(2, '0');
+    const menitEst = String(waktuEstimasi.getMinutes()).padStart(2, '0');
+
+    const elEst = document.getElementById("teksEstimasiLama");
+    if (elEst) {
+      elEst.innerText = `Estimasi Dipanggil: ${jamEst}.${menitEst}`;
+    }
+  }
+});
+
   </script>
 </body>
 </html>

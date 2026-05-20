@@ -25,9 +25,9 @@
       <p class="tc-title">Jadwal Antrian</p>
       <p class="tc-grey" id="teksJadwal">Senin, 27 April 2026<br>Pukul 10.00</p>
       
-      <p class="tc-title" id="teksUnit">Pilih Unit</p>
-      <p class="tc-title" style="margin-top: 5px;" id="teksSisaAntrian">Ada 0 Antrian Didepan</p>
-      <p class="tc-title" style="margin-top: 15px;">-Terima Kasih-</p>
+     <p class="tc-title" style="margin-top: 5px;" id="teksSisaAntrian">Ada 0 Antrian Didepan</p>
+<p class="tc-grey" style="margin-top: 4px;" id="teksEstimasi">Estimasi Dipanggil: --:--</p>  <!-- ← tambah ini -->
+<p class="tc-title" style="margin-top: 15px;">-Terima Kasih-</p>
     </div>
 
     <div class="action-buttons">
@@ -50,86 +50,65 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      // ==========================================
-      // 1. BIKIN TANGGAL & JAM OTOMATIS SAAT INI
-      // ==========================================
-      const waktuSekarang = new Date();
-      const namaHari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-      const namaBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-      
-      const hari = namaHari[waktuSekarang.getDay()];
-      const tanggal = waktuSekarang.getDate();
-      const bulan = namaBulan[waktuSekarang.getMonth()];
-      const tahun = waktuSekarang.getFullYear();
-      
-      const jam = String(waktuSekarang.getHours()).padStart(2, '0');
-      const menit = String(waktuSekarang.getMinutes()).padStart(2, '0');
-      
-      // Tembakkan waktu ke HTML
-      document.getElementById("teksJadwal").innerHTML = `${hari}, ${tanggal} ${bulan} ${tahun}<br>Pukul ${jam}.${menit}`;
+  // ==========================================
+  // 1. AMBIL DATA API DARI FORM SEBELUMNYA
+  // ==========================================
+  const dataAntrian = JSON.parse(localStorage.getItem("pendaftaran"));
 
-      // ==========================================
-      // 2. AMBIL DATA API DARI FORM SEBELUMNYA
-      // ==========================================
-      // Mengambil data pendaftaran yang kita simpan di localStorage sebelumnya
-      const dataAntrian = JSON.parse(localStorage.getItem("pendaftaran"));
+  if (dataAntrian) {
+    const tiket = dataAntrian.tiket;
 
-      if (dataAntrian) {
-        // Ganti Nomor Antrian sesuai dari Backend
-        if (dataAntrian.no_antrian) {
-          document.getElementById("teksNomorAntrian").innerText = dataAntrian.no_antrian;
-        }
-        
-        // Ganti Nama Poli/Unit sesuai yang dipilih
-        if (dataAntrian.nama_poli) {
-          document.getElementById("teksUnit").innerText = dataAntrian.nama_poli;
-        } else if (dataAntrian.unit_id) {
-          // Kalau backend cuma ngirim ID, kita terjemahin ke nama polinya
-          const listPoli = { 1: "Poli Mata", 2: "Poli Gigi", 3: "Poli Penyakit Dalam", 6: "Poli KIA (Ibu & Anak)", 7: "Poli Anak" };
-          document.getElementById("teksUnit").innerText = listPoli[dataAntrian.unit_id] || "Poli Umum";
-        }
-
-        // Kalau backend mengirimkan info sisa antrian di depan kita
-        if (dataAntrian.sisa_antrian !== undefined) {
-          document.getElementById("teksSisaAntrian").innerText = `Ada ${dataAntrian.sisa_antrian} Antrian Didepan`;
-        }
-      }
-    });
-
-    // ==========================================
-    // 3. FUNGSI SIMPAN JADI PNG
-    // ==========================================
-    function simpanKePNG() {
-      const element = document.getElementById("areaTiket");
-      const judul = document.querySelector(".page-title");
-      
-      const wrapper = document.createElement("div");
-      wrapper.style.padding = "20px";
-      wrapper.style.backgroundColor = "white";
-      wrapper.style.display = "flex";
-      wrapper.style.flexDirection = "column";
-      wrapper.style.alignItems = "center";
-      
-      const judulClone = judul.cloneNode(true);
-      judulClone.style.marginTop = "0"; 
-      
-      wrapper.appendChild(judulClone);
-      wrapper.appendChild(element.cloneNode(true));
-      
-      document.body.appendChild(wrapper);
-
-      html2canvas(wrapper, {
-        backgroundColor: "#ffffff",
-        scale: 2 
-      }).then(canvas => {
-        const link = document.createElement("a");
-        link.download = "Antrian-Baru-Viamedika.png";
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-        
-        document.body.removeChild(wrapper);
-      });
+    // Nomor Antrian
+    if (tiket?.kode_antrian) {
+      document.getElementById("teksNomorAntrian").innerText = tiket.kode_antrian;
     }
+
+    // Nama Unit
+    if (tiket?.unit) {
+      document.getElementById("teksUnit").innerText = tiket.unit;
+    }
+
+    // Antrian di depan
+    const antrianDiDepan = tiket?.antrian_di_depan ?? 0;
+    document.getElementById("teksSisaAntrian").innerText = `Ada ${antrianDiDepan} Antrian Didepan`;
+
+    // ==========================================
+    // 2. WAKTU DAFTAR DARI created_at
+    // ==========================================
+    const createdAt = dataAntrian.tiket?.created_at
+      ? new Date(dataAntrian.tiket.created_at)
+      : new Date(); // fallback ke sekarang kalau tidak ada
+
+    const namaHari   = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+    const namaBulan  = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+
+    const hari    = namaHari[createdAt.getDay()];
+    const tanggal = createdAt.getDate();
+    const bulan   = namaBulan[createdAt.getMonth()];
+    const tahun   = createdAt.getFullYear();
+    const jam     = String(createdAt.getHours()).padStart(2, '0');
+    const menit   = String(createdAt.getMinutes()).padStart(2, '0');
+
+    document.getElementById("teksJadwal").innerHTML =
+      `${hari}, ${tanggal} ${bulan} ${tahun}<br>Pukul ${jam}.${menit}`;
+
+    // ==========================================
+    // 3. ESTIMASI WAKTU = antrian_di_depan x 5 menit
+    // ==========================================
+    const estimasiMenit = antrianDiDepan * 5;
+    const waktuEstimasi = new Date(createdAt.getTime() + estimasiMenit * 60000);
+
+    const jamEst   = String(waktuEstimasi.getHours()).padStart(2, '0');
+    const menitEst = String(waktuEstimasi.getMinutes()).padStart(2, '0');
+
+    // Tampilkan estimasi di bawah sisa antrian
+    // Pastikan ada elemen <p id="teksEstimasi"> di HTML-mu
+    const elEst = document.getElementById("teksEstimasi");
+    if (elEst) {
+      elEst.innerText = `Estimasi Dipanggil: ${jamEst}.${menitEst}`;
+    }
+  }
+});
   </script>
 </body>
 </html>

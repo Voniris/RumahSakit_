@@ -82,7 +82,7 @@
     const BASE_URL    = 'http://kelompok1-rs.test/api';
     const UNITS_URL   = `${BASE_URL}/units`;
     const DAFTAR_URL  = `${BASE_URL}/pendaftaran/online`;
-    const CEK_NIK_URL = (nik) => `${BASE_URL}/pasien/cek-nik/${nik}`;
+    const PROFIL_URL = `${BASE_URL}/pasien/profil`;
 
     function authHeaders() {
       const token = localStorage.getItem('rs_token');
@@ -140,7 +140,7 @@
       if (nik.length !== 16) return;
 
       try {
-        const res  = await fetch(CEK_NIK_URL(nik), { headers: authHeaders() });
+        const res  = await fetch(PROFIL_URL, { headers: authHeaders() });
         const data = await res.json();
 
         if (data.terdaftar && data.data) {
@@ -197,7 +197,7 @@
           localStorage.setItem('antrian_lama', JSON.stringify(data.data));
         }
 
-        window.location.href = '../../cetak_antrian_lama.html';
+        window.location.href = 'cetak_antrian_lama.html';
 
       } catch (err) {
         showError('Gagal terhubung ke server. Pastikan Backend sudah jalan.');
