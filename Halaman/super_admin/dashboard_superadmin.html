@@ -7,14 +7,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     /* ── Paste your super_admin.css inline here or keep as external link ── */
-    /* The JS below handles all API logic; styles remain unchanged from original */
-  </style>
+  </style> 
   <link rel="stylesheet" href="super_admin.css" />
 </head>
 <body>
 <div class="dashboard-container">
 
-<!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="sidebar-logo">
     <img src="../../assets/logo/Logors.png" alt="Logo"
@@ -26,16 +24,24 @@
          onerror="this.style.display='none'"/>
     Manajemen Pengguna
   </a>
+  
+  <a href="#" class="nav-item" onclick="logout(event)" style="margin-top: auto; color: #ef4444;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; margin-right: 10px;">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+      <polyline points="16 17 21 12 16 7"></polyline>
+      <line x1="21" y1="12" x2="9" y2="12"></line>
+    </svg>
+    Keluar
+  </a>
 </aside>
 
-<!-- MAIN -->
 <main class="main">
   <div class="top-profile">
     <div class="info-user">
-      <span class="roles">Petugas</span>
-      <span class="name">Zanira Pahlevi</span>
+      <span class="roles" id="profileRole">Memuat...</span>
+      <span class="name" id="profileName">Memuat...</span>
     </div>
-    <div class="avatar-circle">ZP</div>
+    <div class="avatar-circle" id="profileAvatar">...</div>
   </div>
 
   <div class="content">
@@ -58,7 +64,6 @@
         </div>
       </div>
 
-      <!-- toolbar -->
       <div class="toolbar">
         <div class="search-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
@@ -79,11 +84,14 @@
           <select id="rolesFilter" onchange="filterTable()"
                   style="border:none;outline:none;font-family:inherit;font-size:13px;color:inherit;background:transparent;cursor:pointer;">
             <option value="">Semua roles</option>
-            <option value="Dokter">Dokter</option>
+            <option value="Admin_perawat">Admin perawat</option>
+            <option value="Pasien">Pasien</option>
             <option value="Perawat">Perawat</option>
+            <option value="Dokter">Dokter</option>
+            <option value="Kasir">Kasir</option>
+            <option value="Admin_kasir">Admin kasir</option>
             <option value="Apoteker">Apoteker</option>
-            <option value="Admin">Admin</option>
-            <option value="Petugas">Petugas</option>
+            <option value="Admin_apotik">Admin apotik</option>
           </select>
         </div>
 
@@ -96,7 +104,6 @@
         </button>
       </div>
 
-      <!-- loading state -->
       <div id="loadingState" style="text-align:center;padding:40px;display:none;">
         <svg style="width:32px;height:32px;animation:spin 1s linear infinite;color:#6366f1"
              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -105,7 +112,6 @@
         <p style="margin-top:12px;color:#6b7280;font-size:14px;">Memuat data pengguna...</p>
       </div>
 
-      <!-- error state -->
       <div id="errorState" style="text-align:center;padding:40px;display:none;">
         <svg style="width:40px;height:40px;color:#ef4444;margin-bottom:12px"
              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -120,7 +126,6 @@
         </button>
       </div>
 
-      <!-- table -->
       <table id="userTable">
         <thead>
           <tr>
@@ -135,7 +140,6 @@
         <tbody id="userTableBody"></tbody>
       </table>
 
-      <!-- footer -->
       <div class="card-footer">
         <span class="footer-info" id="footerInfo">–</span>
         <div class="pagination" id="pagination"></div>
@@ -145,7 +149,6 @@
 </main>
 </div>
 
-<!-- MODAL -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeOnOverlay(event)">
   <div class="modal">
     <h2 id="modalTitle">Tambah Pengguna</h2>
@@ -182,7 +185,6 @@
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
        stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
@@ -197,14 +199,82 @@
 
 <script>
   // ─────────────────────────────────────────────────────────────
+  // 0. SCRIPT AMBIL PROFIL & FALLBACK EMAIL
+  // ─────────────────────────────────────────────────────────────
+  (async function initProfile() {
+      const token = localStorage.getItem('rs_token') || localStorage.getItem('token');
+      
+      if (!token) {
+          window.location.href = '../auth/masuk.html';
+          return;
+      }
+
+      try {
+          const response = await fetch('http://kelompok1-rs.test/api/auth/me', {
+              method: 'GET',
+              headers: {
+                  'Authorization': `Bearer ${token}`, 
+                  'Accept': 'application/json'
+              }
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+              let namaFinal = result?.data?.name || result?.name || result?.data?.user?.name || result?.user?.name;
+              let roleFinal = result?.data?.roles?.[0] || result?.roles?.[0] || result?.data?.user?.roles?.[0] || result?.user?.roles?.[0] || 'Admin';
+
+              if (!namaFinal || namaFinal.trim() === "") {
+                  const emailUser = result?.data?.user?.email || result?.user?.email || result?.data?.email || result?.email;
+                  if (emailUser && emailUser.includes('@')) {
+                      let namaMentah = emailUser.split('@')[0];
+                      let namaBersih = namaMentah.replace(/[^a-zA-Z]/g, ' ');
+                      namaFinal = namaBersih.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ').trim();
+                  }
+              }
+
+              if (!namaFinal || namaFinal.trim() === "") namaFinal = "Admin Pengguna";
+
+              roleFinal = roleFinal.replace(/_/g, ' ');
+              roleFinal = roleFinal.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
+              document.getElementById('profileName').innerText = namaFinal;
+              document.getElementById('profileRole').innerText = roleFinal;
+              document.getElementById('profileAvatar').innerText = initials(namaFinal);
+
+          } else {
+              localStorage.removeItem('rs_token');
+              localStorage.removeItem('token');
+              window.location.href = '../auth/masuk.html';
+          }
+      } catch (error) {
+          console.error("Gagal memuat profil:", error);
+          document.getElementById('profileName').innerText = "Admin (Offline)";
+      }
+  })();
+
+  // ─────────────────────────────────────────────────────────────
+  // 1. SCRIPT LOGOUT (PERSIS SEPERTI PASIEN)
+  // ─────────────────────────────────────────────────────────────
+  function logout(event) {
+      // Menghentikan efek klik menyebar
+      event.stopPropagation();
+      
+      // Hapus token yang tersimpan
+      localStorage.removeItem('rs_token');
+      localStorage.removeItem('token'); 
+      
+      // Arahkan kembali ke halaman masuk
+      window.location.href = '../auth/masuk.html';
+  }
+
+  // ─────────────────────────────────────────────────────────────
   // CONFIG – ganti BASE_URL sesuai base URL backend Anda
   // ─────────────────────────────────────────────────────────────
-  const BASE_URL = 'http://kelompok1-rs.test/api/users'; // contoh: 'https://api.vamedika.id/api'
+  const BASE_URL = 'http://kelompok1-rs.test/api/users';
 
-  // Jika API butuh token, letakkan di sini
-  // const TOKEN = localStorage.getItem('token') || '';
   function authHeaders() {
-    const token = localStorage.getItem('token') || '';
+    const token = localStorage.getItem('rs_token') || localStorage.getItem('token') || '';
     return {
       'Content-Type': 'application/json',
       ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
@@ -214,7 +284,7 @@
   // ─────────────────────────────────────────────────────────────
   // STATE
   // ─────────────────────────────────────────────────────────────
-  let allUsers    = [];   // data dari API
+  let allUsers    = [];   
   let currentPage = 1;
   let editingId   = null;
   const PAGE_SIZE = 5;
@@ -223,7 +293,6 @@
   // API CALLS
   // ─────────────────────────────────────────────────────────────
 
-  /** GET /users */
   async function loadUsers() {
     setLoading(true);
     try {
@@ -234,8 +303,6 @@
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
 
-      // Normalkan: sesuaikan key jika berbeda dari API Anda
-      // Misal API mengembalikan { data: [...] } atau langsung array
       allUsers = Array.isArray(data) ? data : (data.data ?? []);
       setLoading(false);
       render();
@@ -244,7 +311,6 @@
     }
   }
 
-  /** POST /users */
   async function createUser(payload) {
     const res = await fetch(`${BASE_URL}/users`, {
       method: 'POST',
@@ -258,7 +324,6 @@
     return res.json();
   }
 
-  /** PUT /users/{id} */
   async function updateUser(id, payload) {
     const res = await fetch(`${BASE_URL}/users/${id}`, {
       method: 'PUT',
@@ -272,7 +337,6 @@
     return res.json();
   }
 
-  /** DELETE /users/{id}  (soft delete) */
   async function deleteUser(id) {
     const res = await fetch(`${BASE_URL}/users/${id}`, {
       method: 'DELETE',
@@ -292,7 +356,7 @@
     document.getElementById('loadingState').style.display = show ? 'block' : 'none';
     document.getElementById('errorState').style.display   = 'none';
     document.getElementById('userTable').style.display    = show ? 'none' : '';
-    document.getElementById('footerInfo').textContent     = show ? '–' : '';
+    document.getElementById('footerInfo').textContent     = show ? '' : '';
     document.getElementById('pagination').innerHTML       = '';
   }
 
@@ -305,9 +369,6 @@
     document.getElementById('pagination').innerHTML       = '';
   }
 
-  // ─────────────────────────────────────────────────────────────
-  // roles CONFIG
-  // ─────────────────────────────────────────────────────────────
   const rolesCfg = {
     Dokter:   { cls:'roles-dokter',   icon:'<path d="M12 2a1 1 0 0 1 1 1v8h8a1 1 0 0 1 0 2h-8v8a1 1 0 0 1-2 0v-8H3a1 1 0 0 1 0-2h8V3a1 1 0 0 1 1-1z"/>' },
     Perawat:  { cls:'roles-perawat',  icon:'<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>' },
@@ -329,7 +390,6 @@
     const r = document.getElementById('rolesFilter').value;
 
     return allUsers.filter(u => {
-      // Sesuaikan key nama/email/roles dengan response API Anda
       const nama  = (u.nama  || u.name         || u.full_name || '').toLowerCase();
       const email = (u.email || u.email_address || '').toLowerCase();
       const roles  = (u.roles  || u.jabatan       || u.position  || '');
@@ -350,7 +410,6 @@
 
     tbody.innerHTML = slice.map((u, i) => {
       const no     = (currentPage-1)*PAGE_SIZE + i + 1;
-      // Normalkan field dari API
       const nama   = u.nama   || u.name         || u.full_name || '-';
       const email  = u.email  || u.email_address || '-';
       const roles   = u.roles   || u.jabatan       || u.position  || '-';
@@ -405,12 +464,10 @@
         </tr>`;
     }).join('');
 
-    // footer
     const from = total ? (currentPage-1)*PAGE_SIZE+1 : 0;
     const to   = Math.min(currentPage*PAGE_SIZE, total);
     document.getElementById('footerInfo').textContent = `Menampilkan ${from}–${to} dari ${total} pengguna`;
 
-    // pagination
     const pag = document.getElementById('pagination');
     let html = `<button class="page-btn" onclick="goPage(${currentPage-1})"
       ${currentPage===1?'disabled style="opacity:.4;cursor:not-allowed"':''}>
@@ -448,7 +505,7 @@
   }
 
   // ─────────────────────────────────────────────────────────────
-  // MODAL
+  // MODAL & FORM LOGIC
   // ─────────────────────────────────────────────────────────────
   function openModal(id = null) {
     editingId = id;
@@ -488,10 +545,7 @@
 
     if (!nama || !email || !roles) { alert('Harap lengkapi semua field.'); return; }
 
-    // Sesuaikan key payload dengan yang diharapkan API Anda
     const payload = { nama, email, roles, status };
-    // Jika API Anda pakai key berbeda, ubah di sini, misal:
-    // const payload = { name: nama, email, roles, is_active: status === 'Aktif' };
 
     const btn = document.getElementById('btnSave');
     btn.disabled     = true;
@@ -500,7 +554,6 @@
     try {
       if (editingId) {
         const updated = await updateUser(editingId, payload);
-        // Update local state
         const idx = allUsers.findIndex(u => (u.id || u._id) == editingId);
         if (idx !== -1) allUsers[idx] = updated.data ?? updated;
         showToast('Data pengguna berhasil diperbarui!');

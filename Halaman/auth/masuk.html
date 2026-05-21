@@ -84,7 +84,7 @@
             // Pastikan di database/backend isinya tulisan 'pasien' atau 'petugas'
             const userRoles = data.data.user.roles[0]; 
 
-            alert("Login berhasil! Selamat datang, " + data.data.user.nama_lengkap);
+            alert("Login berhasil! Selamat datang, " + data.data.user.email);
 
             // 3. Alur lempar halaman (Redirect)
             if (userRoles.includes('pasien')) {

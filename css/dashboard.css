@@ -8,8 +8,6 @@
       overflow-y: none; /* Tambahkan ini untuk menghilangkan scrollbar vertikal */
     }
     
-    
-
     .dashboard-container {
       display: flex;
       height: 100vh;

@@ -6,14 +6,12 @@
   <title>Dashboard Pasien - Rumah Sakit Viamedika</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../css/dashboard.css" />
-  
 </head>
 <body>
 
   <div class="dashboard-container">
     
-    <!-- SIDEBAR -->
-     <aside class="sidebar-dashboard">
+    <aside class="sidebar-dashboard">
       <div class="sidebar-logo">
         <img src="../../assets/logo/Logors.png" alt="Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3063/3063206.png'" />
         <span>Rumah Sakit<br><small>Viamedika</small></span>
@@ -24,43 +22,38 @@
         <span>Dashboard</span>
       </a>
 
-      <!-- Menu Pendaftaran (Mati) -->
       <a href="pendaftaran_pasien.html" class="menu-item">
         <img src="../../assets/icons/pendaftaran.png" alt="Daftar" width="20">
         <span>Pendaftaran</span>
       </a>
 
-      <!-- Menu Lihat Antrian (Mati) -->
       <a href="lihat_antrian.html" class="menu-item">
         <img src="../../assets/icons/panggill.png" alt="Antrian" width="20">
         <span>Lihat Antrian</span>
       </a>
     </aside>
 
-    <!-- KONTEN UTAMA -->
     <main class="main-content">
       
-      <!-- PROFIL POJOK KANAN ATAS -->
       <div class="top-profile" onclick="toggleProfile()">
         <div class="info-user">
           <span class="role">Pasien</span>
-          <span class="name">Nulla</span>
+          <span class="name">Memuat...</span> 
         </div>
-        <img src="../../assets/images/my.jpg" alt="Profile">
+        <img id="headerAvatar" src="../../assets/images/my.jpg" alt="Profile">
 
         <div class="profile-popup" id="profilePopup">
             <span class="close-popup" onclick="toggleProfile(); event.stopPropagation();">&times;</span>
-            <img src="../../assets/images/my.jpg" class="img-large" alt="Profile">
-            <h4>Nulla</h4>
+            <img id="popupAvatar" src="../../assets/images/my.jpg" class="img-large" alt="Profile">
+            <h4>Memuat...</h4> 
             <p class="popup-role">Pasien</p>
             <div class="popup-btns">
-                <button class="btn-logout" onclick="window.location.href='../auth/masuk.html'; event.stopPropagation();">Keluar</button>
+                <button class="btn-logout" onclick="logout(event)">Keluar</button>
             </div>
         </div>
       </div>
-      <!-- BARIS 1: STATISTIK -->
+
       <div class="stats-row">
-        <!-- Card 1: Antrian -->
         <div class="stat-card">
           <div class="icon-box icon-green">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
@@ -73,7 +66,6 @@
           </div>
         </div>
 
-        <!-- Card 2: Riwayat Kunjungan -->
         <div class="stat-card">
           <div class="icon-box icon-purple">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M16 13H8"></path><path d="M16 17H8"></path><path d="M10 9H8"></path></svg>
@@ -85,7 +77,6 @@
           </div>
         </div>
 
-        <!-- Card 3: Notifikasi -->
         <div class="stat-card">
           <div class="icon-box icon-orange">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
@@ -98,20 +89,16 @@
         </div>
       </div>
 
-      <!-- BARIS 2: BANNER SELAMAT DATANG -->
       <div class="banner-card">
         <div class="banner-content">
           <h2><span>Selamat Datang</span> Di Rumah Sakit Viamedika</h2>
           <p>Kami Siap Memberikan Pelayanan Kesehatan<br>Terbaik untuk Anda dan Keluarga</p>
         </div>
-        <!-- Pastikan path gambarnya bener ya -->
         <img src="../../assets/images/dokter.png" alt="Dokter 3D" class="doctor-img" onerror="this.style.display='none'">
       </div>
 
-      <!-- BARIS 3: BAWAH -->
       <div class="bottom-row">
         
-        <!-- Kiri: Riwayat Medis -->
         <div class="history-card">
           <h3>Riwayat Medis Terakhir</h3>
           <div class="history-box">
@@ -134,7 +121,6 @@
           </div>
         </div>
 
-        <!-- Kanan: Tips Kesehatan (Slider) -->
         <div class="health-tips-card">
           <div class="ht-header">
             <h3>Tips Kesehatan</h3>
@@ -145,7 +131,6 @@
 
           <div class="ht-carousel-wrapper">
             <div class="ht-slide active">
-              <!-- Cek path gambarnya -->
               <img src="../../assets/images/banyu.png" alt="Air Putih" class="ht-img" onerror="this.style.display='none'">
               <div class="ht-text">
                 <h4>Minum air putih yang cukup</h4>
@@ -180,46 +165,93 @@
     </main>
   </div>
 
-  <!-- SCRIPT SLIDER TIPS KESEHATAN -->
   <script>
-    let slideSekarang = 0;
-    let timerSlider;
+    // ==========================================
+    // 1. SCRIPT AMBIL DATA DARI API PROFILE + FALLBACK EMAIL
+    // ==========================================
+    document.addEventListener("DOMContentLoaded", async function() {
+        const token = localStorage.getItem('rs_token');
 
-    const semuaSlide = document.querySelectorAll('.ht-slide');
-    const semuaTitik = document.querySelectorAll('.ht-dots .dot');
+        if (!token) {
+            window.location.href = '../auth/masuk.html';
+            return;
+        }
 
-    function tampilkanSlide(index) {
-      semuaSlide.forEach(slide => slide.classList.remove('active'));
-      semuaTitik.forEach(titik => titik.classList.remove('active'));
+        try {
+            const response = await fetch('http://kelompok1-rs.test/api/auth/me', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`, 
+                    'Accept': 'application/json'
+                }
+            });
 
-      slideSekarang = (index + semuaSlide.length) % semuaSlide.length;
+            const result = await response.json();
 
-      semuaSlide[slideSekarang].classList.add('active');
-      semuaTitik[slideSekarang].classList.add('active');
+            if (response.ok) {
+                // Langkah A: Coba ambil properti nama asli dari berbagai kemungkinan struktur JSON
+                let namaFinal = result?.data?.name || result?.name || result?.data?.user?.name || result?.user?.name;
+
+                // Langkah B: Jika nama asli kosong/null, ekstrak dari email
+                if (!namaFinal || namaFinal.trim() === "") {
+                    // Cari properti email dari response API
+                    const emailUser = result?.data?.user?.email || result?.user?.email || result?.data?.email || result?.email;
+                    
+                    if (emailUser && emailUser.includes('@')) {
+                        let namaMentah = emailUser.split('@')[0]; // Ambil bagian sebelum '@'
+                        let namaBersih = namaMentah.replace(/[^a-zA-Z]/g, ' '); // Ganti titik/angka dengan spasi
+                        
+                        // Buat huruf pertama tiap kata menjadi Kapital (Capital Case)
+                        namaFinal = namaBersih.split(' ').map(word => {
+                            return word.charAt(0).toUpperCase() + word.slice(1);
+                        }).join(' ').trim();
+                    }
+                }
+
+                // Langkah C: Jika nama asli & email tidak ditemukan, gunakan default "Pasien"
+                if (!namaFinal || namaFinal.trim() === "") {
+                    namaFinal = "Pasien";
+                }
+
+                // Terapkan nama final ke elemen HTML dashboard
+                const elemenNama = document.querySelectorAll('.name, .user-name, .profile-popup h4');
+                elemenNama.forEach(function(elemen) {
+                    elemen.innerText = namaFinal;
+                });
+
+                // Update URL Avatar otomatis sesuai inisial nama baru
+                const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(namaFinal)}&background=005461&color=fff`;
+                if (document.getElementById('headerAvatar')) document.getElementById('headerAvatar').src = avatarUrl;
+                if (document.getElementById('popupAvatar')) document.getElementById('popupAvatar').src = avatarUrl;
+
+            } else {
+                console.log("Sesi berakhir atau token tidak valid.");
+                localStorage.removeItem('rs_token');
+                window.location.href = '../auth/masuk.html';
+            }
+        } catch (error) {
+            console.error("Gagal terhubung ke API Profile:", error);
+            document.querySelectorAll('.name, .user-name, .profile-popup h4').forEach(el => el.innerText = "Pasien");
+        }
+    });
+
+    // ==========================================
+    // 2. SCRIPT LOGOUT
+    // ==========================================
+    function logout(event) {
+        event.stopPropagation();
+        localStorage.removeItem('rs_token');
+        window.location.href = '../auth/masuk.html';
     }
 
-    function slideSelanjutnya() {
-      tampilkanSlide(slideSekarang + 1);
-    }
-
-    function pindahSlide(index) {
-      tampilkanSlide(index);
-      resetOtomatis();
-    }
-
-    function resetOtomatis() {
-      clearInterval(timerSlider);
-      timerSlider = setInterval(slideSelanjutnya, 4000);
-    }
-
-    resetOtomatis();
-    // --- SCRIPT POPUP PROFILE ---
+    // ==========================================
+    // 3. SCRIPT POPUP PROFILE
+    // ==========================================
     function toggleProfile() {
       const popup = document.getElementById('profilePopup');
       popup.classList.toggle('show');
     }
 
-    // Biar kalau ngeklik di luar kotak profile, popup-nya otomatis nutup
     window.addEventListener('click', function(event) {
       if (!event.target.closest('.top-profile')) {
         const popup = document.getElementById('profilePopup');
@@ -228,6 +260,36 @@
         }
       }
     });
+
+    // ==========================================
+    // 4. SCRIPT SLIDER TIPS KESEHATAN
+    // ==========================================
+    let slideSekarang = 0;
+    let timerSlider;
+    const semuaSlide = document.querySelectorAll('.ht-slide');
+    const semuaTitik = document.querySelectorAll('.ht-dots .dot');
+
+    if (semuaSlide.length > 0) {
+        function tampilkanSlide(index) {
+          semuaSlide.forEach(slide => slide.classList.remove('active'));
+          semuaTitik.forEach(titik => titik.classList.remove('active'));
+
+          slideSekarang = (index + semuaSlide.length) % semuaSlide.length;
+
+          semuaSlide[slideSekarang].classList.add('active');
+          semuaTitik[slideSekarang].classList.add('active');
+        }
+
+        function slideSelanjutnya() { tampilkanSlide(slideSekarang + 1); }
+        function pindahSlide(index) { tampilkanSlide(index); resetOtomatis(); }
+
+        function resetOtomatis() {
+          clearInterval(timerSlider);
+          timerSlider = setInterval(slideSelanjutnya, 4000);
+        }
+
+        resetOtomatis();
+    }
   </script>
 </body>
 </html>

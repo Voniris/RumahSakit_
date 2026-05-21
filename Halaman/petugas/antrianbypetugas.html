@@ -13,7 +13,6 @@
 </head>
 <body>
 
-<!-- Toast Container -->
 <div id="toast-container"></div>
 
 <div class="dashboard-container">
@@ -41,12 +40,22 @@
 
     <div class="main-content">
         
-        <div class="top-profile">
+        <div class="top-profile" onclick="toggleProfile()">
             <div class="info-user">
-                <span class="role">Admin Perawat</span>
-                <span class="name" id="namaPertugas">-</span>
+                <span class="role" id="profileRole">Admin Perawat</span>
+                <span class="name" id="namaPertugas">Memuat...</span>
             </div>
-            <img src="https://ui-avatars.com/api/?name=Petugas&background=005461&color=fff" alt="Profile" id="fotoPertugas">
+            <img src="https://ui-avatars.com/api/?name=Petugas&background=005461&color=fff" alt="Profile" id="headerAvatar">
+
+            <div class="profile-popup" id="profilePopup">
+                <span class="close-popup" onclick="toggleProfile(); event.stopPropagation();">&times;</span>
+                <img id="popupAvatar" src="https://ui-avatars.com/api/?name=Petugas&background=005461&color=fff" class="img-large" alt="Profile">
+                <h4 id="popupName">Memuat...</h4>
+                <p class="popup-role" id="popupRoleDisplay">Admin Perawat</p>
+                <div class="popup-btns">
+                    <button class="btn-logout" onclick="logout(event)">Keluar</button>
+                </div>
+            </div>
         </div>
 
         <div class="header-area">
@@ -61,18 +70,15 @@
             <form id="formPendaftaran">
                 <div class="form-grid">
 
-                    <!-- NIK — input utama, cek otomatis saat blur -->
                     <div class="input-group">
                         <label>Nomor Induk Kependudukan (NIK) <span>*</span></label>
                         <div class="input-wrapper">
                             <i class="fa-regular fa-id-card"></i>
                             <input type="text" id="nik" name="nik" placeholder="Masukkan NIK (16 digit)" maxlength="16" required>
                         </div>
-                        <!-- Badge status pasien -->
                         <div id="nikStatus" style="display:none; margin-top:6px; font-size:12px; font-weight:600; padding: 4px 10px; border-radius:8px; width:fit-content;"></div>
                     </div>
 
-                    <!-- Nama Lengkap -->
                     <div class="input-group">
                         <label>Nama Lengkap <span>*</span></label>
                         <div class="input-wrapper">
@@ -81,7 +87,6 @@
                         </div>
                     </div>
 
-                    <!-- Tanggal Lahir -->
                     <div class="input-group">
                         <label>Tanggal Lahir <span>*</span></label>
                         <div class="input-wrapper">
@@ -89,7 +94,6 @@
                         </div>
                     </div>
 
-                    <!-- Jenis Kelamin -->
                     <div class="input-group">
                         <label>Jenis Kelamin <span>*</span></label>
                         <div class="input-wrapper">
@@ -101,7 +105,6 @@
                         </div>
                     </div>
 
-                    <!-- Alamat -->
                     <div class="input-group">
                         <label>Alamat <span>*</span></label>
                         <div class="input-wrapper">
@@ -110,7 +113,6 @@
                         </div>
                     </div>
 
-                    <!-- No Telepon -->
                     <div class="input-group">
                         <label>Nomor Telepon / WhatsApp <span>*</span></label>
                         <div class="input-wrapper">
@@ -120,7 +122,6 @@
                     </div>
                 </div>
 
-                <!-- Pilih Unit -->
                 <div class="input-group full-width" style="margin-top: 20px;">
                     <label>Pilih Unit <span>*</span></label>
                     <div class="input-wrapper">
@@ -131,7 +132,6 @@
                     </div>
                 </div>
 
-                <!-- Error message -->
                 <div id="errorMsg" style="display:none; background:#fee2e2; border:1px solid #fca5a5; color:#b91c1c; padding:10px 14px; border-radius:8px; font-size:13px; margin-top:12px;"></div>
 
                 <button type="submit" class="btn-submit" id="btnSubmit">
@@ -148,6 +148,77 @@
 </div>
 
 <script>
+    // ==========================================
+    // 0. SCRIPT API PROFILE (Header & Popup)
+    // ==========================================
+    (async function initProfile() {
+        const token = localStorage.getItem('rs_token');
+        if (!token) {
+            window.location.href = '../auth/masuk.html';
+            return;
+        }
+        try {
+            const response = await fetch('http://kelompok1-rs.test/api/auth/me', {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
+            });
+            const result = await response.json();
+            if (response.ok) {
+                let namaFinal = result?.data?.name || result?.name || result?.data?.user?.name || result?.user?.name;
+                let roleFinal = result?.data?.roles?.[0] || result?.roles?.[0] || result?.data?.user?.roles?.[0] || result?.user?.roles?.[0] || 'Admin Perawat';
+
+                if (!namaFinal || namaFinal.trim() === "") {
+                    const emailUser = result?.data?.user?.email || result?.user?.email || result?.data?.email || result?.email;
+                    if (emailUser && emailUser.includes('@')) {
+                        let namaMentah = emailUser.split('@')[0];
+                        namaFinal = namaMentah.replace(/[^a-zA-Z]/g, ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ').trim();
+                    }
+                }
+                if (!namaFinal || namaFinal.trim() === "") namaFinal = "Petugas";
+
+                roleFinal = roleFinal.replace(/_/g, ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
+                document.getElementById('namaPertugas').innerText = namaFinal;
+                document.getElementById('profileRole').innerText = roleFinal;
+                document.getElementById('popupName').innerText = namaFinal;
+                document.getElementById('popupRoleDisplay').innerText = roleFinal;
+                
+                const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(namaFinal)}&background=005461&color=fff`;
+                document.getElementById('headerAvatar').src = avatarUrl;
+                document.getElementById('popupAvatar').src = avatarUrl;
+            } else {
+                localStorage.removeItem('rs_token');
+                window.location.href = '../auth/masuk.html';
+            }
+        } catch (error) {
+            console.error("Gagal memuat profil:", error);
+            document.getElementById('namaPertugas').innerText = "Petugas (Offline)";
+            document.getElementById('popupName').innerText = "Petugas (Offline)";
+        }
+    })();
+
+    function toggleProfile() {
+        const popup = document.getElementById('profilePopup');
+        popup.classList.toggle('show');
+    }
+
+    window.addEventListener('click', function(event) {
+        if (!event.target.closest('.top-profile')) {
+            const popup = document.getElementById('profilePopup');
+            if (popup && popup.classList.contains('show')) popup.classList.remove('show');
+        }
+    });
+
+    function logout(event) {
+        event.stopPropagation();
+        localStorage.removeItem('rs_token');
+        window.location.href = '../auth/masuk.html';
+    }
+
+
+    // ==========================================
+    // 1. SCRIPT API PENDAFTARAN (Bawaan)
+    // ==========================================
     const API_BASE      = 'http://kelompok1-rs.test/api';
     const CEK_NIK_URL   = (nik) => `${API_BASE}/pasien/cek-nik/${nik}`;
     const UNITS_URL     = `${API_BASE}/units`;
@@ -168,12 +239,9 @@
         el.textContent = msg;
         el.style.display = 'block';
     }
+    function hideError() { document.getElementById('errorMsg').style.display = 'none'; }
 
-    function hideError() {
-        document.getElementById('errorMsg').style.display = 'none';
-    }
-
-    // ── 1. LOAD UNITS DARI API ──
+    // ── LOAD UNITS ──
     async function loadUnits() {
         const select = document.getElementById('unit_id');
         try {
@@ -193,16 +261,13 @@
         }
     }
 
-    // ── 2. CEK NIK OTOMATIS SAAT SELESAI KETIK ──
+    // ── CEK NIK OTOMATIS ──
     document.getElementById('nik').addEventListener('blur', async function () {
         const nik = this.value.trim();
         const statusEl = document.getElementById('nikStatus');
 
-        // Reset form dulu
-        setFormEditable(true);
-        clearPrefill();
-        statusEl.style.display = 'none';
-        hideError();
+        setFormEditable(true); clearPrefill();
+        statusEl.style.display = 'none'; hideError();
 
         if (nik.length !== 16) return;
 
@@ -211,26 +276,20 @@
             const data = await res.json();
 
             if (data.terdaftar && data.data) {
-                // ✅ Pasien LAMA — pre-fill otomatis, form dikunci
                 const p = data.data;
                 document.getElementById('nama_lengkap').value  = p.nama_lengkap  || '';
-                document.getElementById('tanggal_lahir').value = p.tanggal_lahir || '';
+                if (p.tanggal_lahir) document.getElementById('tanggal_lahir').value = p.tanggal_lahir.substring(0, 10);
                 document.getElementById('jenis_kelamin').value = p.jenis_kelamin || '';
                 document.getElementById('alamat').value        = p.alamat        || '';
                 document.getElementById('no_telepon').value    = p.no_telepon    || '';
 
-                // Kunci field biodata, petugas tinggal pilih unit
                 setFormEditable(false);
-
                 statusEl.textContent = '✓ Pasien Lama — Data terisi otomatis';
                 statusEl.style.background = '#D6F0E9';
                 statusEl.style.color = '#005461';
                 statusEl.style.display = 'block';
-
             } else {
-                // 🆕 Pasien BARU — form kosong, bisa diisi
                 setFormEditable(true);
-
                 statusEl.textContent = '+ Pasien Baru — Lengkapi data di bawah';
                 statusEl.style.background = '#FFF3E0';
                 statusEl.style.color = '#E65100';
@@ -241,33 +300,26 @@
         }
     });
 
-    // Helper: kunci/buka field biodata (unit tetap bisa dipilih)
     function setFormEditable(editable) {
-        const fields = ['nama_lengkap', 'tanggal_lahir', 'jenis_kelamin', 'alamat', 'no_telepon'];
-        fields.forEach(id => {
+        ['nama_lengkap', 'tanggal_lahir', 'jenis_kelamin', 'alamat', 'no_telepon'].forEach(id => {
             const el = document.getElementById(id);
-            el.readOnly   = !editable;
-            el.disabled   = !editable;
+            el.readOnly   = !editable; el.disabled   = !editable;
             el.style.backgroundColor = editable ? '' : '#f5f5f5';
             el.style.color = editable ? '' : '#555';
         });
     }
 
-    // Helper: kosongkan semua field biodata
     function clearPrefill() {
         ['nama_lengkap','tanggal_lahir','jenis_kelamin','alamat','no_telepon'].forEach(id => {
             document.getElementById(id).value = '';
         });
     }
 
-    // ── 3. SUBMIT FORM ──
+    // ── SUBMIT FORM ──
     document.getElementById('formPendaftaran').addEventListener('submit', async function (e) {
-        e.preventDefault();
-        hideError();
-
+        e.preventDefault(); hideError();
         const btn = document.getElementById('btnSubmit');
-        btn.classList.add('loading');
-        btn.disabled = true;
+        btn.classList.add('loading'); btn.disabled = true;
 
         const payload = {
             nik:           document.getElementById('nik').value.trim(),
@@ -290,25 +342,15 @@
 
             if (res.ok || res.status === 201) {
                 showToast('success', 'Berhasil!', 'Pasien berhasil didaftarkan. Mengalihkan ke halaman cetak...');
-                
-                if (data.data) {
-                    sessionStorage.setItem('dataPasienBaru', JSON.stringify(data.data));
-                }
-
-                setTimeout(() => {
-                    window.location.href = 'cetakbypetugas.html';
-                }, 1800);
+                if (data.data) sessionStorage.setItem('dataPasienBaru', JSON.stringify(data.data));
+                setTimeout(() => { window.location.href = 'cetakbypetugas.html'; }, 1800);
             } else {
                 const pesan = data?.message || data?.error || `Terjadi kesalahan (HTTP ${res.status})`;
-                showError(pesan);
-                btn.classList.remove('loading');
-                btn.disabled = false;
+                showError(pesan); btn.classList.remove('loading'); btn.disabled = false;
             }
-
         } catch (err) {
             showError('Tidak dapat menghubungi server. Periksa koneksi Anda.');
-            btn.classList.remove('loading');
-            btn.disabled = false;
+            btn.classList.remove('loading'); btn.disabled = false;
         }
     });
 
@@ -336,6 +378,7 @@
             setTimeout(() => toast.remove(), 400);
         }, 4000);
     }
+    
     // Jalankan saat halaman load
     loadUnits();
 </script>

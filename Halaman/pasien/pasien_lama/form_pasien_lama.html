@@ -36,7 +36,7 @@
         <label>Nomor Induk Kependudukan (NIK) <span>*</span></label>
         <div class="input-wrapper">
           <img src="../../../assets/icons/nmalngkp.png" alt="NIK" class="icon-left" style="width:18px; height:18px; margin-left:4px;">
-          <input type="text" id="nik" class="form-control pad-left" placeholder="Masukkan NIK" maxlength="16" required/>
+          <input type="text" id="nik" class="form-control pad-left" placeholder="Memuat NIK..." maxlength="16" readonly required/>
         </div>
       </div>
 
@@ -44,7 +44,7 @@
         <label>Nama Lengkap <span>*</span></label>
         <div class="input-wrapper">
           <img src="../../../assets/icons/nmalngkp.png" alt="Nama" class="icon-left" style="width:18px; height:18px; margin-left:4px;">
-          <input type="text" id="nama_lengkap" class="form-control pad-left" placeholder="Otomatis terisi setelah NIK diisi" readonly/>
+          <input type="text" id="nama_lengkap" class="form-control pad-left" placeholder="Memuat nama..." readonly required/>
         </div>
       </div>
 
@@ -52,7 +52,7 @@
         <label>Nomor Rekam Medis <span>*</span></label>
         <div class="input-wrapper">
           <img src="../../../assets/icons/rekammedis.png" alt="RM" class="icon-left" style="width:18px; height:18px; margin-left:4px;">
-          <input type="text" id="nomor_rm" class="form-control pad-left" placeholder="Otomatis terisi setelah NIK diisi" readonly/>
+          <input type="text" id="nomor_rm" class="form-control pad-left" placeholder="Memuat nomor RM..." readonly required/>
         </div>
       </div>
 
@@ -82,7 +82,7 @@
     const BASE_URL    = 'http://kelompok1-rs.test/api';
     const UNITS_URL   = `${BASE_URL}/units`;
     const DAFTAR_URL  = `${BASE_URL}/pendaftaran/online`;
-    const PROFIL_URL = `${BASE_URL}/pasien/profil`;
+    const PROFIL_URL  = `${BASE_URL}/pasien/profil`;
 
     function authHeaders() {
       const token = localStorage.getItem('rs_token');
@@ -108,7 +108,7 @@
       document.getElementById('errorMsg').style.display = 'none';
     }
 
-    // Fetch units dari API saat halaman load
+    // 1. Fetch units dari API
     async function loadUnits() {
       const select = document.getElementById('unit_id');
       try {
@@ -129,31 +129,43 @@
       }
     }
 
-    // Auto-fill nama & nomor RM dari API saat NIK selesai diketik
-    document.getElementById('nik').addEventListener('blur', async function () {
-      const nik = this.value.trim();
-
-      document.getElementById('nama_lengkap').value = '';
-      document.getElementById('nomor_rm').value     = '';
-      hideError();
-
-      if (nik.length !== 16) return;
-
+    // 2. FUNGSI BARU: Otomatis memuat profil pasien (NIK, Nama, RM) saat halaman dibuka
+    async function loadPasienProfil() {
       try {
-        const res  = await fetch(PROFIL_URL, { headers: authHeaders() });
-        const data = await res.json();
-
-        if (data.terdaftar && data.data) {
-          document.getElementById('nama_lengkap').value = data.data.nama_lengkap || '';
-          document.getElementById('nomor_rm').value     = data.data.nomor_rm     || '';
-        } else {
-          showError('NIK tidak ditemukan. Pastikan Anda sudah terdaftar sebagai pasien lama.');
+        const res = await fetch(PROFIL_URL, { headers: authHeaders() });
+        
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
         }
-      } catch (err) {
-        showError('Gagal mengecek NIK. Periksa koneksi internet Anda.');
+        
+        const data = await res.json();
+        console.log("Data Profil Terdeteksi:", data);
+          
+        if (data.terdaftar && data.data) {
+            const p = data.data;
+            // Otomatis isi ketiga field sekaligus!
+            document.getElementById('nik').value = p.nik || '';
+            document.getElementById('nama_lengkap').value = p.nama_lengkap || '';
+            document.getElementById('nomor_rm').value = p.nomor_rm || '';
+        } else {
+            showError('Data profil Anda tidak ditemukan. Pastikan Anda sudah terdaftar sebagai pasien lama.');
+            setPlaceholders('Data tidak ditemukan');
+        }
+      } catch (error) {
+        console.error("Gagal memuat data pasien:", error);
+        showError('Gagal mengambil data profil dari server. Pastikan Anda sudah login.');
+        setPlaceholders('Gagal memuat data');
       }
-    });
+    }
 
+    // Fungsi pembantu untuk mengubah teks placeholder jika gagal load
+    function setPlaceholders(text) {
+      document.getElementById('nik').placeholder = text;
+      document.getElementById('nama_lengkap').placeholder = text;
+      document.getElementById('nomor_rm').placeholder = text;
+    }
+
+    // 3. Submit Pendaftaran ke Backend
     async function submitPendaftaranLama() {
       hideError();
 
@@ -207,8 +219,11 @@
       }
     }
 
-    // Jalankan saat halaman load
-    loadUnits();
+    // JALANKAN SEMUA FUNGSI SAAT HALAMAN DI-LOAD
+    window.addEventListener('DOMContentLoaded', () => {
+      loadUnits();        // Muat dropdown poliklinik
+      loadPasienProfil(); // Muat otomatis NIK, Nama, dan No. RM
+    });
   </script>
 
 </body>
