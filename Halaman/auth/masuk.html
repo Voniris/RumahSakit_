@@ -22,15 +22,16 @@
       </div>
 
       <input type="hidden" id="selectedRoles" value="pasien" />
+      
       <form id="formLogin">
         <div class="form-group">
           <label>Alamat Email / NIK</label>
-          <input type="email" id="email" placeholder="Masukkan Email atau NIK Anda" required />
+          <input type="email" id="email" placeholder="Masukkan Email atau NIK Anda" required autocomplete="off" />
         </div>
 
         <div class="form-group password-group">
           <label>Kata Sandi</label>
-          <input type="password" id="password" placeholder="Masukkan Kata Sandi" required />
+          <input type="password" id="password" placeholder="Masukkan Kata Sandi" required autocomplete="new-password" />
           <span class="toggle-password" onclick="togglePassword('password', this)">
             <img src="../../assets/icons/closedeyes.png" width="20" />
           </span>
@@ -38,7 +39,7 @@
         <br>
         <div class="remember-row">
             <label><input type="checkbox" id="remember_me" /> Ingatlah selama 7 hari</label>
-                <a href="reset_password.html" style="margin-top: -50px;">Lupa Kata Sandi</a>
+            <a href="reset_password.html" style="margin-top: -50px;">Lupa Kata Sandi</a>
         </div>
         <br>
         <button type="submit" class="btn-primary" id="btnSubmitLogin">Masuk</button>
@@ -55,11 +56,21 @@
   <script src="../../js/main.js"></script>
 
   <script>
+
+    function setRoles(roles) {
+      document.getElementById('selectedRoles').value = roles;
+      document.getElementById('btnPasien').classList.toggle('active', roles === 'pasien');
+      document.getElementById('btnPetugas').classList.toggle('active', roles === 'petugas');
+    }
+
     document.getElementById('formLogin').addEventListener('submit', async function(e) {
         e.preventDefault();
+        
         const btnSubmit = document.getElementById('btnSubmitLogin');
         btnSubmit.innerText = "Memeriksa...";
         btnSubmit.disabled = true;
+
+        const tombolAktif = document.getElementById('selectedRoles').value;
 
         const payload = {
             email: document.getElementById('email').value,
@@ -73,28 +84,41 @@
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                 body: JSON.stringify(payload)
             });
-            const data = await response.json();
-        if(response.status === 200 || data.success) {
-            localStorage.setItem('rs_token', data.data.token);
-            const userRoles = data.data.user.roles[0]; 
+            
+            const result = await response.json();
 
-            alert("Login berhasil! Selamat datang, " + data.data.user.email);
-            if (userRoles.includes('pasien')) {
-                window.location.href = "../pasien/dashboard_pasien.html";
-            } else if (userRoles.includes('superadmin')) {
-                window.location.href = "../super_admin/dashboard_superadmin.html";
-            } else if (userRoles.includes('admin_perawat') || userRoles.includes('petugas') || userRoles.includes('perawat')) {
-                window.location.href = "../petugas/dashboard_petugas.html";
-            } else if (userRoles.includes('dokter')) {
-                window.location.href = "../petugas/dashboard_petugas.html";
+            if (response.ok || result.success) {
+                localStorage.setItem('rs_token', result.data.token);
+                const userRoles = result.data.user.roles; 
+
+                alert("Login berhasil! Selamat datang.");
+                if (tombolAktif === 'pasien') {
+                    if (userRoles.includes('pasien')) {
+                        window.location.href = "../pasien/dashboard_pasien.html";
+                    } else {
+                        alert("Akses Ditolak: Akun Anda tidak terdaftar sebagai Pasien.");
+                        localStorage.removeItem('rs_token');
+                    }
+                } 
+                
+                else if (tombolAktif === 'petugas') {
+                    if (userRoles.includes('superadmin')) {
+                        window.location.href = "../super_admin/dashboard_superadmin.html";
+                    } 
+                    else if (userRoles.includes('admin_perawat') || userRoles.includes('petugas') || userRoles.includes('perawat') || userRoles.includes('dokter')) {
+                        window.location.href = "../petugas/dashboard_petugas.html";
+                    } 
+                    else {
+                        alert("Akses Ditolak: Anda tidak memiliki otoritas akses Petugas/Admin.");
+                        localStorage.removeItem('rs_token');
+                    }
+                }
+
             } else {
-                alert("Peringatan: Role tidak dikenal (" + userRoles.join(', ') + ")");
+                alert("Gagal Login: " + (result.message || "Username atau Password salah"));
             }
-
-        } else {
-            alert("Gagal Login: " + (data.message || "Username atau Password salah"));
-        }
         } catch (error) {
+            console.error(error);
             alert("Error: Tidak dapat terhubung ke server Backend.");
         } finally {
             btnSubmit.innerText = "Masuk";
@@ -102,15 +126,5 @@
         }
     });
   </script>
-  <script>
-  function setRoles(roles) {
-    document.getElementById('selectedRoles').value = roles;
-    document.getElementById('btnPasien').classList.toggle('active', roles === 'pasien');
-    document.getElementById('btnPetugas').classList.toggle('active', roles === 'petugas');
-  }
-
-  document.getElementById('formLogin').addEventListener('submit', async function(e) {
-  });
-</script>
 </body>
 </html>

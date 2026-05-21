@@ -5,9 +5,41 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Manajemen Pengguna – Vamedika</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  
   <style>
-    /* ── Paste your super_admin.css inline here or keep as external link ── */
-  </style> 
+    .top-profile { cursor: pointer; position: relative; }
+    .profile-popup {
+      display: none; position: absolute; top: 60px; right: 0; 
+      background: white; border: 1px solid #e0e0e0; 
+      border-radius: 16px; padding: 20px; width: 220px; 
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.1); 
+      text-align: center; z-index: 100;
+    }
+    .profile-popup.show { display: block; animation: slideUp 0.2s ease; }
+    .close-popup { position: absolute; top: 10px; right: 15px; font-size: 22px; cursor: pointer; color: #888; }
+    .close-popup:hover { color: #ef4444; }
+    .profile-popup h4 { color: #111; margin: 10px 0 2px; font-size: 15px; font-weight: 700; }
+    .popup-role { color: #555; font-size: 12px; margin-bottom: 15px; font-weight: 600; text-transform: capitalize; }
+    .btn-logout {
+      background: #ef4444; color: white; border: none; padding: 10px 0; 
+      border-radius: 10px; width: 100%; cursor: pointer; 
+      font-family: inherit; font-weight: 600; font-size: 13px; transition: 0.2s;
+    }
+    .btn-logout:hover { background: #dc2626; }
+    .img-large { width: 65px !important; height: 65px !important; font-size: 24px !important; margin: 0 auto; }
+    
+    /* Paksa hilangkan warna kuning autofill di browser jika cara HTML kurang mempan */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus, 
+    input:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 30px white inset !important;
+      -webkit-text-fill-color: #111111 !important;
+    }
+
+    @keyframes slideUp { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  </style>
+
   <link rel="stylesheet" href="super_admin.css" />
 </head>
 <body>
@@ -24,16 +56,25 @@
          onerror="this.style.display='none'"/>
     Manajemen Pengguna
   </a>
-  
 </aside>
 
 <main class="main">
-  <div class="top-profile">
+  <div class="top-profile" onclick="toggleProfile()">
     <div class="info-user">
       <span class="roles" id="profileRole">Memuat...</span>
       <span class="name" id="profileName">Memuat...</span>
     </div>
     <div class="avatar-circle" id="profileAvatar">...</div>
+
+    <div class="profile-popup" id="profilePopup">
+      <span class="close-popup" onclick="toggleProfile(); event.stopPropagation();">&times;</span>
+      <div class="avatar-circle img-large" id="popupAvatar">...</div>
+      <h4 id="popupName">Memuat...</h4>
+      <p class="popup-role" id="popupRoleDisplay">Memuat...</p>
+      <div class="popup-btns">
+        <button class="btn-logout" onclick="logout(event)">Keluar</button>
+      </div>
+    </div>
   </div>
 
   <div class="content">
@@ -58,12 +99,10 @@
 
       <div class="toolbar">
         <div class="search-wrap">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-               stroke-linecap="round" stroke-linejoin="round">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
           </svg>
-          <input type="text" id="searchInput" placeholder="Cari nama, email, atau jabatan..."
-                 oninput="filterTable()"/>
+          <input type="text" id="searchInput" placeholder="Cari nama, email, atau jabatan..." oninput="filterTable()" autocomplete="off" value=""/>
         </div>
 
         <div class="filter-select">
@@ -124,7 +163,7 @@
             <th>No</th>
             <th>Nama Lengkap</th>
             <th>Email</th>
-            <th>roles</th>
+            <th>Roles</th>
             <th>Status</th>
             <th>Aksi</th>
           </tr>
@@ -144,32 +183,32 @@
 <div class="modal-overlay" id="modalOverlay" onclick="closeOnOverlay(event)">
   <div class="modal">
     <h2 id="modalTitle">Tambah Pengguna</h2>
-    <div class="form-group">
-      <label>Nama Lengkap</label>
-      <input type="text" id="formNama" placeholder="Masukkan nama lengkap"/>
-    </div>
+    
     <div class="form-group">
       <label>Email</label>
-      <input type="email" id="formEmail" placeholder="email@vamedika.id"/>
+      <input type="email" id="formEmail" placeholder="email@vamedika.id" autocomplete="off"/>
     </div>
+    
     <div class="form-group">
-      <label>roles</label>
+      <label>Kata Sandi</label>
+      <input type="password" id="formPassword" placeholder="Masukkan kata sandi" autocomplete="new-password"/>
+    </div>
+    
+    <div class="form-group">
+      <label>Roles</label>
       <select id="formroles">
         <option value="">-- Pilih roles --</option>
-        <option>Dokter</option>
-        <option>Perawat</option>
-        <option>Apoteker</option>
-        <option>Admin</option>
-        <option>Petugas</option>
+        <option value="Admin_perawat">Admin perawat</option>
+        <option value="Pasien">Pasien</option>
+        <option value="Perawat">Perawat</option>
+        <option value="Dokter">Dokter</option>
+        <option value="Kasir">Kasir</option>
+        <option value="Admin_kasir">Admin kasir</option>
+        <option value="Apoteker">Apoteker</option>
+        <option value="Admin_apotik">Admin apotik</option>
       </select>
     </div>
-    <div class="form-group">
-      <label>Status</label>
-      <select id="formStatus">
-        <option value="Aktif">Aktif</option>
-        <option value="Nonaktif">Nonaktif</option>
-      </select>
-    </div>
+
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">Batal</button>
       <button class="btn-save" id="btnSave" onclick="saveUser()">Simpan</button>
@@ -195,8 +234,7 @@
       const token = localStorage.getItem('rs_token') || localStorage.getItem('token');
       
       if (!token) {
-         window.location.href = '../auth/masuk.html'; //disini cia kunci
-          return;
+          console.log("Bypass login aktif untuk testing."); // dibuka untuk cia kalau mau nutup ganti ini window.location.href = '../auth/masuk.html';
       }
 
       try {
@@ -230,18 +268,37 @@
 
               document.getElementById('profileName').innerText = namaFinal;
               document.getElementById('profileRole').innerText = roleFinal;
-              document.getElementById('profileAvatar').innerText = initials(namaFinal);
+              document.getElementById('popupName').innerText = namaFinal;
+              document.getElementById('popupRoleDisplay').innerText = roleFinal;
+
+              const avatarInitials = initials(namaFinal);
+              document.getElementById('profileAvatar').innerText = avatarInitials;
+              document.getElementById('popupAvatar').innerText = avatarInitials;
 
           } else {
-              localStorage.removeItem('rs_token');
-              localStorage.removeItem('token');
-              window.location.href = '../auth/masuk.html';
           }
       } catch (error) {
           console.error("Gagal memuat profil:", error);
           document.getElementById('profileName').innerText = "Admin (Offline)";
+          document.getElementById('popupName').innerText = "Admin (Offline)";
+          document.getElementById('profileAvatar').innerText = "AD";
+          document.getElementById('popupAvatar').innerText = "AD";
       }
   })();
+
+  function toggleProfile() {
+    const popup = document.getElementById('profilePopup');
+    popup.classList.toggle('show');
+  }
+
+  window.addEventListener('click', function(event) {
+    if (!event.target.closest('.top-profile')) {
+      const popup = document.getElementById('profilePopup');
+      if (popup && popup.classList.contains('show')) {
+        popup.classList.remove('show');
+      }
+    }
+  });
 
   function logout(event) {
       event.stopPropagation();
@@ -250,7 +307,6 @@
       window.location.href = '../auth/masuk.html';
   }
 
- 
   const BASE_URL = 'http://kelompok1-rs.test/api/users';
 
   function authHeaders() {
@@ -261,6 +317,7 @@
     };
   }
 
+  let allUsers    = []; 
   let currentPage = 1;
   let editingId   = null;
   const PAGE_SIZE = 5;
@@ -344,6 +401,7 @@
     Apoteker: { cls:'roles-apoteker', icon:'<path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/>' },
     Admin:    { cls:'roles-admin',    icon:'<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>' },
     Petugas:  { cls:'roles-petugas',  icon:'<circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>' },
+    Pasien:   { cls:'roles-pasien',   icon:'<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>' }
   };
 
   function initials(name) {
@@ -376,8 +434,15 @@
 
     tbody.innerHTML = slice.map((u, i) => {
       const no     = (currentPage-1)*PAGE_SIZE + i + 1;
-      const nama   = u.nama   || u.name         || u.full_name || '-';
+      
+      let nama   = u.nama   || u.name         || u.full_name || '';
       const email  = u.email  || u.email_address || '-';
+      
+      if (!nama && email !== '-') {
+          let namaMentah = email.split('@')[0];
+          nama = namaMentah.replace(/[^a-zA-Z]/g, ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ').trim();
+      }
+
       const roles   = u.roles   || u.jabatan       || u.position  || '-';
       const status = u.status || u.is_active === false ? 'Nonaktif' : (u.is_active === true ? 'Aktif' : (u.status || 'Aktif'));
       const id     = u.id     || u._id;
@@ -473,18 +538,16 @@
   function openModal(id = null) {
     editingId = id;
     document.getElementById('modalTitle').textContent = id ? 'Edit Pengguna' : 'Tambah Pengguna';
+    
     if (id) {
       const u    = allUsers.find(u => (u.id || u._id) == id);
-      const nama = u.nama || u.name || u.full_name || '';
-      document.getElementById('formNama').value   = nama;
       document.getElementById('formEmail').value  = u.email || u.email_address || '';
+      document.getElementById('formPassword').value = ''; 
       document.getElementById('formroles').value   = u.roles  || u.jabatan || u.position || '';
-      document.getElementById('formStatus').value = u.status || (u.is_active === false ? 'Nonaktif' : 'Aktif');
     } else {
-      document.getElementById('formNama').value   = '';
       document.getElementById('formEmail').value  = '';
+      document.getElementById('formPassword').value = '';
       document.getElementById('formroles').value   = '';
-      document.getElementById('formStatus').value = 'Aktif';
     }
     document.getElementById('modalOverlay').classList.add('show');
   }
@@ -501,14 +564,24 @@
   function editUser(id) { openModal(id); }
 
   async function saveUser() {
-    const nama   = document.getElementById('formNama').value.trim();
-    const email  = document.getElementById('formEmail').value.trim();
-    const roles   = document.getElementById('formroles').value;
-    const status = document.getElementById('formStatus').value;
+    const email    = document.getElementById('formEmail').value.trim();
+    const password = document.getElementById('formPassword').value;
+    const roles    = document.getElementById('formroles').value;
 
-    if (!nama || !email || !roles) { alert('Harap lengkapi semua field.'); return; }
+    if (!email || !roles) { 
+      alert('Harap lengkapi Email dan Roles.'); 
+      return; 
+    }
 
-    const payload = { nama, email, roles, status };
+    if (!editingId && !password) {
+      alert('Harap isi Kata Sandi untuk pengguna baru.');
+      return;
+    }
+
+    const payload = { email, roles };
+    if (password) {
+      payload.password = password; 
+    }
 
     const btn = document.getElementById('btnSave');
     btn.disabled     = true;
@@ -546,7 +619,6 @@
       alert('Gagal menghapus: ' + err.message);
     }
   }
-
 
   function showToast(msg) {
     const t = document.getElementById('toast');
