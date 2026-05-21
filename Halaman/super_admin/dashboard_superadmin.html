@@ -195,7 +195,7 @@
       const token = localStorage.getItem('rs_token') || localStorage.getItem('token');
       
       if (!token) {
-         console.log("Belum login, tapi dibiarkan masuk untuk testing desain."); //disini cia kunci
+         window.location.href = '../auth/masuk.html'; //disini cia kunci
           return;
       }
 
