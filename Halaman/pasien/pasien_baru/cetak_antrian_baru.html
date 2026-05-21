@@ -51,27 +51,15 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      // Ambil data dari localStorage yang disimpan di form pasien baru
       const dataAntrian = JSON.parse(localStorage.getItem("pendaftaran"));
 
       if (dataAntrian) {
         const tiket = dataAntrian.tiket;
 
-        // Nomor Antrian
         document.getElementById("teksNomorAntrian").innerText = tiket.kode_antrian ?? "A-001";
-
-        // Nama Unit
         document.getElementById("teksUnit").innerText = tiket.unit ?? "Unit";
-
-        // Antrian di depan
-        document.getElementById("teksSisaAntrian").innerText =
-          `Ada ${tiket.antrian_di_depan ?? 0} Antrian Didepan`;
-
-        // Estimasi dari backend
-        document.getElementById("teksEstimasi").innerText =
-          `Estimasi Dipanggil: ${tiket.estimasi?.perkiraan_jam ?? "--:--"}`;
-
-        // Tanggal (T00:00:00 biar tidak timezone offset)
+        document.getElementById("teksSisaAntrian").innerText =`Ada ${tiket.antrian_di_depan ?? 0} Antrian Didepan`;
+        document.getElementById("teksEstimasi").innerText =`Estimasi Dipanggil: ${tiket.estimasi?.perkiraan_jam ?? "--:--"}`;
         const tgl = tiket.tanggal ? new Date(tiket.tanggal + "T00:00:00") : new Date();
         const namaHari  = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
         const namaBulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli',
@@ -82,7 +70,6 @@
       }
     });
 
-    // Simpan Tiket Jadi PNG
     function simpanKePNG() {
       const element = document.getElementById("areaTiket");
       const judul = document.querySelector(".page-title");

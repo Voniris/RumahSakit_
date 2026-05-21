@@ -148,13 +148,11 @@
 </div>
 
 <script>
-    // ==========================================
-    // 0. SCRIPT API PROFILE (Header & Popup)
-    // ==========================================
+
     (async function initProfile() {
         const token = localStorage.getItem('rs_token');
         if (!token) {
-            window.location.href = '../auth/masuk.html';
+            console.log("Belum login, tapi dibiarkan masuk untuk testing desain.");
             return;
         }
         try {
@@ -215,10 +213,6 @@
         window.location.href = '../auth/masuk.html';
     }
 
-
-    // ==========================================
-    // 1. SCRIPT API PENDAFTARAN (Bawaan)
-    // ==========================================
     const API_BASE      = 'http://kelompok1-rs.test/api';
     const CEK_NIK_URL   = (nik) => `${API_BASE}/pasien/cek-nik/${nik}`;
     const UNITS_URL     = `${API_BASE}/units`;
@@ -241,7 +235,6 @@
     }
     function hideError() { document.getElementById('errorMsg').style.display = 'none'; }
 
-    // ── LOAD UNITS ──
     async function loadUnits() {
         const select = document.getElementById('unit_id');
         try {
@@ -261,7 +254,6 @@
         }
     }
 
-    // ── CEK NIK OTOMATIS ──
     document.getElementById('nik').addEventListener('blur', async function () {
         const nik = this.value.trim();
         const statusEl = document.getElementById('nikStatus');
@@ -315,7 +307,6 @@
         });
     }
 
-    // ── SUBMIT FORM ──
     document.getElementById('formPendaftaran').addEventListener('submit', async function (e) {
         e.preventDefault(); hideError();
         const btn = document.getElementById('btnSubmit');
@@ -354,7 +345,7 @@
         }
     });
 
-    // ── Toast Notifikasi ──
+
     function showToast(type, title, desc) {
         const container = document.getElementById('toast-container');
         const icon = type === 'success'
@@ -378,8 +369,7 @@
             setTimeout(() => toast.remove(), 400);
         }, 4000);
     }
-    
-    // Jalankan saat halaman load
+
     loadUnits();
 </script>
 

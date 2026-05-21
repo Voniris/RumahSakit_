@@ -25,14 +25,6 @@
     Manajemen Pengguna
   </a>
   
-  <a href="#" class="nav-item" onclick="logout(event)" style="margin-top: auto; color: #ef4444;">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; margin-right: 10px;">
-      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-      <polyline points="16 17 21 12 16 7"></polyline>
-      <line x1="21" y1="12" x2="9" y2="12"></line>
-    </svg>
-    Keluar
-  </a>
 </aside>
 
 <main class="main">
@@ -198,14 +190,12 @@
 </style>
 
 <script>
-  // ─────────────────────────────────────────────────────────────
-  // 0. SCRIPT AMBIL PROFIL & FALLBACK EMAIL
-  // ─────────────────────────────────────────────────────────────
+
   (async function initProfile() {
       const token = localStorage.getItem('rs_token') || localStorage.getItem('token');
       
       if (!token) {
-          window.location.href = '../auth/masuk.html';
+         console.log("Belum login, tapi dibiarkan masuk untuk testing desain."); //disini cia kunci
           return;
       }
 
@@ -253,24 +243,14 @@
       }
   })();
 
-  // ─────────────────────────────────────────────────────────────
-  // 1. SCRIPT LOGOUT (PERSIS SEPERTI PASIEN)
-  // ─────────────────────────────────────────────────────────────
   function logout(event) {
-      // Menghentikan efek klik menyebar
       event.stopPropagation();
-      
-      // Hapus token yang tersimpan
       localStorage.removeItem('rs_token');
       localStorage.removeItem('token'); 
-      
-      // Arahkan kembali ke halaman masuk
       window.location.href = '../auth/masuk.html';
   }
 
-  // ─────────────────────────────────────────────────────────────
-  // CONFIG – ganti BASE_URL sesuai base URL backend Anda
-  // ─────────────────────────────────────────────────────────────
+ 
   const BASE_URL = 'http://kelompok1-rs.test/api/users';
 
   function authHeaders() {
@@ -281,17 +261,9 @@
     };
   }
 
-  // ─────────────────────────────────────────────────────────────
-  // STATE
-  // ─────────────────────────────────────────────────────────────
-  let allUsers    = [];   
   let currentPage = 1;
   let editingId   = null;
   const PAGE_SIZE = 5;
-
-  // ─────────────────────────────────────────────────────────────
-  // API CALLS
-  // ─────────────────────────────────────────────────────────────
 
   async function loadUsers() {
     setLoading(true);
@@ -349,9 +321,6 @@
     return res.json().catch(() => ({}));
   }
 
-  // ─────────────────────────────────────────────────────────────
-  // UI HELPERS
-  // ─────────────────────────────────────────────────────────────
   function setLoading(show) {
     document.getElementById('loadingState').style.display = show ? 'block' : 'none';
     document.getElementById('errorState').style.display   = 'none';
@@ -382,9 +351,6 @@
     return name.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
   }
 
-  // ─────────────────────────────────────────────────────────────
-  // FILTER & RENDER
-  // ─────────────────────────────────────────────────────────────
   function getFiltered() {
     const q = (document.getElementById('searchInput').value || '').toLowerCase();
     const r = document.getElementById('rolesFilter').value;
@@ -504,9 +470,6 @@
     render();
   }
 
-  // ─────────────────────────────────────────────────────────────
-  // MODAL & FORM LOGIC
-  // ─────────────────────────────────────────────────────────────
   function openModal(id = null) {
     editingId = id;
     document.getElementById('modalTitle').textContent = id ? 'Edit Pengguna' : 'Tambah Pengguna';
@@ -584,9 +547,7 @@
     }
   }
 
-  // ─────────────────────────────────────────────────────────────
-  // TOAST
-  // ─────────────────────────────────────────────────────────────
+
   function showToast(msg) {
     const t = document.getElementById('toast');
     document.getElementById('toastMsg').textContent = msg;
@@ -594,9 +555,6 @@
     setTimeout(() => t.classList.remove('show'), 2800);
   }
 
-  // ─────────────────────────────────────────────────────────────
-  // INIT
-  // ─────────────────────────────────────────────────────────────
   loadUsers();
 </script>
 </body>

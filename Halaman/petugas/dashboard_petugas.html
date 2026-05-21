@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Petugas - RS Viamedika</title>
-    <link rel ="stylesheet" href="../../css/dashboard_petugas.css">
+    <link rel="stylesheet" href="../../css/dashboard_petugas.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/dashboard.css" />
     <link rel="stylesheet" href="../../css/dashboard_petugas.css" />
-
 </head>
 <body>
 
@@ -19,51 +18,49 @@
             <span>Rumah Sakit<br><small>Viamedika</small></span>
         </div>
         
-              <a href="dashboard_petugas.html" class="menu-item active">
-        <img src="../../assets/icons/beranda.png" alt="Home" width="27">
-        <span>Dashboard</span>
-      </a>
+        <a href="dashboard_petugas.html" class="menu-item active">
+            <img src="../../assets/icons/beranda.png" alt="Home" width="27">
+            <span>Dashboard</span>
+        </a>
 
-      <!-- Menu Pendaftaran (Mati) -->
-      <a href="antrianbypetugas.html" class="menu-item">
-        <img src="../../assets/icons/pendaftaran.png" alt="Daftar" width="20">
-        <span>Pendaftaran</span>
-      </a>
+        <a href="antrianbypetugas.html" class="menu-item">
+            <img src="../../assets/icons/pendaftaran.png" alt="Daftar" width="20">
+            <span>Pendaftaran</span>
+        </a>
 
-      <!-- Menu Lihat Antrian (Mati) -->
-      <a href="panggil_antrian.html" class="menu-item">
-        <img src="../../assets/icons/panggill.png" alt="Antrian" width="20">
-        <span>Lihat Antrian</span>
-      </a>
+        <a href="panggil_antrian.html" class="menu-item">
+            <img src="../../assets/icons/panggill.png" alt="Antrian" width="20">
+            <span>Lihat Antrian</span>
+        </a>
     </aside>
 
     <main class="main-content">
         
         <div class="header-area">
             <p class="welcome-text">Selamat datang,</p>
-            <h1 class="user-name">Jani</h1>
-            <p class="user-roles">Admin Perawat</p>
+            <h1 class="user-name" id="welcomeName">Memuat...</h1>
+            <p class="user-roles" id="welcomeRole">Admin Perawat</p>
         </div>
 
         <div class="top-profile" onclick="toggleProfile()">
             <div class="info-user">
-                <span class="roles">Admin Perawat</span>
-                <span class="name">Jani</span>
+                <span class="roles" id="profileRole">Admin Perawat</span>
+                <span class="name" id="namaPertugas">Memuat...</span>
             </div>
-            <img src="https://ui-avatars.com/api/?name=Jani&background=005461&color=fff" alt="Profile">
+            <img id="headerAvatar" src="https://ui-avatars.com/api/?name=Petugas&background=005461&color=fff" alt="Profile">
             
             <div class="profile-popup" id="profilePopup">
                 <span class="close-popup" onclick="toggleProfile(); event.stopPropagation();">&times;</span>
-                <img src="https://ui-avatars.com/api/?name=Jani&background=005461&color=fff" class="img-large" alt="Profile">
-                <h4>Jani</h4>
-                <p class="popup-role">Admin Perawat</p>
+                <img id="popupAvatar" src="https://ui-avatars.com/api/?name=Petugas&background=005461&color=fff" class="img-large" alt="Profile">
+                <h4 id="popupName">Memuat...</h4>
+                <p class="popup-role" id="popupRoleDisplay">Admin Perawat</p>
                 <div class="popup-btns">
-                    <button class="btn-logout" onclick="window.location.href='../auth/masuk.html'; event.stopPropagation();">Keluar</button>
+                    <button class="btn-logout" onclick="logout(event)">Keluar</button>
                 </div>
             </div>
         </div>
 
-            <div class="stats-grid">
+        <div class="stats-grid">
             
             <div class="stat-card-petugas">
                 <div class="stat-icon">
@@ -154,19 +151,98 @@
 </div>
 
 <script>
+
+    (async function initProfile() {
+        const token = localStorage.getItem('rs_token');
+        
+        if (!token) {
+            console.log("Belum login, tapi dibiarkan masuk untuk testing desain."); //kunci disini cia
+            return;
+        }
+
+        try {
+            const response = await fetch('http://kelompok1-rs.test/api/auth/me', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`, 
+                    'Accept': 'application/json'
+                }
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                // Ambil Nama Asli
+                let namaFinal = result?.data?.name || result?.name || result?.data?.user?.name || result?.user?.name;
+                // Ambil Role
+                let roleFinal = result?.data?.roles?.[0] || result?.roles?.[0] || result?.data?.user?.roles?.[0] || result?.user?.roles?.[0] || 'Admin Perawat';
+
+                // Jika Nama Kosong, Ekstrak dari Email
+                if (!namaFinal || namaFinal.trim() === "") {
+                    const emailUser = result?.data?.user?.email || result?.user?.email || result?.data?.email || result?.email;
+                    if (emailUser && emailUser.includes('@')) {
+                        let namaMentah = emailUser.split('@')[0];
+                        let namaBersih = namaMentah.replace(/[^a-zA-Z]/g, ' ');
+                        namaFinal = namaBersih.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ').trim();
+                    }
+                }
+
+                if (!namaFinal || namaFinal.trim() === "") namaFinal = "Petugas";
+
+                // Rapikan Teks Role (contoh: "admin_perawat" jadi "Admin Perawat")
+                roleFinal = roleFinal.replace(/_/g, ' ');
+                roleFinal = roleFinal.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
+                // Update Elemen Teks
+                document.getElementById('welcomeName').innerText = namaFinal;
+                document.getElementById('namaPertugas').innerText = namaFinal;
+                document.getElementById('popupName').innerText = namaFinal;
+                
+                document.getElementById('welcomeRole').innerText = roleFinal;
+                document.getElementById('profileRole').innerText = roleFinal;
+                document.getElementById('popupRoleDisplay').innerText = roleFinal;
+                
+                // Update Avatar
+                const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(namaFinal)}&background=005461&color=fff`;
+                document.getElementById('headerAvatar').src = avatarUrl;
+                document.getElementById('popupAvatar').src = avatarUrl;
+
+            } else {
+                localStorage.removeItem('rs_token');
+                window.location.href = '../auth/masuk.html';
+            }
+        } catch (error) {
+            console.error("Gagal memuat profil:", error);
+            document.getElementById('welcomeName').innerText = "Petugas (Offline)";
+            document.getElementById('namaPertugas').innerText = "Petugas (Offline)";
+            document.getElementById('popupName').innerText = "Petugas (Offline)";
+        }
+    })();
+
+    // ==========================================
+    // 2. SCRIPT POPUP & LOGOUT
+    // ==========================================
     function toggleProfile() {
         const popup = document.getElementById('profilePopup');
         popup.classList.toggle('show');
     }
 
-    window.onclick = function(event) {
-        // Cek apakah klik terjadi di luar area .top-profile
+    // Klik di luar popup
+    window.addEventListener('click', function(event) {
         if (!event.target.closest('.top-profile')) {
             const popup = document.getElementById('profilePopup');
-            if (popup.classList.contains('show')) {
+            if (popup && popup.classList.contains('show')) {
                 popup.classList.remove('show');
             }
         }
+    });
+
+    // Fungsi Logout
+    function logout(event) {
+        event.stopPropagation();
+        localStorage.removeItem('rs_token');
+        localStorage.removeItem('token');
+        window.location.href = '../auth/masuk.html';
     }
 </script>
 

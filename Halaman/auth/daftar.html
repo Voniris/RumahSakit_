@@ -77,11 +77,6 @@
         document.getElementById('btnPasien').classList.toggle('active', roles === 'pasien');
         document.getElementById('btnPetugas').classList.toggle('active', roles === 'petugas');
     }
-
-
-    // ==========================================
-    // KIRIM KODE OTP
-    // ==========================================
     document.querySelector('.btn-kirim').addEventListener('click', async function() {
         const btnKirim = this;
         const email = document.getElementById('email').value;
@@ -90,8 +85,6 @@
             showAlert('warning', 'Email Kosong', 'Masukkan alamat email dulu ya!');
             return;
         }
-
-        // Reset OTP kalau kirim ulang
         otpVerified = false;
         lockPasswordFields();
 
@@ -119,10 +112,6 @@
             btnKirim.disabled = false;
         }
     });
-
-    // ==========================================
-    // SUBMIT DAFTAR
-    // ==========================================
     document.getElementById('formDaftar').addEventListener('submit', async function(e) {
         e.preventDefault();
         const btnSubmit = document.getElementById('btnSubmitDaftar');

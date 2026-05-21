@@ -9,9 +9,7 @@
   <link rel="stylesheet" href="../../css/dashboard.css" />  
 
   <style>
-    /* =========================================
-       TOMBOL AKSI (LEWATI, RECALL, BERIKUTNYA)
-       ========================================= */
+
     .action-buttons {
       display: flex;
       gap: 12px;
@@ -70,7 +68,6 @@
       stroke: #ffffff;
     }
 
-    /* Toast Notifikasi */
     #toast-container {
       position: fixed;
       bottom: 24px;
@@ -107,12 +104,11 @@
 </head>
 <body>
 
-<!-- Toast Container -->
 <div id="toast-container"></div>
 
   <div class="dashboard-container">
     
-    <!-- SIDEBAR KIRI -->
+
     <aside class="sidebar-dashboard">
       <div class="sidebar-logo">
         <img src="../../assets/logo/Logors.png" alt="Logo" />
@@ -133,10 +129,7 @@
       </a>
     </aside>
 
-    <!-- KONTEN KANAN -->
     <main class="main-content">
-      
-      <!-- HEADER -->
       <div class="header-area">
         <h1 class="page-title">Antrian Pasien</h1>
         <div class="profile-area">
@@ -148,10 +141,8 @@
         </div>
       </div>
 
-      <!-- AREA ANTRIAN -->
+
       <div class="queue-container">
-        
-        <!-- KOTAK KIRI (BERLANGSUNG) -->
         <div class="current-card" id="cardBerlangsung">
           <div class="badge-berlangsung">Berlangsung</div>
           <h1 class="current-no" id="berlangsungNo">A-001</h1>
@@ -159,10 +150,8 @@
           <p class="current-unit">Kedokteran Umum • Dr. James Unit</p>
           
         
-          <!-- 3 TOMBOL AKSI -->
-          <div class="action-buttons">
 
-            <!-- LEWATI → PUT /antrian/{id}/selesai -->
+          <div class="action-buttons">
             <button class="btn-action btn-lewati" id="btnLewati" onclick="lewatiAntrian()">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polygon points="5 4 15 12 5 20 5 4"></polygon>
@@ -171,7 +160,6 @@
               <span>Lewati</span>
             </button>
 
-            <!-- RECALL → POST /antrian/{id}/panggil -->
             <button class="btn-action btn-recall" id="btnRecall" onclick="recallAntrian()">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="1 4 1 10 7 10"></polyline>
@@ -180,7 +168,6 @@
               <span>Recall</span>
             </button>
 
-            <!-- BERIKUTNYA → POST /antrian/unit/{unitId}/panggil-berikutnya -->
             <button class="btn-action btn-berikutnya" id="btnBerikutnya" onclick="berikutnyaAntrian()">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -192,7 +179,6 @@
           </div>
         </div>
 
-        <!-- KOTAK KANAN (DAFTAR TUNGGU) -->
         <div class="waiting-card">
           <div class="waiting-header">
             <div class="waiting-title-area">
@@ -208,7 +194,7 @@
           </div>
 
           <div class="waiting-list" id="waitingListContainer">
-            <!-- Diisi oleh JS -->
+
           </div>
         </div>
 
@@ -218,13 +204,9 @@
   </div>
 
   <script>
-    // =============================================
-    // KONFIGURASI
-    // =============================================
-    const API_BASE = 'http://kelompok1-rs.test/api'; // Ganti dengan base URL API kamu
-    const UNIT_ID  = 1; // Ganti sesuai unit petugas yang login
-
-    // Ambil token dari localStorage (disimpan saat login)
+    
+    const API_BASE = 'http://kelompok1-rs.test/api'; 
+    const UNIT_ID  = 1; 
     function getToken() {
       return localStorage.getItem('token') || '';
     }
@@ -234,9 +216,6 @@
       return token ? { 'Authorization': `Bearer ${token}` } : {};
     }
 
-    // =============================================
-    // DATA LOKAL (fallback / tampilan awal)
-    // =============================================
     let dataAntrian = [
       { id: 1, no: "A-001", name: "Mr. Rajwa Shahifa",   time: "Sedang Dilayani" },
       { id: 2, no: "A-002", name: "Mr. Maulana",         time: "Menunggu 15m" },
@@ -248,11 +227,6 @@
       { id: 8, no: "A-008", name: "Ms. Siti Aminah",     time: "Menunggu 58m" }
     ];
 
-
-
-    // =============================================
-    // RENDER TAMPILAN
-    // =============================================
     function updateTampilanAntrian() {
       if (dataAntrian.length === 0) {
         document.getElementById("berlangsungNo").innerText   = "-";
@@ -268,7 +242,6 @@
 
       const pasienSekarang = dataAntrian[0];
 
-      // Animasi kartu kiri
       const card = document.getElementById("cardBerlangsung");
       card.style.animation = 'none';
       card.offsetHeight;
@@ -276,8 +249,6 @@
 
       document.getElementById("berlangsungNo").innerText   = pasienSekarang.no;
       document.getElementById("berlangsungName").innerText = pasienSekarang.name;
-
-      // Daftar tunggu
       const listContainer = document.getElementById("waitingListContainer");
       listContainer.innerHTML = "";
 
@@ -312,16 +283,6 @@
       });
     }
 
-    // =============================================
-    // TIMER
-    // =============================================
-
-
-    // =============================================
-    // AKSI TOMBOL + INTEGRASI API
-    // =============================================
-
-    // LEWATI → PUT /antrian/{id}/selesai
     async function lewatiAntrian() {
       if (dataAntrian.length === 0) return;
       const pasien = dataAntrian[0];
@@ -349,7 +310,6 @@
       }
     }
 
-    // RECALL → POST /antrian/{id}/panggil
     async function recallAntrian() {
       if (dataAntrian.length === 0) return;
       const pasien = dataAntrian[0];
@@ -363,7 +323,7 @@
 
         if (res.ok) {
           showToast('success', `Memanggil ulang ${pasien.no} — ${pasien.name}`);
-          waktuSisa = 10; // Reset timer
+          waktuSisa = 10; 
           document.getElementById("timerText").innerText = "00:10";
         } else {
           const err = await res.json().catch(() => ({}));
@@ -376,7 +336,6 @@
       }
     }
 
-    // BERIKUTNYA → POST /antrian/unit/{unitId}/panggil-berikutnya
     async function berikutnyaAntrian() {
       if (dataAntrian.length === 0) return;
       const pasienSekarang = dataAntrian[0];
@@ -392,7 +351,6 @@
           const data = await res.json().catch(() => ({}));
           showToast('success', `Memanggil antrian berikutnya.`);
 
-          // Update dataAntrian dari response API jika tersedia
           if (data && data.no_antrian) {
             dataAntrian[0] = {
               id:   data.id   || pasienSekarang.id,
@@ -401,7 +359,6 @@
               time: 'Sedang Dilayani'
             };
           } else {
-            // Fallback: geser lokal
             dataAntrian.shift();
           }
 
@@ -418,9 +375,7 @@
       }
     }
 
-    // =============================================
-    // TOAST NOTIFIKASI
-    // =============================================
+
     function showToast(type, msg) {
       const icons = {
         success: '✅',
@@ -439,9 +394,6 @@
       }, 3500);
     }
 
-    // =============================================
-    // INIT
-    // =============================================
     window.onload = () => {
       updateTampilanAntrian();
       mulaiTimer();

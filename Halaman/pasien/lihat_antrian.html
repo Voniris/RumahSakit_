@@ -13,19 +13,17 @@
 
   <div class="dashboard-container">
     
-    <!-- SIDEBAR KIRI -->
     <aside class="sidebar-dashboard">
       <div class="sidebar-logo">
         <img src="../../assets/logo/Logors.png" alt="Logo" />
         <span>Rumah Sakit<br><small>Viamedika</small></span>
       </div>
 
-      <!-- Menu Items -->
       <a href="dashboard_pasien.html" class="menu-item">
         <img src="../../assets/icons/beranda.png" alt="Home" width="27">
         <span>Dashboard</span>
       </a>
-      <a href="pendaftaran_pasien.html" class="menu-item"> <!-- Arahkan ke HTML Pendaftaranmu -->
+      <a href="pendaftaran_pasien.html" class="menu-item">
         <img src="../../assets/icons/pendaftaran.png" alt="Daftar" width="20">
         <span>Pendaftaran</span>
       </a>
@@ -35,10 +33,8 @@
       </a>
     </aside>
 
-    <!-- KONTEN KANAN -->
+
     <main class="main-content">
-      
-      <!-- HEADER -->
       <div class="header-area">
         <h1 class="page-title">Antrian Pasien</h1>
         <div class="profile-area">
@@ -50,10 +46,7 @@
         </div>
       </div>
 
-      <!-- AREA ANTRIAN -->
       <div class="queue-container">
-        
-        <!-- KOTAK KIRI (BERLANGSUNG) -->
         <div class="current-card" id="cardBerlangsung">
           <div class="badge-berlangsung">Berlangsung</div>
           <h1 class="current-no" id="berlangsungNo">A-001</h1>
@@ -66,7 +59,6 @@
           </div>
         </div>
 
-        <!-- KOTAK KANAN (DAFTAR TUNGGU) -->
         <div class="waiting-card">
           <div class="waiting-header">
             <div class="waiting-title-area">
@@ -81,9 +73,8 @@
             <div class="badge-tertunda" id="jumlahTertunda">4 Tertunda</div>
           </div>
 
-          <!-- LIST DAFTAR TUNGGU -->
+
           <div class="waiting-list" id="waitingListContainer">
-            <!-- Isi list akan dimuat otomatis oleh JavaScript -->
           </div>
         </div>
 
@@ -92,10 +83,7 @@
     </main>
   </div>
 
-  <!-- SCRIPT LOGIKA ANTRIAN LOOPING -->
   <script>
-    // 1. DATA DATABASE PALSU (Bisa ditambah sampai panjang)
-    // Cia, Budi, Siti disiapkan di antrian paling belakang
     let dataAntrian = [
       { no: "A-001", name: "Mr. Rajwa Shahifa", time: "Sedang Dilayani" },
       { no: "A-002", name: "Mr. Maulana", time: "Menunggu 15m" },
@@ -106,15 +94,11 @@
       { no: "A-007", name: "Mr. Budi Santoso", time: "Menunggu 50m" },
       { no: "A-008", name: "Ms. Siti Aminah", time: "Menunggu 58m" }
     ];
-
-    // Waktu mundur per pasien (Aku set 10 detik biar kamu bisa liat geraknya cepat)
-    // Kalau mau normal misal 5 menit, ganti jadi: let waktuSisa = 300;
     let waktuSisa = 10; 
     let timerInterval;
 
-    // FUNGSI RENDER TAMPILAN
+
     function updateTampilanAntrian() {
-      // Jika antrian habis
       if (dataAntrian.length === 0) {
         document.getElementById("berlangsungNo").innerText = "-";
         document.getElementById("berlangsungName").innerText = "Tidak ada antrian";
@@ -124,27 +108,23 @@
         document.getElementById("timerText").innerText = "00:00";
         return;
       }
-
-      // 1. Update Pasien Berlangsung (Data pertama di Array, index 0)
       let pasienSekarang = dataAntrian[0];
       
-      // Kasih efek kedip halus pas pergantian nama
+
       let cardBerlangsung = document.getElementById("cardBerlangsung");
       cardBerlangsung.style.animation = 'none';
-      cardBerlangsung.offsetHeight; /* trigger reflow */
+      cardBerlangsung.offsetHeight;
       cardBerlangsung.style.animation = 'slideUp 0.5s ease';
 
       document.getElementById("berlangsungNo").innerText = pasienSekarang.no;
       document.getElementById("berlangsungName").innerText = pasienSekarang.name;
 
-      // 2. Update Daftar Tunggu (Data index 1 sampai maksimal 4 orang ke bawah)
       let listContainer = document.getElementById("waitingListContainer");
-      listContainer.innerHTML = ""; // Bersihkan list lama
+      listContainer.innerHTML = "";
 
       let tertundaCount = dataAntrian.length - 1;
       document.getElementById("jumlahTertunda").innerText = tertundaCount + " Tertunda";
 
-      // Loop sisa pasien untuk ditampilkan di kanan (maksimal 4 orang di layar)
       for (let i = 1; i < Math.min(dataAntrian.length, 5); i++) {
         let p = dataAntrian[i];
         let div = document.createElement("div");
@@ -163,32 +143,20 @@
       }
     }
 
-    // FUNGSI JALANIN TIMER
     function mulaiTimer() {
       timerInterval = setInterval(() => {
         waktuSisa--;
-
-        // Format waktu jadi MM:SS
         let menit = Math.floor(waktuSisa / 60);
         let detik = waktuSisa % 60;
         document.getElementById("timerText").innerText = 
           (menit < 10 ? "0" : "") + menit + ":" + (detik < 10 ? "0" : "") + detik;
-
-        // Kalau waktu habis
         if (waktuSisa <= 0) {
-          // Hapus pasien pertama (Rajwa selesai!)
           dataAntrian.shift(); 
-          
-          // Reset timer ke 10 detik lagi untuk pasien berikutnya
           waktuSisa = 10; 
-          
-          // Perbarui layar (Maulana akan naik ke kiri, Cia akan muncul di kanan)
           updateTampilanAntrian(); 
         }
-      }, 1000); // Jalan setiap 1000ms = 1 detik
+      }, 1000); 
     }
-
-    // JALANKAN SAAT HALAMAN DIBUKA
     window.onload = () => {
       updateTampilanAntrian();
       mulaiTimer();

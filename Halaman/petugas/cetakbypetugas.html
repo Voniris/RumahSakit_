@@ -7,8 +7,6 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  
-  <!-- Sesuaikan path CSS-nya dengan direktori Anda -->
   <link rel="stylesheet" href="../../css/cetakkartubaru.css" />
 </head>
 <body>
@@ -58,32 +56,22 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      // Mengambil data dari sessionStorage hasil pendaftaran oleh petugas
       const rawData = sessionStorage.getItem("dataPasienBaru");
 
       if (rawData) {
         const parsedData = JSON.parse(rawData);
-        
-        // Fleksibilitas format response API (mengantisipasi jika data dibungkus dalam 'tiket' atau dikembalikan langsung)
         const tiket = parsedData.tiket || parsedData.antrian || parsedData;
-
-        // 1. Nomor Antrian
         document.getElementById("teksNomorAntrian").innerText = tiket.kode_antrian || tiket.nomor_antrian || "A-000";
-
-        // 2. Nama Unit
         document.getElementById("teksUnit").innerText = tiket.unit || tiket.nama_unit || "Unit Tujuan";
 
-        // 3. Sisa Antrian di depan
         const sisaAntrian = tiket.antrian_di_depan ?? 0;
         document.getElementById("teksSisaAntrian").innerText = `Ada ${sisaAntrian} Antrian Didepan`;
 
-        // 4. Estimasi Pemanggilan
         const estimasiJam = tiket.estimasi?.perkiraan_jam || tiket.perkiraan_jam || "--:--";
         document.getElementById("teksEstimasi").innerText = `Estimasi Dipanggil: ${estimasiJam}`;
 
-        // 5. Tanggal & Jadwal
         const tanggalMentah = tiket.tanggal || tiket.tanggal_antrian;
-        const tgl = tanggalMentah ? new Date(tanggalMentah + "T00:00:00") : new Date(); // Tambahan T00:00:00 menghindari timezone shift
+        const tgl = tanggalMentah ? new Date(tanggalMentah + "T00:00:00") : new Date();
         
         const namaHari  = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
         const namaBulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli',
@@ -96,85 +84,68 @@
         window.location.href = 'antrianbypetugas.html';
       }
     });
+          function simpanKePNG() {
+        const element = document.getElementById("areaTiket");
+        const judul = document.querySelector(".page-title");
 
-    // Fungsi Simpan Tiket Jadi PNG menggunakan html2canvas
-    function simpanKePNG() {
-  const element = document.getElementById("areaTiket");
-  const judul = document.querySelector(".page-title");
-  
-  if (!element) return;
+        if (!element) return;
+        const wrapper = document.createElement("div");
 
-  // 1. Buat kontainer pembungkus sementara
-  const wrapper = document.createElement("div");
-  
-  // 2. Set style Flexbox agar semua konten berada tepat di tengah kotak
-  wrapper.style.display = "flex";
-  wrapper.style.flexDirection = "column";
-  wrapper.style.alignItems = "center";
-  wrapper.style.justifyContent = "center"; // Membuat konten center secara vertikal
-  wrapper.style.backgroundColor = "white";
-  wrapper.style.boxSizing = "border-box";
-  wrapper.style.padding = "30px";
-  
-  // 3. FORCE UKURAN MENJADI PERSEGI KOTAK SAMA SISI (1:1)
-  // Ukuran 420px biasanya sangat pas untuk menampung judul dan kartu tiket
-  const ukuranKotak = "420px"; 
-  wrapper.style.width = ukuranKotak;
-  wrapper.style.height = ukuranKotak;
-  
-  // 4. Kloning Judul (.page-title)
-  if (judul) {
-    const judulClone = judul.cloneNode(true);
-    judulClone.style.marginTop = "0";
-    judulClone.style.marginBottom = "20px";
-    judulClone.style.fontSize = "20px"; // Sedikit dikecilkan agar proporsional di dalam gambar kotak
-    wrapper.appendChild(judulClone);
-  }
-  
-  // 5. Kloning Area Tiket
-  const tiketClone = element.cloneNode(true);
-  
-  // Hilangkan margin luar & bayangan bawaan css agar tidak merusak kalkulasi center html2canvas
-  tiketClone.style.margin = "0";
-  tiketClone.style.boxShadow = "none";
-  // Jika di CSS Anda .ticket-card menggunakan border tipis, kita bisa pastikan di sini
-  tiketClone.style.border = "1px solid #777"; 
-  
-  wrapper.appendChild(tiketClone);
-  
-  // Masukkan wrapper ke dalam dokumen agar bisa dirender oleh html2canvas
-  document.body.appendChild(wrapper);
+        wrapper.style.display = "flex";
+        wrapper.style.flexDirection = "column";
+        wrapper.style.alignItems = "center";
+        wrapper.style.justifyContent = "center"; 
+        wrapper.style.backgroundColor = "white";
+        wrapper.style.boxSizing = "border-box";
+        wrapper.style.padding = "30px";
 
-  // 6. Proses konversi ke berkas gambar PNG
-  html2canvas(wrapper, {
-    backgroundColor: "#ffffff",
-    scale: 2 // Skala 2x agar hasil gambar jernih dan tidak pecah
-  }).then(canvas => {
-    const link = document.createElement("a");
-    
-    // Penamaan file dinamis berdasarkan nomor antrian dari elemen teks asli di halaman
-    const elNoAntrian = document.getElementById("teksNomorAntrian") || document.getElementById("teksNomorAntrianLama");
-    const noAntrian = elNoAntrian ? elNoAntrian.innerText.trim() : "A-001";
-    
-    link.download = `Tiket-Antrian-${noAntrian}-Viamedika.png`;
-    link.href = canvas.toDataURL("image/png");
-    link.click();
-    
-    // Hapus elemen wrapper sementara dari body setelah sukses download
-    document.body.removeChild(wrapper);
-  }).catch(err => {
-    console.error("Gagal mendownload tiket:", err);
-    if (document.body.contains(wrapper)) {
-      document.body.removeChild(wrapper);
-    }
-  });
-}
+        const ukuranKotak = "420px"; 
+        wrapper.style.width = ukuranKotak;
+        wrapper.style.height = ukuranKotak;
 
-    // Fungsi Kembali dan reset temporary storage
-    function kembaliKePendaftaran() {
-      sessionStorage.removeItem("dataPasienBaru");
-      window.location.href = 'antrianbypetugas.html';
-    }
+
+        if (judul) {
+          const judulClone = judul.cloneNode(true);
+          judulClone.style.marginTop = "0";
+          judulClone.style.marginBottom = "20px";
+          judulClone.style.fontSize = "20px"; 
+          wrapper.appendChild(judulClone);
+        }
+        const tiketClone = element.cloneNode(true);
+        tiketClone.style.margin = "0";
+        tiketClone.style.boxShadow = "none";
+        tiketClone.style.border = "1px solid #777"; 
+
+        wrapper.appendChild(tiketClone);
+
+        document.body.appendChild(wrapper);
+
+        html2canvas(wrapper, {
+          backgroundColor: "#ffffff",
+          scale: 2 
+        }).then(canvas => {
+          const link = document.createElement("a");
+          
+          const elNoAntrian = document.getElementById("teksNomorAntrian") || document.getElementById("teksNomorAntrianLama");
+          const noAntrian = elNoAntrian ? elNoAntrian.innerText.trim() : "A-001";
+          
+          link.download = `Tiket-Antrian-${noAntrian}-Viamedika.png`;
+          link.href = canvas.toDataURL("image/png");
+          link.click();
+          
+          document.body.removeChild(wrapper);
+        }).catch(err => {
+          console.error("Gagal mendownload tiket:", err);
+          if (document.body.contains(wrapper)) {
+            document.body.removeChild(wrapper);
+          }
+        });
+        }
+
+          function kembaliKePendaftaran() {
+            sessionStorage.removeItem("dataPasienBaru");
+            window.location.href = 'antrianbypetugas.html';
+          }
   </script>
 </body>
 </html>

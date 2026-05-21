@@ -108,7 +108,6 @@
       document.getElementById('errorMsg').style.display = 'none';
     }
 
-    // 1. Fetch units dari API
     async function loadUnits() {
       const select = document.getElementById('unit_id');
       try {
@@ -129,7 +128,6 @@
       }
     }
 
-    // 2. FUNGSI BARU: Otomatis memuat profil pasien (NIK, Nama, RM) saat halaman dibuka
     async function loadPasienProfil() {
       try {
         const res = await fetch(PROFIL_URL, { headers: authHeaders() });
@@ -143,7 +141,6 @@
           
         if (data.terdaftar && data.data) {
             const p = data.data;
-            // Otomatis isi ketiga field sekaligus!
             document.getElementById('nik').value = p.nik || '';
             document.getElementById('nama_lengkap').value = p.nama_lengkap || '';
             document.getElementById('nomor_rm').value = p.nomor_rm || '';
@@ -158,14 +155,12 @@
       }
     }
 
-    // Fungsi pembantu untuk mengubah teks placeholder jika gagal load
     function setPlaceholders(text) {
       document.getElementById('nik').placeholder = text;
       document.getElementById('nama_lengkap').placeholder = text;
       document.getElementById('nomor_rm').placeholder = text;
     }
 
-    // 3. Submit Pendaftaran ke Backend
     async function submitPendaftaranLama() {
       hideError();
 
@@ -219,10 +214,9 @@
       }
     }
 
-    // JALANKAN SEMUA FUNGSI SAAT HALAMAN DI-LOAD
     window.addEventListener('DOMContentLoaded', () => {
-      loadUnits();        // Muat dropdown poliklinik
-      loadPasienProfil(); // Muat otomatis NIK, Nama, dan No. RM
+      loadUnits();
+      loadPasienProfil();
     });
   </script>
 

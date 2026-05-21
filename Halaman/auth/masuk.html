@@ -16,7 +16,6 @@
       </div>
       <h1>Masuk</h1>
 
-        <!-- Tambahkan ini setelah <h1>Masuk</h1> -->
       <div class="roles-toggle">
           <button type="button" class="btn-roles active" id="btnPasien" onclick="setRoles('pasien')">Pasien</button>
           <button type="button" class="btn-roles" id="btnPetugas" onclick="setRoles('petugas')">Petugas</button>
@@ -63,7 +62,7 @@
         btnSubmit.disabled = true;
 
         const payload = {
-            email: document.getElementById('email').value, // API butuh field email 
+            email: document.getElementById('email').value,
             password: document.getElementById('password').value,
             remember_me: document.getElementById('remember_me').checked
         };
@@ -76,28 +75,17 @@
             });
             const data = await response.json();
         if(response.status === 200 || data.success) {
-            // 1. Simpan token buat "tiket masuk"
             localStorage.setItem('rs_token', data.data.token);
-            
-            // 2. Ambil data role dari jawaban backend
-            // Biasanya di Laravel: data.data.user.role 
-            // Pastikan di database/backend isinya tulisan 'pasien' atau 'petugas'
             const userRoles = data.data.user.roles[0]; 
 
             alert("Login berhasil! Selamat datang, " + data.data.user.email);
-
-            // 3. Alur lempar halaman (Redirect)
             if (userRoles.includes('pasien')) {
-                // Diarahkan ke dashboard pasien
                 window.location.href = "../pasien/dashboard_pasien.html";
             } else if (userRoles.includes('superadmin')) {
-                // Diarahkan ke dashboard super admin
                 window.location.href = "../super_admin/dashboard_superadmin.html";
             } else if (userRoles.includes('admin_perawat') || userRoles.includes('petugas') || userRoles.includes('perawat')) {
-                // Role petugas dan admin_perawat diarahkan ke dashboard petugas
                 window.location.href = "../petugas/dashboard_petugas.html";
             } else if (userRoles.includes('dokter')) {
-                // Tambahan untuk role dokter jika diperlukan
                 window.location.href = "../petugas/dashboard_petugas.html";
             } else {
                 alert("Peringatan: Role tidak dikenal (" + userRoles.join(', ') + ")");
@@ -115,7 +103,6 @@
     });
   </script>
   <script>
-  // ✅ Taruh di LUAR form submit listener
   function setRoles(roles) {
     document.getElementById('selectedRoles').value = roles;
     document.getElementById('btnPasien').classList.toggle('active', roles === 'pasien');
@@ -123,7 +110,6 @@
   }
 
   document.getElementById('formLogin').addEventListener('submit', async function(e) {
-    // ... sisa kode login seperti biasa
   });
 </script>
 </body>

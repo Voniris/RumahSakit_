@@ -166,9 +166,6 @@
   </div>
 
   <script>
-    // ==========================================
-    // 1. SCRIPT AMBIL DATA DARI API PROFILE + FALLBACK EMAIL
-    // ==========================================
     document.addEventListener("DOMContentLoaded", async function() {
         const token = localStorage.getItem('rs_token');
 
@@ -189,37 +186,30 @@
             const result = await response.json();
 
             if (response.ok) {
-                // Langkah A: Coba ambil properti nama asli dari berbagai kemungkinan struktur JSON
                 let namaFinal = result?.data?.name || result?.name || result?.data?.user?.name || result?.user?.name;
 
-                // Langkah B: Jika nama asli kosong/null, ekstrak dari email
                 if (!namaFinal || namaFinal.trim() === "") {
-                    // Cari properti email dari response API
                     const emailUser = result?.data?.user?.email || result?.user?.email || result?.data?.email || result?.email;
                     
                     if (emailUser && emailUser.includes('@')) {
-                        let namaMentah = emailUser.split('@')[0]; // Ambil bagian sebelum '@'
-                        let namaBersih = namaMentah.replace(/[^a-zA-Z]/g, ' '); // Ganti titik/angka dengan spasi
+                        let namaMentah = emailUser.split('@')[0];
+                        let namaBersih = namaMentah.replace(/[^a-zA-Z]/g, ' ');
                         
-                        // Buat huruf pertama tiap kata menjadi Kapital (Capital Case)
                         namaFinal = namaBersih.split(' ').map(word => {
                             return word.charAt(0).toUpperCase() + word.slice(1);
                         }).join(' ').trim();
                     }
                 }
 
-                // Langkah C: Jika nama asli & email tidak ditemukan, gunakan default "Pasien"
                 if (!namaFinal || namaFinal.trim() === "") {
                     namaFinal = "Pasien";
                 }
 
-                // Terapkan nama final ke elemen HTML dashboard
                 const elemenNama = document.querySelectorAll('.name, .user-name, .profile-popup h4');
                 elemenNama.forEach(function(elemen) {
                     elemen.innerText = namaFinal;
                 });
 
-                // Update URL Avatar otomatis sesuai inisial nama baru
                 const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(namaFinal)}&background=005461&color=fff`;
                 if (document.getElementById('headerAvatar')) document.getElementById('headerAvatar').src = avatarUrl;
                 if (document.getElementById('popupAvatar')) document.getElementById('popupAvatar').src = avatarUrl;
@@ -235,18 +225,12 @@
         }
     });
 
-    // ==========================================
-    // 2. SCRIPT LOGOUT
-    // ==========================================
     function logout(event) {
         event.stopPropagation();
         localStorage.removeItem('rs_token');
         window.location.href = '../auth/masuk.html';
     }
 
-    // ==========================================
-    // 3. SCRIPT POPUP PROFILE
-    // ==========================================
     function toggleProfile() {
       const popup = document.getElementById('profilePopup');
       popup.classList.toggle('show');
@@ -261,9 +245,6 @@
       }
     });
 
-    // ==========================================
-    // 4. SCRIPT SLIDER TIPS KESEHATAN
-    // ==========================================
     let slideSekarang = 0;
     let timerSlider;
     const semuaSlide = document.querySelectorAll('.ht-slide');

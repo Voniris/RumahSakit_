@@ -11,71 +11,60 @@
 
   <div class="dashboard-container">
     
-    <!-- SIDEBAR KIRI -->
     <aside class="sidebar-dashboard">
       <div class="sidebar-logo">
         <img src="../../assets/logo/Logors.png" alt="Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3063/3063206.png'" />
         <span>Rumah Sakit<br><small>Viamedika</small></span>
       </div>
 
-      <!-- Menu Dashboard (Mati) -->
       <a href="dashboard_pasien.html" class="menu-item">
         <img src="../../assets/icons/beranda.png" alt="Home" width="27">
         <span>Dashboard</span>
       </a>
 
-      <!-- Menu Pendaftaran (AKTIF / NYALA) -->
       <a href="pendaftaran_pasien.html" class="menu-item active">
         <img src="../../assets/icons/pendaftaran.png" alt="Daftar" width="20">
         <span>Pendaftaran</span>
       </a>
 
-      <!-- Menu Lihat Antrian (Mati) -->
       <a href="lihat_antrian.html" class="menu-item">
         <img src="../../assets/icons/panggill.png" alt="Antrian" width="20">
         <span>Lihat Antrian</span>
       </a>
     </aside>
 
-    <!-- KONTEN UTAMA -->
     <main class="main-content">
       
-      <!-- PROFIL -->
       <div class="top-profile" onclick="toggleProfile()">
         <div class="info-user">
           <span class="role">Pasien</span>
-          <span class="name">Nulla</span>
+          <span class="name" id="profileName">Memuat...</span>
         </div>
-        <img src="../../assets/images/my.jpg" alt="Profile">
+        <img id="headerAvatar" src="../../assets/images/my.jpg" alt="Profile">
 
         <div class="profile-popup" id="profilePopup">
             <span class="close-popup" onclick="toggleProfile(); event.stopPropagation();">&times;</span>
-            <img src="../../assets/images/my.jpg" class="img-large" alt="Profile">
-            <h4>Nulla</h4>
+            <img id="popupAvatar" src="../../assets/images/my.jpg" class="img-large" alt="Profile">
+            <h4 id="popupName">Memuat...</h4>
             <p class="popup-role">Pasien</p>
             <div class="popup-btns">
-                <button class="btn-logout" onclick="window.location.href='../auth/masuk.html'; event.stopPropagation();">Keluar</button>
+                <button class="btn-logout" onclick="logout(event)">Keluar</button>
             </div>
         </div>
       </div>
 
       <h1 class="page-title">Pembuatan Tiket</h1>
 
-      <!-- KOTAK TENGAH -->
       <div class="center-wrapper">
         <div class="ticket-card">
           
-          <!-- GAMBAR DOKTER -->
           <img src="../../assets/images/dokterpendaftarannew.png" alt="Dokter Mikir" class="doctor-ticket-img" onerror="this.style.display='none'">
           
-          <!-- KONTEN KANAN -->
           <div class="ticket-content">
             <h2>Pilih Jenis Pasien</h2>
             <p>Silakan pilih salah satu jenis pasien dibawah ini</p>
             
-            <!-- DROPDOWN -->
             <div class="custom-dropdown">
-              <!-- Tombol Pemicu -->
               <button class="btn-dropdown-header" onclick="toggleDropdown()">
                 Pilih Jenis Pasien
                 <svg id="dropdown-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -83,7 +72,6 @@
                 </svg>
               </button>
               
-              <!-- Pilihan Dropdown -->
               <div class="dropdown-options" id="dropdownMenu">
                 <button class="btn-option" onclick="window.location.href='pasien_baru/form_pasien_baru.html'">
                   Pasien Baru
@@ -101,8 +89,59 @@
     </main>
   </div>
 
-  <!-- SCRIPT LOGIKA DROPDOWN -->
   <script>
+ 
+    (async function initProfile() {
+        const token = localStorage.getItem('rs_token');
+        
+        if (!token) {
+            window.location.href = '../auth/masuk.html';
+            return;
+        }
+
+        try {
+            const response = await fetch('http://kelompok1-rs.test/api/auth/me', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`, 
+                    'Accept': 'application/json'
+                }
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                let namaFinal = result?.data?.name || result?.name || result?.data?.user?.name || result?.user?.name;
+
+                if (!namaFinal || namaFinal.trim() === "") {
+                    const emailUser = result?.data?.user?.email || result?.user?.email || result?.data?.email || result?.email;
+                    if (emailUser && emailUser.includes('@')) {
+                        let namaMentah = emailUser.split('@')[0];
+                        let namaBersih = namaMentah.replace(/[^a-zA-Z]/g, ' ');
+                        namaFinal = namaBersih.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ').trim();
+                    }
+                }
+
+                if (!namaFinal || namaFinal.trim() === "") namaFinal = "Pasien";
+                document.getElementById('profileName').innerText = namaFinal;
+                document.getElementById('popupName').innerText = namaFinal;
+                
+    
+                const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(namaFinal)}&background=005461&color=fff`;
+                document.getElementById('headerAvatar').src = avatarUrl;
+                document.getElementById('popupAvatar').src = avatarUrl;
+
+            } else {
+                localStorage.removeItem('rs_token');
+                window.location.href = '../auth/masuk.html';
+            }
+        } catch (error) {
+            console.error("Gagal memuat profil:", error);
+            document.getElementById('profileName').innerText = "Pasien (Offline)";
+            document.getElementById('popupName').innerText = "Pasien (Offline)";
+        }
+    })();
+
     function toggleDropdown() {
       const menu = document.getElementById("dropdownMenu");
       const icon = document.getElementById("dropdown-icon");
@@ -110,21 +149,33 @@
       menu.classList.toggle("show");
       icon.classList.toggle("rotate-icon");
     }
-     // --- SCRIPT POPUP PROFILE ---
+
     function toggleProfile() {
       const popup = document.getElementById('profilePopup');
       popup.classList.toggle('show');
     }
 
-    // Biar kalau ngeklik di luar kotak profile, popup-nya otomatis nutup
     window.addEventListener('click', function(event) {
-      if (!event.target.closest('.top-profile')) {
-        const popup = document.getElementById('profilePopup');
-        if (popup && popup.classList.contains('show')) {
-          popup.classList.remove('show');
+      if (!event.target.closest('.top-profile') && !event.target.closest('.custom-dropdown')) {
+        const popupProfile = document.getElementById('profilePopup');
+        if (popupProfile && popupProfile.classList.contains('show')) {
+          popupProfile.classList.remove('show');
+        }
+
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        const dropdownIcon = document.getElementById('dropdown-icon');
+        if (dropdownMenu && dropdownMenu.classList.contains('show')) {
+          dropdownMenu.classList.remove('show');
+          if (dropdownIcon) dropdownIcon.classList.remove('rotate-icon');
         }
       }
     });
+
+    function logout(event) {
+        event.stopPropagation();
+        localStorage.removeItem('rs_token');
+        window.location.href = '../auth/masuk.html';
+    }
   </script>
 </body>
 </html>

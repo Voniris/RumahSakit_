@@ -99,8 +99,6 @@
           </svg>
         </div>
       </div>
-
-      <!-- Error message -->
       <div id="errorMsg" style="display:none;background:#fee2e2;border:1px solid #fca5a5;color:#b91c1c;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px;"></div>
 
       <div class="action-buttons">
@@ -112,7 +110,6 @@
   </div>
 
  <script>
-  // ── CONFIG ──
   const BASE_URL  = 'http://kelompok1-rs.test/api/pendaftaran/online';
   const UNITS_URL = 'http://kelompok1-rs.test/api/units';
 
@@ -140,7 +137,6 @@
     document.getElementById('errorMsg').style.display = 'none';
   }
 
-  // ── LOAD UNITS DARI API ──
   async function loadUnits() {
     const select = document.getElementById('unit_id');
     try {
@@ -220,7 +216,6 @@
     }
   }
 
-  // ── JALANKAN SAAT HALAMAN LOAD ──
   loadUnits();
 </script>
 
