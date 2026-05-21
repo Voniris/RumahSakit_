@@ -1,85 +1,411 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Manajemen Pengguna – Vamedika</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manajemen Pengguna – Vamedika</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      .top-profile {
+        cursor: pointer;
+        position: relative;
+      }
+      .profile-popup {
+        display: none;
+        position: absolute;
+        top: 60px;
+        right: 0;
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 16px;
+        padding: 20px;
+        width: 220px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        z-index: 100;
+      }
+      .profile-popup.show {
+        display: block;
+        animation: slideUp 0.2s ease;
+      }
+      .close-popup {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 22px;
+        cursor: pointer;
+        color: #888;
+      }
+      .close-popup:hover {
+        color: #ef4444;
+      }
+      .profile-popup h4 {
+        color: #111;
+        margin: 10px 0 2px;
+        font-size: 15px;
+        font-weight: 700;
+      }
+      .popup-role {
+        color: #555;
+        font-size: 12px;
+        margin-bottom: 15px;
+        font-weight: 600;
+        text-transform: capitalize;
+      }
+      .btn-logout {
+        background: #ef4444;
+        color: white;
+        border: none;
+        padding: 10px 0;
+        border-radius: 10px;
+        width: 100%;
+        cursor: pointer;
+        font-family: inherit;
+        font-weight: 600;
+        font-size: 13px;
+        transition: 0.2s;
+      }
+      .btn-logout:hover {
+        background: #dc2626;
+      }
+      .img-large {
+        width: 65px !important;
+        height: 65px !important;
+        font-size: 24px !important;
+        margin: 0 auto;
+      }
+
+      /* Paksa hilangkan warna kuning autofill di browser jika cara HTML kurang mempan */
+      input:-webkit-autofill,
+      input:-webkit-autofill:hover,
+      input:-webkit-autofill:focus,
+      input:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 30px white inset !important;
+        -webkit-text-fill-color: #111111 !important;
+      }
+
+      @keyframes slideUp {
+        from {
+          transform: translateY(10px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .roles-superadmin {
+        background: #ede9fe;
+        color: #5b21b6;
+      }
+
+      /* Kolom role — bungkus badge kalau lebih dari satu */
+      .roles-cell {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        max-width: 220px; /* sesuaikan lebar kolom tabelmu */
+      }
+
+      .roles-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+    </style>
+
     <link rel="stylesheet" href="super_admin.css" />
-</head>
-<body>
-<div class="dashboard-container">
-
-<aside class="sidebar">
-  <div class="sidebar-logo">
-    <img src="../../assets/logo/Logors.png" alt="Logo"
-         onerror="this.src='https://cdn-icons-png.flaticon.com/512/3063/3063206.png'"/>
-    <span>Rumah Sakit<br><small>Viamedika</small></span>
-  </div>
-  <a href="#" class="nav-item active">
-    <img src="../../assets/icons/manajemeen.png" alt="icon" class="nav-icon"
-         onerror="this.style.display='none'"/>
-    Manajemen Pengguna
-  </a>
-</aside>
-
-<main class="main">
-  <div class="top-profile" onclick="toggleProfile()">
-    <div class="info-user">
-      <span class="roles" id="profileRole">Memuat...</span>
-      <span class="name" id="profileName">Memuat...</span>
-    </div>
-    <div class="avatar-circle" id="profileAvatar">...</div>
-
-    <div class="profile-popup" id="profilePopup">
-      <span class="close-popup" onclick="toggleProfile(); event.stopPropagation();">&times;</span>
-      <div class="avatar-circle img-large" id="popupAvatar">...</div>
-      <h4 id="popupName">Memuat...</h4>
-      <p class="popup-role" id="popupRoleDisplay">Memuat...</p>
-      <div class="popup-btns">
-        <button class="btn-logout" onclick="logout(event)">Keluar</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="content">
-    <div class="page-header">
-      <div>
-        <h1>Manajemen Pengguna</h1>
-        <p>Kelola akun pengguna dan berikan roles sesuai jabatannya.</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-               stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-          </svg>
-          Daftar Pengguna
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <aside class="sidebar">
+        <div class="sidebar-logo">
+          <img
+            src="../../assets/logo/Logors.png"
+            alt="Logo"
+            onerror="
+              this.src =
+                'https://cdn-icons-png.flaticon.com/512/3063/3063206.png'
+            "
+          />
+          <span>Rumah Sakit<br /><small>Viamedika</small></span>
         </div>
-      </div>
+        <a href="#" class="nav-item active">
+          <img
+            src="../../assets/icons/manajemeen.png"
+            alt="icon"
+            class="nav-icon"
+            onerror="this.style.display = 'none'"
+          />
+          Manajemen Pengguna
+        </a>
+      </aside>
 
-      <div class="toolbar">
-        <div class="search-wrap">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-          </svg>
-          <input type="text" id="searchInput" placeholder="Cari nama, email, atau jabatan..." oninput="filterTable()" autocomplete="off" value=""/>
+      <main class="main">
+        <div class="top-profile" onclick="toggleProfile()">
+          <div class="info-user">
+            <span class="roles" id="profileRole">Memuat...</span>
+            <span class="name" id="profileName">Memuat...</span>
+          </div>
+          <div class="avatar-circle" id="profileAvatar">...</div>
+
+          <div class="profile-popup" id="profilePopup">
+            <span
+              class="close-popup"
+              onclick="
+                toggleProfile();
+                event.stopPropagation();
+              "
+              >&times;</span
+            >
+            <div class="avatar-circle img-large" id="popupAvatar">...</div>
+            <h4 id="popupName">Memuat...</h4>
+            <p class="popup-role" id="popupRoleDisplay">Memuat...</p>
+            <div class="popup-btns">
+              <button class="btn-logout" onclick="logout(event)">Keluar</button>
+            </div>
+          </div>
         </div>
 
-        <div class="filter-select">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-               stroke-linecap="round" stroke-linejoin="round">
-            <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
-            <line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/>
-            <line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
-          </svg>
-          <select id="rolesFilter" onchange="filterTable()"
-                  style="border:none;outline:none;font-family:inherit;font-size:13px;color:inherit;background:transparent;cursor:pointer;">
-            <option value="">Semua roles</option>
+        <div class="content">
+          <div class="page-header">
+            <div>
+              <h1>Manajemen Pengguna</h1>
+              <p>Kelola akun pengguna dan berikan roles sesuai jabatannya.</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                </svg>
+                Daftar Pengguna
+              </div>
+            </div>
+
+            <div class="toolbar">
+              <div class="search-wrap">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.35-4.35" />
+                </svg>
+                <input
+                  type="text"
+                  id="searchInput"
+                  placeholder="Cari nama, email, atau jabatan..."
+                  oninput="filterTable()"
+                  autocomplete="off"
+                  value=""
+                />
+              </div>
+
+              <div class="filter-select">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="8" y1="6" x2="21" y2="6" />
+                  <line x1="8" y1="12" x2="21" y2="12" />
+                  <line x1="8" y1="18" x2="21" y2="18" />
+                  <line x1="3" y1="6" x2="3.01" y2="6" />
+                  <line x1="3" y1="12" x2="3.01" y2="12" />
+                  <line x1="3" y1="18" x2="3.01" y2="18" />
+                </svg>
+                <select
+                  id="rolesFilter"
+                  onchange="filterTable()"
+                  style="
+                    border: none;
+                    outline: none;
+                    font-family: inherit;
+                    font-size: 13px;
+                    color: inherit;
+                    background: transparent;
+                    cursor: pointer;
+                  "
+                >
+                  <option value="">Semua roles</option>
+                  <option value="Admin_perawat">Admin perawat</option>
+                  <option value="Pasien">Pasien</option>
+                  <option value="Perawat">Perawat</option>
+                  <option value="Dokter">Dokter</option>
+                  <option value="Kasir">Kasir</option>
+                  <option value="Admin_kasir">Admin kasir</option>
+                  <option value="Apoteker">Apoteker</option>
+                  <option value="Admin_apotik">Admin apotik</option>
+                </select>
+              </div>
+
+              <button class="btn-add" onclick="openModal()">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                Tambah Pengguna
+              </button>
+            </div>
+
+            <div
+              id="loadingState"
+              style="text-align: center; padding: 40px; display: none"
+            >
+              <svg
+                style="
+                  width: 32px;
+                  height: 32px;
+                  animation: spin 1s linear infinite;
+                  color: #6366f1;
+                "
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+              </svg>
+              <p style="margin-top: 12px; color: #6b7280; font-size: 14px">
+                Memuat data pengguna...
+              </p>
+            </div>
+
+            <div
+              id="errorState"
+              style="text-align: center; padding: 40px; display: none"
+            >
+              <svg
+                style="
+                  width: 40px;
+                  height: 40px;
+                  color: #ef4444;
+                  margin-bottom: 12px;
+                "
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              <p
+                id="errorMsg"
+                style="color: #ef4444; font-size: 14px; margin: 0"
+              >
+                Gagal memuat data.
+              </p>
+              <button
+                onclick="loadUsers()"
+                style="
+                  margin-top: 12px;
+                  padding: 8px 16px;
+                  background: #6366f1;
+                  color: #fff;
+                  border: none;
+                  border-radius: 8px;
+                  cursor: pointer;
+                  font-size: 13px;
+                "
+              >
+                Coba Lagi
+              </button>
+            </div>
+
+            <table id="userTable">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Nama Email</th>
+                  <th>Email</th>
+                  <th>Roles</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="userTableBody"></tbody>
+            </table>
+
+            <div class="card-footer">
+              <span class="footer-info" id="footerInfo">–</span>
+              <div class="pagination" id="pagination"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div
+      class="modal-overlay"
+      id="modalOverlay"
+      onclick="closeOnOverlay(event)"
+    >
+      <div class="modal">
+        <h2 id="modalTitle">Tambah Pengguna</h2>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input
+            type="email"
+            id="formEmail"
+            placeholder="email@vamedika.id"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Kata Sandi</label>
+          <input
+            type="password"
+            id="formPassword"
+            placeholder="Masukkan kata sandi"
+            autocomplete="new-password"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Roles</label>
+          <select id="formroles">
+            <option value="">-- Pilih roles --</option>
             <option value="Admin_perawat">Admin perawat</option>
             <option value="Pasien">Pasien</option>
             <option value="Perawat">Perawat</option>
@@ -91,346 +417,407 @@
           </select>
         </div>
 
-        <button class="btn-add" onclick="openModal()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-               stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-          Tambah Pengguna
-        </button>
-      </div>
-
-      <div id="loadingState" style="text-align:center;padding:40px;display:none;">
-        <svg style="width:32px;height:32px;animation:spin 1s linear infinite;color:#6366f1"
-             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
-        </svg>
-        <p style="margin-top:12px;color:#6b7280;font-size:14px;">Memuat data pengguna...</p>
-      </div>
-
-      <div id="errorState" style="text-align:center;padding:40px;display:none;">
-        <svg style="width:40px;height:40px;color:#ef4444;margin-bottom:12px"
-             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-             stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="12" y1="8" x2="12" y2="12"/>
-          <line x1="12" y1="16" x2="12.01" y2="16"/>
-        </svg>
-        <p id="errorMsg" style="color:#ef4444;font-size:14px;margin:0">Gagal memuat data.</p>
-        <button onclick="loadUsers()" style="margin-top:12px;padding:8px 16px;background:#6366f1;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;">
-          Coba Lagi
-        </button>
-      </div>
-
-      <table id="userTable">
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Nama Lengkap</th>
-            <th>Email</th>
-            <th>Roles</th>
-            <th>Status</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody id="userTableBody"></tbody>
-      </table>
-
-      <div class="card-footer">
-        <span class="footer-info" id="footerInfo">–</span>
-        <div class="pagination" id="pagination"></div>
+        <div class="modal-actions">
+          <button class="btn-cancel" onclick="closeModal()">Batal</button>
+          <button class="btn-save" id="btnSave" onclick="saveUser()">
+            Simpan
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-</main>
-</div>
 
-<div class="modal-overlay" id="modalOverlay" onclick="closeOnOverlay(event)">
-  <div class="modal">
-    <h2 id="modalTitle">Tambah Pengguna</h2>
-    
-    <div class="form-group">
-      <label>Email</label>
-      <input type="email" id="formEmail" placeholder="email@vamedika.id" autocomplete="off"/>
-    </div>
-    
-    <div class="form-group">
-      <label>Kata Sandi</label>
-      <input type="password" id="formPassword" placeholder="Masukkan kata sandi" autocomplete="new-password"/>
-    </div>
-    
-    <div class="form-group">
-      <label>Roles</label>
-      <select id="formroles">
-        <option value="">-- Pilih roles --</option>
-        <option value="Admin_perawat">Admin perawat</option>
-        <option value="Pasien">Pasien</option>
-        <option value="Perawat">Perawat</option>
-        <option value="Dokter">Dokter</option>
-        <option value="Kasir">Kasir</option>
-        <option value="Admin_kasir">Admin kasir</option>
-        <option value="Apoteker">Apoteker</option>
-        <option value="Admin_apotik">Admin apotik</option>
-      </select>
+    <div class="toast" id="toast">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        style="width: 16px; height: 16px"
+      >
+        <polyline points="20 6 9 17 4 12" />
+      </svg>
+      <span id="toastMsg">Berhasil disimpan!</span>
     </div>
 
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">Batal</button>
-      <button class="btn-save" id="btnSave" onclick="saveUser()">Simpan</button>
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="toast">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-       stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
-    <polyline points="20 6 9 17 4 12"/>
-  </svg>
-  <span id="toastMsg">Berhasil disimpan!</span>
-</div>
-
-<style>
-  @keyframes spin { to { transform: rotate(360deg); } }
-</style>
-
-<script>
-
-  (async function initProfile() {
-      const token = localStorage.getItem('rs_token') || localStorage.getItem('token');
-      
-      if (!token) {
-          console.log("Bypass login aktif untuk testing."); // dibuka untuk cia kalau mau nutup ganti ini window.location.href = '../auth/masuk.html';
+    <style>
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
       }
+    </style>
 
-      try {
-          const response = await fetch('http://kelompok1-rs.test/api/auth/me', {
-              method: 'GET',
-              headers: {
-                  'Authorization': `Bearer ${token}`, 
-                  'Accept': 'application/json'
-              }
+    <script>
+      (async function initProfile() {
+        const token =
+          localStorage.getItem("rs_token") || localStorage.getItem("token");
+
+        if (!token) {
+          console.log("Bypass login aktif untuk testing.");
+        }
+
+        try {
+          const response = await fetch("http://kelompok1-rs.test/api/auth/me", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: "application/json",
+            },
           });
 
           const result = await response.json();
 
           if (response.ok) {
-              let namaFinal = result?.data?.name || result?.name || result?.data?.user?.name || result?.user?.name;
-              let roleFinal = result?.data?.roles?.[0] || result?.roles?.[0] || result?.data?.user?.roles?.[0] || result?.user?.roles?.[0] || 'Admin';
+            let namaFinal =
+              result?.data?.name ||
+              result?.name ||
+              result?.data?.user?.name ||
+              result?.user?.name;
+            let roleFinal =
+              result?.data?.roles?.[0]?.nama_role ||
+              result?.roles?.[0]?.nama_role ||
+              result?.data?.user?.roles?.[0]?.nama_role ||
+              result?.user?.roles?.[0]?.nama_role ||
+              "Admin";
 
-              if (!namaFinal || namaFinal.trim() === "") {
-                  const emailUser = result?.data?.user?.email || result?.user?.email || result?.data?.email || result?.email;
-                  if (emailUser && emailUser.includes('@')) {
-                      let namaMentah = emailUser.split('@')[0];
-                      let namaBersih = namaMentah.replace(/[^a-zA-Z]/g, ' ');
-                      namaFinal = namaBersih.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ').trim();
-                  }
+            if (!namaFinal || namaFinal.trim() === "") {
+              const emailUser =
+                result?.data?.user?.email ||
+                result?.user?.email ||
+                result?.data?.email ||
+                result?.email;
+              if (emailUser && emailUser.includes("@")) {
+                let namaMentah = emailUser.split("@")[0];
+                let namaBersih = namaMentah.replace(/[^a-zA-Z]/g, " ");
+                namaFinal = namaBersih
+                  .split(" ")
+                  .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                  .join(" ")
+                  .trim();
               }
+            }
 
-              if (!namaFinal || namaFinal.trim() === "") namaFinal = "Admin Pengguna";
+            if (!namaFinal || namaFinal.trim() === "")
+              namaFinal = "Admin Pengguna";
 
-              roleFinal = roleFinal.replace(/_/g, ' ');
-              roleFinal = roleFinal.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+            roleFinal = roleFinal.replace(/_/g, " ");
+            roleFinal = roleFinal
+              .split(" ")
+              .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+              .join(" ");
 
-              document.getElementById('profileName').innerText = namaFinal;
-              document.getElementById('profileRole').innerText = roleFinal;
-              document.getElementById('popupName').innerText = namaFinal;
-              document.getElementById('popupRoleDisplay').innerText = roleFinal;
+            document.getElementById("profileName").innerText = namaFinal;
+            document.getElementById("profileRole").innerText = roleFinal;
+            document.getElementById("popupName").innerText = namaFinal;
+            document.getElementById("popupRoleDisplay").innerText = roleFinal;
 
-              const avatarInitials = initials(namaFinal);
-              document.getElementById('profileAvatar').innerText = avatarInitials;
-              document.getElementById('popupAvatar').innerText = avatarInitials;
-
-          } else {
+            const avatarInitials = initials(namaFinal);
+            document.getElementById("profileAvatar").innerText = avatarInitials;
+            document.getElementById("popupAvatar").innerText = avatarInitials;
           }
-      } catch (error) {
+        } catch (error) {
           console.error("Gagal memuat profil:", error);
-          document.getElementById('profileName').innerText = "Admin (Offline)";
-          document.getElementById('popupName').innerText = "Admin (Offline)";
-          document.getElementById('profileAvatar').innerText = "AD";
-          document.getElementById('popupAvatar').innerText = "AD";
+          document.getElementById("profileName").innerText = "Admin (Offline)";
+          document.getElementById("popupName").innerText = "Admin (Offline)";
+          document.getElementById("profileAvatar").innerText = "AD";
+          document.getElementById("popupAvatar").innerText = "AD";
+        }
+      })();
+
+      function toggleProfile() {
+        const popup = document.getElementById("profilePopup");
+        popup.classList.toggle("show");
       }
-  })();
 
-  function toggleProfile() {
-    const popup = document.getElementById('profilePopup');
-    popup.classList.toggle('show');
-  }
-
-  window.addEventListener('click', function(event) {
-    if (!event.target.closest('.top-profile')) {
-      const popup = document.getElementById('profilePopup');
-      if (popup && popup.classList.contains('show')) {
-        popup.classList.remove('show');
-      }
-    }
-  });
-
-  function logout(event) {
-      event.stopPropagation();
-      localStorage.removeItem('rs_token');
-      localStorage.removeItem('token'); 
-      window.location.href = '../auth/masuk.html';
-  }
-
-  const BASE_URL = 'http://kelompok1-rs.test/api/users';
-
-  function authHeaders() {
-    const token = localStorage.getItem('rs_token') || localStorage.getItem('token') || '';
-    return {
-      'Content-Type': 'application/json',
-      ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
-    };
-  }
-
-  let allUsers    = []; 
-  let currentPage = 1;
-  let editingId   = null;
-  const PAGE_SIZE = 5;
-
-  async function loadUsers() {
-    setLoading(true);
-    try {
-      const res = await fetch(`${BASE_URL}/users`, {
-        method: 'GET',
-        headers: authHeaders(),
+      window.addEventListener("click", function (event) {
+        if (!event.target.closest(".top-profile")) {
+          const popup = document.getElementById("profilePopup");
+          if (popup && popup.classList.contains("show")) {
+            popup.classList.remove("show");
+          }
+        }
       });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
 
-      allUsers = Array.isArray(data) ? data : (data.data ?? []);
-      setLoading(false);
-      render();
-    } catch (err) {
-      setError('Gagal memuat data pengguna. ' + err.message);
-    }
-  }
-
-  async function createUser(payload) {
-    const res = await fetch(`${BASE_URL}/users`, {
-      method: 'POST',
-      headers: authHeaders(),
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || `HTTP ${res.status}`);
-    }
-    return res.json();
-  }
-
-  async function updateUser(id, payload) {
-    const res = await fetch(`${BASE_URL}/users/${id}`, {
-      method: 'PUT',
-      headers: authHeaders(),
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || `HTTP ${res.status}`);
-    }
-    return res.json();
-  }
-
-  async function deleteUser(id) {
-    const res = await fetch(`${BASE_URL}/users/${id}`, {
-      method: 'DELETE',
-      headers: authHeaders(),
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || `HTTP ${res.status}`);
-    }
-    return res.json().catch(() => ({}));
-  }
-
-  function setLoading(show) {
-    document.getElementById('loadingState').style.display = show ? 'block' : 'none';
-    document.getElementById('errorState').style.display   = 'none';
-    document.getElementById('userTable').style.display    = show ? 'none' : '';
-    document.getElementById('footerInfo').textContent     = show ? '' : '';
-    document.getElementById('pagination').innerHTML       = '';
-  }
-
-  function setError(msg) {
-    document.getElementById('loadingState').style.display = 'none';
-    document.getElementById('errorState').style.display   = 'block';
-    document.getElementById('userTable').style.display    = 'none';
-    document.getElementById('errorMsg').textContent       = msg;
-    document.getElementById('footerInfo').textContent     = '–';
-    document.getElementById('pagination').innerHTML       = '';
-  }
-
-  const rolesCfg = {
-    Dokter:   { cls:'roles-dokter',   icon:'<path d="M12 2a1 1 0 0 1 1 1v8h8a1 1 0 0 1 0 2h-8v8a1 1 0 0 1-2 0v-8H3a1 1 0 0 1 0-2h8V3a1 1 0 0 1 1-1z"/>' },
-    Perawat:  { cls:'roles-perawat',  icon:'<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>' },
-    Apoteker: { cls:'roles-apoteker', icon:'<path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/>' },
-    Admin:    { cls:'roles-admin',    icon:'<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>' },
-    Petugas:  { cls:'roles-petugas',  icon:'<circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>' },
-    Pasien:   { cls:'roles-pasien',   icon:'<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>' }
-  };
-
-  function initials(name) {
-    if (!name) return '?';
-    return name.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
-  }
-
-  function getFiltered() {
-    const q = (document.getElementById('searchInput').value || '').toLowerCase();
-    const r = document.getElementById('rolesFilter').value.toLowerCase();
-
-    return allUsers.filter(u => {
-      const nama  = (u.nama_lengkap || '').toLowerCase();
-      const email = (u.email || '').toLowerCase();
-      
-      let roleAsli = '';
-      if (u.roles && u.roles.length > 0) {
-          roleAsli = u.roles[0].name || u.roles[0];
+      function logout(event) {
+        event.stopPropagation();
+        localStorage.removeItem("rs_token");
+        localStorage.removeItem("token");
+        window.location.href = "../auth/masuk.html";
       }
-      const roles = roleAsli.toLowerCase();
 
-      const matchQ = !q || nama.includes(q) || email.includes(q) || roles.includes(q);
-      const matchR = !r || roles === r;
-      
-      return matchQ && matchR;
-    });
-  }
+      const BASE_URL = "http://kelompok1-rs.test/api";
 
-  function render() {
-    const filtered = getFiltered();
-    const total    = filtered.length;
-    const pages    = Math.max(1, Math.ceil(total / PAGE_SIZE));
-    if (currentPage > pages) currentPage = pages;
-
-    const slice = filtered.slice((currentPage-1)*PAGE_SIZE, currentPage*PAGE_SIZE);
-    const tbody = document.getElementById('userTableBody');
-
-    // Jika data kosong
-    if (slice.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 20px;">Tidak ada data pengguna ditemukan.</td></tr>`;
-        document.getElementById('footerInfo').textContent = `Menampilkan 0–0 dari 0 pengguna`;
-        document.getElementById('pagination').innerHTML = '';
-        return;
-    }
-
-    tbody.innerHTML = slice.map((u, i) => {
-      const no = (currentPage-1)*PAGE_SIZE + i + 1;
-      const nama  = u.nama_lengkap || '-';
-      const email = u.email || '-';
-      const id    = u.id;
-
-      let rolesStr = '-';
-      if (u.roles && u.roles.length > 0) {
-          rolesStr = u.roles[0].name || u.roles[0];
+      function authHeaders() {
+        const token =
+          localStorage.getItem("rs_token") ||
+          localStorage.getItem("token") ||
+          "";
+        return {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        };
       }
-      let rolesTampil = rolesStr.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 
-      const status = (u.is_active === 1 || u.is_active === "1" || u.is_active === true) ? 'Aktif' : 'Nonaktif';
-      const statusClass = status === 'Aktif' ? 'aktif' : 'nonaktif';
+      let allUsers = [];
+      let currentPage = 1;
+      let editingId = null;
+      const PAGE_SIZE = 5;
 
-      let cfgKey = Object.keys(rolesCfg).find(key => rolesTampil.toLowerCase().includes(key.toLowerCase()));
-      const cfg = cfgKey ? rolesCfg[cfgKey] : { cls: '', icon: '' };
+      // ─── Ambil SEMUA role sebagai array string ────────────────────────────────────
+      function getRoleArray(u) {
+        if (u.roles && u.roles.length > 0) {
+          return u.roles
+            .map((r) =>
+              typeof r === "object" ? r.nama_role || r.name || r.slug || "" : r,
+            )
+            .filter(Boolean);
+        }
+        if (u.role) {
+          const r =
+            typeof u.role === "object"
+              ? u.role.nama_role || u.role.name || ""
+              : u.role;
+          return r ? [r] : [];
+        }
+        return [];
+      }
 
-      return `
+      // ─── Untuk filter/search (tetap pakai string gabungan) ───────────────────────
+      function getRoleString(u) {
+        return getRoleArray(u).join(" ");
+      }
+
+      // ─── Render satu atau banyak badge role ──────────────────────────────────────
+      function renderRoleBadges(u) {
+        const roles = getRoleArray(u);
+        if (roles.length === 0) return `<span class="roles-badge">–</span>`;
+
+        return roles
+          .map((roleAsli) => {
+            const roleTampil = String(roleAsli)
+              .replace(/_/g, " ")
+              .replace(/\b\w/g, (l) => l.toUpperCase());
+
+            const cfgKey = Object.keys(rolesCfg).find((k) =>
+              roleAsli.toLowerCase().includes(k),
+            );
+            const cfg = cfgKey ? rolesCfg[cfgKey] : { cls: "" };
+
+            return `<span class="roles-badge ${cfg.cls}" style="margin-bottom:2px">
+            ${roleTampil}
+        </span>`;
+          })
+          .join("");
+      }
+
+      // ─── Buat nama tampilan dari email jika tidak ada nama lengkap ───────────────
+      function namaFromEmail(email) {
+        if (!email || !email.includes("@")) return "";
+        const raw = email.split("@")[0].replace(/[^a-zA-Z]/g, " ");
+        return raw
+          .split(" ")
+          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(" ")
+          .trim();
+      }
+
+      // ─── Inisial avatar ──────────────────────────────────────────────────────────
+      function initials(name) {
+        if (!name) return "?";
+        return name
+          .split(" ")
+          .slice(0, 2)
+          .map((w) => w[0])
+          .join("")
+          .toUpperCase();
+      }
+
+      // ─── Config badge role (ditambah superadmin) ─────────────────────────────────
+      const rolesCfg = {
+        superadmin: { cls: "roles-superadmin" },
+        dokter: { cls: "roles-dokter" },
+        perawat: { cls: "roles-perawat" },
+        admin_perawat: { cls: "roles-perawat" },
+        apoteker: { cls: "roles-apoteker" },
+        admin: { cls: "roles-admin" },
+        petugas: { cls: "roles-petugas" },
+        pasien: { cls: "roles-pasien" },
+      };
+
+      // ─── CRUD ────────────────────────────────────────────────────────────────────
+      async function loadUsers() {
+        setLoading(true);
+        try {
+          const res = await fetch(`${BASE_URL}/users`, {
+            headers: authHeaders(),
+          });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const data = await res.json();
+
+          console.log("Struktur data dari API:", data);
+
+          if (data && Array.isArray(data.data)) {
+            allUsers = data.data;
+          } else if (data && data.data && Array.isArray(data.data.data)) {
+            allUsers = data.data.data;
+          } else if (Array.isArray(data)) {
+            allUsers = data;
+          } else {
+            allUsers = [];
+          }
+
+          setLoading(false);
+          render();
+        } catch (err) {
+          console.error(err);
+          setError("Gagal memuat data pengguna. " + err.message);
+        }
+      }
+
+      async function createUser(payload) {
+        const res = await fetch(`${BASE_URL}/users`, {
+          method: "POST",
+          headers: authHeaders(),
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.message || `HTTP ${res.status}`);
+        }
+        return res.json();
+      }
+
+      async function updateUser(id, payload) {
+        const res = await fetch(`${BASE_URL}/users/${id}`, {
+          method: "PUT",
+          headers: authHeaders(),
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.message || `HTTP ${res.status}`);
+        }
+        return res.json();
+      }
+
+      async function deleteUser(id) {
+        const res = await fetch(`${BASE_URL}/users/${id}`, {
+          method: "DELETE",
+          headers: authHeaders(),
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.message || `HTTP ${res.status}`);
+        }
+        return res.json().catch(() => ({}));
+      }
+
+      // ─── UI helpers ──────────────────────────────────────────────────────────────
+      function setLoading(show) {
+        document.getElementById("loadingState").style.display = show
+          ? "block"
+          : "none";
+        document.getElementById("errorState").style.display = "none";
+        document.getElementById("userTable").style.display = show ? "none" : "";
+        document.getElementById("footerInfo").textContent = "";
+        document.getElementById("pagination").innerHTML = "";
+      }
+
+      function setError(msg) {
+        document.getElementById("loadingState").style.display = "none";
+        document.getElementById("errorState").style.display = "block";
+        document.getElementById("userTable").style.display = "none";
+        document.getElementById("errorMsg").textContent = msg;
+        document.getElementById("footerInfo").textContent = "–";
+        document.getElementById("pagination").innerHTML = "";
+      }
+
+      function getFiltered() {
+        if (!Array.isArray(allUsers)) allUsers = [];
+
+        const q = (
+          document.getElementById("searchInput")?.value || ""
+        ).toLowerCase();
+        const r = (
+          document.getElementById("rolesFilter")?.value || ""
+        ).toLowerCase();
+
+        return allUsers.filter((u) => {
+          if (!u) return false;
+
+          // Nama: API tidak punya nama_lengkap, pakai email sebagai fallback
+          const namaDisplay = (
+            u.nama_lengkap ||
+            u.name ||
+            namaFromEmail(u.email) ||
+            ""
+          ).toLowerCase();
+          const email = (u.email || "").toLowerCase();
+          const roleStr = getRoleString(u).toLowerCase();
+
+          const matchQ =
+            !q ||
+            namaDisplay.includes(q) ||
+            email.includes(q) ||
+            roleStr.includes(q);
+          const matchR = !r || roleStr === r || roleStr.includes(r);
+
+          return matchQ && matchR;
+        });
+      }
+
+      // ─── Render tabel ────────────────────────────────────────────────────────────
+      function render() {
+        const filtered = getFiltered();
+        const total = filtered.length;
+        const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+        if (currentPage > pages) currentPage = pages;
+
+        const slice = filtered.slice(
+          (currentPage - 1) * PAGE_SIZE,
+          currentPage * PAGE_SIZE,
+        );
+        const tbody = document.getElementById("userTableBody");
+
+        if (slice.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px">Tidak ada data pengguna ditemukan.</td></tr>`;
+          document.getElementById("footerInfo").textContent =
+            "Menampilkan 0–0 dari 0 pengguna";
+          document.getElementById("pagination").innerHTML = "";
+          return;
+        }
+
+        tbody.innerHTML = slice
+          .map((u, i) => {
+            const no = (currentPage - 1) * PAGE_SIZE + i + 1;
+            const id = u.id;
+            const email = u.email || "-";
+
+            // Nama tampilan: ambil dari field nama jika ada, fallback ke email
+            const nama =
+              u.nama_lengkap || u.name || namaFromEmail(u.email) || email;
+
+            // Role: pakai nama_role sesuai API
+            const roleAsli = getRoleString(u);
+            const roleTampil = String(roleAsli || "-")
+              .replace(/_/g, " ")
+              .replace(/\b\w/g, (l) => l.toUpperCase());
+
+            // Status: API mengembalikan boolean true/false
+            const isAktif =
+              u.is_active === true || u.is_active === 1 || u.is_active === "1";
+            const status = isAktif ? "Aktif" : "Nonaktif";
+            const statusClass = isAktif ? "aktif" : "nonaktif";
+
+            // Badge role config — cocokkan dengan nama_role lowercase
+            const cfgKey = Object.keys(rolesCfg).find((k) =>
+              roleAsli.toLowerCase().includes(k),
+            );
+            const cfg = cfgKey ? rolesCfg[cfgKey] : { cls: "", icon: "" };
+
+            return `
         <tr>
           <td class="no">${no}</td>
           <td>
@@ -441,14 +828,13 @@
           </td>
           <td class="email">${email}</td>
           <td>
-            <span class="roles-badge ${cfg.cls}">
-              ${cfg.icon ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${cfg.icon}</svg>` : ''}
-              ${rolesTampil}
-            </span>
+            <div style="display:flex;flex-wrap:wrap;gap:4px">
+              ${renderRoleBadges(u)}
+            </div>
           </td>
           <td>
             <span class="status-dot ${statusClass}">
-              <span class="dot ${status === 'Aktif' ? '' : 'inactive'}"></span>
+              <span class="dot ${isAktif ? "" : "inactive"}"></span>
               ${status}
             </span>
           </td>
@@ -471,138 +857,188 @@
             </div>
           </td>
         </tr>`;
-    }).join('');
+          })
+          .join("");
 
-    const from = total ? (currentPage-1)*PAGE_SIZE+1 : 0;
-    const to   = Math.min(currentPage*PAGE_SIZE, total);
-    document.getElementById('footerInfo').textContent = `Menampilkan ${from}–${to} dari ${total} pengguna`;
+        const from = total ? (currentPage - 1) * PAGE_SIZE + 1 : 0;
+        const to = Math.min(currentPage * PAGE_SIZE, total);
+        document.getElementById("footerInfo").textContent =
+          `Menampilkan ${from}–${to} dari ${total} pengguna`;
 
-
-    const pag = document.getElementById('pagination');
-    let html = `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled style="opacity:.4;cursor:not-allowed"':''}>
+        // Pagination
+        const pag = document.getElementById("pagination");
+        let html = `<button class="page-btn" onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled style="opacity:.4;cursor:not-allowed"' : ""}>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
     </button>`;
 
-    for (let p = 1; p <= pages; p++) {
-      if (pages > 6 && p > 3 && p < pages - 1) {
-        if (p === 4) html += `<button class="page-btn" style="cursor:default">…</button>`;
-        continue;
-      }
-      html += `<button class="page-btn ${p===currentPage?'active':''}" onclick="goPage(${p})">${p}</button>`;
-    }
+        const pages2 = Math.ceil(total / PAGE_SIZE) || 1;
+        for (let p = 1; p <= pages2; p++) {
+          if (pages2 > 6 && p > 3 && p < pages2 - 1) {
+            if (p === 4)
+              html += `<button class="page-btn" style="cursor:default">…</button>`;
+            continue;
+          }
+          html += `<button class="page-btn ${p === currentPage ? "active" : ""}" onclick="goPage(${p})">${p}</button>`;
+        }
 
-    html += `<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===pages?'disabled style="opacity:.4;cursor:not-allowed"':''}>
+        html += `<button class="page-btn" onclick="goPage(${currentPage + 1})" ${currentPage === pages2 ? 'disabled style="opacity:.4;cursor:not-allowed"' : ""}>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
     </button>`;
 
-    pag.innerHTML = html;
-  }
-
-  function goPage(p) {
-    const pages = Math.ceil(getFiltered().length / PAGE_SIZE);
-    if (p < 1 || p > pages) return;
-    currentPage = p;
-    render();
-  }
-
-  function filterTable() {
-    currentPage = 1;
-    render();
-  }
-
-  function openModal(id = null) {
-    editingId = id;
-    document.getElementById('modalTitle').textContent = id ? 'Edit Pengguna' : 'Tambah Pengguna';
-    
-    if (id) {
-      const u    = allUsers.find(u => (u.id || u._id) == id);
-      document.getElementById('formEmail').value  = u.email || u.email_address || '';
-      document.getElementById('formPassword').value = ''; 
-      document.getElementById('formroles').value   = u.roles  || u.jabatan || u.position || '';
-    } else {
-      document.getElementById('formEmail').value  = '';
-      document.getElementById('formPassword').value = '';
-      document.getElementById('formroles').value   = '';
-    }
-    document.getElementById('modalOverlay').classList.add('show');
-  }
-
-  function closeModal() {
-    document.getElementById('modalOverlay').classList.remove('show');
-    editingId = null;
-  }
-
-  function closeOnOverlay(e) {
-    if (e.target === document.getElementById('modalOverlay')) closeModal();
-  }
-
-  function editUser(id) { openModal(id); }
-
-  async function saveUser() {
-    const email    = document.getElementById('formEmail').value.trim();
-    const password = document.getElementById('formPassword').value;
-    const roles    = document.getElementById('formroles').value;
-
-    if (!email || !roles) { 
-      alert('Harap lengkapi Email dan Roles.'); 
-      return; 
-    }
-
-    if (!editingId && !password) {
-      alert('Harap isi Kata Sandi untuk pengguna baru.');
-      return;
-    }
-
-    const payload = { email, roles };
-    if (password) {
-      payload.password = password; 
-    }
-
-    const btn = document.getElementById('btnSave');
-    btn.disabled     = true;
-    btn.textContent  = 'Menyimpan...';
-
-    try {
-      if (editingId) {
-        const updated = await updateUser(editingId, payload);
-        const idx = allUsers.findIndex(u => (u.id || u._id) == editingId);
-        if (idx !== -1) allUsers[idx] = updated.data ?? updated;
-        showToast('Data pengguna berhasil diperbarui!');
-      } else {
-        const created = await createUser(payload);
-        allUsers.push(created.data ?? created);
-        showToast('Pengguna baru berhasil ditambahkan!');
+        pag.innerHTML = html;
       }
-      closeModal();
-      render();
-    } catch (err) {
-      alert('Gagal menyimpan: ' + err.message);
-    } finally {
-      btn.disabled    = false;
-      btn.textContent = 'Simpan';
-    }
-  }
 
-  async function confirmDelete(id, nama) {
-    if (!confirm(`Hapus pengguna "${nama}"?\nData akan di-nonaktifkan (soft delete).`)) return;
-    try {
-      await deleteUser(id);
-      allUsers = allUsers.filter(u => (u.id || u._id) != id);
-      render();
-      showToast('Pengguna berhasil dihapus!');
-    } catch (err) {
-      alert('Gagal menghapus: ' + err.message);
-    }
-  }
+      function goPage(p) {
+        const pages = Math.ceil(getFiltered().length / PAGE_SIZE) || 1;
+        if (p < 1 || p > pages) return;
+        currentPage = p;
+        render();
+      }
 
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    document.getElementById('toastMsg').textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2800);
-  }
+      function filterTable() {
+        currentPage = 1;
+        render();
+      }
 
-  loadUsers();
-</script>
-</body>
+      // ─── Modal tambah/edit ───────────────────────────────────────────────────────
+      function openModal(id = null) {
+        editingId = id;
+        document.getElementById("modalTitle").textContent = id
+          ? "Edit Pengguna"
+          : "Tambah Pengguna";
+
+        if (id) {
+          const u = allUsers.find((u) => (u.id || u._id) == id);
+          document.getElementById("formEmail").value = u?.email || "";
+          document.getElementById("formPassword").value = "";
+
+          // Jika formroles adalah <select multiple> tampilkan semua role yang dimiliki
+          const rolesArr = getRoleArray(u);
+          const sel = document.getElementById("formroles");
+
+          if (sel.multiple) {
+            // <select multiple> — centang semua role yang sesuai
+            Array.from(sel.options).forEach((opt) => {
+              opt.selected = rolesArr.includes(opt.value);
+            });
+          } else {
+            // <select> biasa — tampilkan role pertama saja
+            sel.value = rolesArr[0] || "";
+          }
+        } else {
+          document.getElementById("formEmail").value = "";
+          document.getElementById("formPassword").value = "";
+          const sel = document.getElementById("formroles");
+          if (sel.multiple) {
+            Array.from(sel.options).forEach((opt) => (opt.selected = false));
+          } else {
+            sel.value = "";
+          }
+        }
+
+        document.getElementById("modalOverlay").classList.add("show");
+      }
+
+      function closeModal() {
+        document.getElementById("modalOverlay").classList.remove("show");
+        editingId = null;
+      }
+
+      function closeOnOverlay(e) {
+        if (e.target === document.getElementById("modalOverlay")) closeModal();
+      }
+
+      function editUser(id) {
+        openModal(id);
+      }
+
+      // ─── Simpan (satu fungsi, tanpa duplikat) ───────────────────────────────────
+      async function saveUser() {
+        const email = document.getElementById("formEmail").value.trim();
+        const password = document.getElementById("formPassword").value;
+        const sel = document.getElementById("formroles");
+
+        // 1. Ambil data dari select HTML
+        let rolesSelected = sel.multiple
+          ? Array.from(sel.selectedOptions).map((o) => o.value)
+          : sel.value;
+
+        if (!email || !rolesSelected || rolesSelected.length === 0) {
+          alert("Harap lengkapi Email dan Roles.");
+          return;
+        }
+        if (!editingId && !password) {
+          alert("Harap isi Kata Sandi untuk pengguna baru.");
+          return;
+        }
+
+        // SOLUSI UTAMA: Pastikan data roles SELALU berbentuk Array [] sesuai format API kamu
+        // Jika rolesSelected masih berupa string biasa, kita bungkus menjadi array
+        const finalRoles = Array.isArray(rolesSelected)
+          ? rolesSelected
+          : [rolesSelected];
+
+        // 2. Susun payload final yang akan dikirim ke backend
+        const payload = {
+          email: email,
+          roles: finalRoles, // Hasilnya pasti ["dokter"], ["admin"], dst.
+        };
+
+        if (password) payload.password = password;
+
+        const btn = document.getElementById("btnSave");
+        btn.disabled = true;
+        btn.textContent = "Menyimpan...";
+
+        try {
+          if (editingId) {
+            const updated = await updateUser(editingId, payload);
+            const idx = allUsers.findIndex((u) => (u.id || u._id) == editingId);
+            if (idx !== -1) allUsers[idx] = updated.data ?? updated;
+            showToast("Data pengguna berhasil diperbarui!");
+          } else {
+            const created = await createUser(payload);
+            allUsers.push(created.data ?? created);
+            showToast("Pengguna baru berhasil ditambahkan!");
+          }
+          closeModal();
+          render();
+        } catch (err) {
+          alert("Gagal menyimpan: " + err.message);
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Simpan";
+        }
+      }
+
+      // ─── Hapus ────────────────────────────────────────────────────────────────────
+      async function confirmDelete(id, nama) {
+        if (
+          !confirm(
+            `Hapus pengguna "${nama}"?\nData akan di-nonaktifkan (soft delete).`,
+          )
+        )
+          return;
+        try {
+          await deleteUser(id);
+          allUsers = allUsers.filter((u) => (u.id || u._id) != id);
+          render();
+          showToast("Pengguna berhasil dihapus!");
+        } catch (err) {
+          alert("Gagal menghapus: " + err.message);
+        }
+      }
+
+      // ─── Toast ────────────────────────────────────────────────────────────────────
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        document.getElementById("toastMsg").textContent = msg;
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 2800);
+      }
+
+      // ─── Init ─────────────────────────────────────────────────────────────────────
+      loadUsers();
+    </script>
+  </body>
 </html>
