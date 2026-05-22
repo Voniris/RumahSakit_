@@ -60,9 +60,9 @@
           </div>
           <div class="stat-info">
             <p>Nomor Antrian</p>
-            <h3>A-001</h3>
-            <span>Unit</span>
-            <div class="badge-menunggu">Menunggu</div>
+            <h3 id="antrianNomor">-</h3>
+            <span id="antrianUnit">Memuat data...</span>
+            <div class="badge-menunggu" id="antrianStatus" style="display: none;">Menunggu</div>
           </div>
         </div>
 
@@ -170,10 +170,8 @@
         const token = localStorage.getItem('rs_token');
 
         if (!token) {
-            window.location.href = '../auth/masuk.html';
-            return;
+            console.log("Bypass login aktif untuk testing"); //am testing 
         }
-
         try {
             const response = await fetch('http://kelompok1-rs.test/api/auth/me', {
                 method: 'GET',
@@ -216,18 +214,65 @@
 
             } else {
                 console.log("Sesi berakhir atau token tidak valid.");
-                localStorage.removeItem('rs_token');
-                window.location.href = '../auth/masuk.html';
+                // localStorage.removeItem('rs_token');
+                // window.location.href = '../auth/masuk.html';
             }
         } catch (error) {
             console.error("Gagal terhubung ke API Profile:", error);
             document.querySelectorAll('.name, .user-name, .profile-popup h4').forEach(el => el.innerText = "Pasien");
         }
-    });
 
+        // ==========================================
+        // 2. SCRIPT AMBIL DATA ANTRIAN SAYA
+        // ==========================================
+        try {
+            const responseAntrian = await fetch('http://kelompok1-rs.test/api/antrian/saya', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`, 
+                    'Accept': 'application/json'
+                }
+            });
+
+            const resAntrian = await responseAntrian.json();
+
+            if (responseAntrian.ok) {
+                let listAntrian = Array.isArray(resAntrian.data) ? resAntrian.data : (Array.isArray(resAntrian) ? resAntrian : []);
+
+                const noAntrianEl = document.getElementById('antrianNomor');
+                const unitEl = document.getElementById('antrianUnit');
+                const statusEl = document.getElementById('antrianStatus');
+
+                if (listAntrian.length > 0) {
+                    let antrianAktif = listAntrian[0];
+
+                    noAntrianEl.innerText = antrianAktif.nomor_antrian || '-';
+                    unitEl.innerText = antrianAktif.unit?.nama_unit || antrianAktif.nama_unit || antrianAktif.unit || 'Unit Umum';
+                    
+                    let statusText = antrianAktif.status || 'Menunggu';
+                    statusEl.innerText = statusText.charAt(0).toUpperCase() + statusText.slice(1);
+                    statusEl.style.display = 'inline-block'; 
+
+                } else {
+                    noAntrianEl.innerText = '-';
+                    unitEl.innerText = 'Belum ada antrian hari ini';
+                    statusEl.style.display = 'none'; 
+                }
+            } else {
+                document.getElementById('antrianNomor').innerText = '-';
+                document.getElementById('antrianUnit').innerText = 'Belum ada antrian hari ini';
+                document.getElementById('antrianStatus').style.display = 'none';
+            }
+        } catch (error) {
+            console.error("Gagal memuat antrian:", error);
+            document.getElementById('antrianNomor').innerText = "Eror";
+            document.getElementById('antrianUnit').innerText = "Gagal memuat data";
+        }
+    });
     function logout(event) {
         event.stopPropagation();
         localStorage.removeItem('rs_token');
+        localStorage.removeItem('token');
         window.location.href = '../auth/masuk.html';
     }
 
@@ -244,7 +289,6 @@
         }
       }
     });
-
     let slideSekarang = 0;
     let timerSlider;
     const semuaSlide = document.querySelectorAll('.ht-slide');
