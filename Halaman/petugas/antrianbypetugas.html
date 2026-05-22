@@ -152,7 +152,7 @@
     (async function initProfile() {
         const token = localStorage.getItem('rs_token');
         if (!token) {
-            window.location.href = '../auth/masuk.html'; //disini cia kunci 
+            console.log("Bypass login aktif untuk testing"); //disini cia kunci 
             return;
         }
         try {

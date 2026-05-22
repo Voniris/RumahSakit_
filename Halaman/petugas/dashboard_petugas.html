@@ -65,14 +65,13 @@
         </div>
 
         <div class="stats-grid">
-            
             <div class="stat-card-petugas">
                 <div class="stat-icon">
                     <img src="../../assets/icons/pasienhariini.png" alt="Icon Pasien">
                 </div> 
                 <div class="stat-info">
                     <span class="label">Pasien Hari Ini</span>
-                    <span class="val">15</span>
+                    <span class="val" id="valPasienHariIni">...</span>
                     <span class="sub-label">Total Pasien Terdaftar</span>
                 </div>
             </div>
@@ -83,7 +82,7 @@
                 </div>
                 <div class="stat-info">
                     <span class="label">Antrian Aktif</span>
-                    <span class="val">10</span>
+                    <span class="val" id="valAntrianAktif">...</span>
                     <span class="sub-label">Sedang Menunggu</span>
                 </div>
             </div>
@@ -94,7 +93,7 @@
                 </div>
                 <div class="stat-info">
                     <span class="label">Pasien Selesai</span>
-                    <span class="val">5</span>
+                    <span class="val" id="valPasienSelesai">...</span>
                 </div>
             </div>
 
@@ -104,10 +103,8 @@
                 </div>
                 <div class="stat-info">
                     <span class="label">Rekam Medis</span>
-                    <span class="val">3</span>
-                </div>
+                    <span class="val" id="valRekamMedis">0</span> </div>
             </div>
-
         </div>
 
         <div class="middle-grid">
@@ -115,13 +112,10 @@
                 <h3>Antrian Hari ini</h3>
                 <table>
                     <thead>
-                        <tr><th>No. Antrian</th><th>Nama Pasien</th><th>Poli</th><th>Waktu Tunggu</th></tr>
+                        <tr><th>No. Antrian</th><th>Nama Pasien</th><th>Poli</th><th>Status</th></tr>
                     </thead>
-                    <tbody>
-                        <tr><td>A01</td><td class="text-teal">Rajwa</td><td class="fw-normal">Umum</td><td class="text-teal">15 menit</td></tr>
-                        <tr><td>A02</td><td class="text-teal">Maulana</td><td class="fw-normal">Umum</td><td class="text-blue">25 menit</td></tr>
-                        <tr><td>A03</td><td class="text-teal">Saputra</td><td class="fw-normal">Umum</td><td class="text-orange">30 menit</td></tr>
-                        <tr><td>A04</td><td class="text-teal">Ivan Adinata</td><td class="fw-normal">Umum</td><td class="text-red">35 menit</td></tr>
+                    <tbody id="tbodyAntrian">
+                        <tr><td colspan="4" style="text-align: center;">Memuat data antrian...</td></tr>
                     </tbody>
                 </table>
                 <button class="btn-outline-teal">Kelola Antrian</button>
@@ -143,10 +137,8 @@
                 <thead>
                     <tr><th>Nama Pasien</th><th>No. RM</th><th>Poli</th><th>Pendaftaran</th><th>Status</th></tr>
                 </thead>
-                <tbody>
-                    <tr><td class="text-teal">Rajwa</td><td>RM00012345</td><td class="fw-normal">Umum</td><td class="fw-normal">10.15 WIB</td><td><span class="badge-yellow">Menunggu</span></td></tr>
-                    <tr><td class="text-teal">Derren</td><td>RM00012345</td><td class="fw-normal">Umum</td><td class="fw-normal">10.45 WIB</td><td><span class="badge-green">Diperiksa</span></td></tr>
-                    <tr><td class="text-teal">Bryant</td><td>RM00012345</td><td class="fw-normal">Umum</td><td class="fw-normal">11.30 WIB</td><td><span class="badge-green">Diperiksa</span></td></tr>
+                <tbody id="tbodyPasien">
+                    <tr><td colspan="5" style="text-align: center;">Memuat data pasien...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -155,7 +147,6 @@
 </div>
 
 <script>
-
     (async function initProfile() {
         const token = localStorage.getItem('rs_token');
         
@@ -217,7 +208,6 @@
         }
     })();
 
-
     async function daftarRolePasien(event) {
         event.stopPropagation();
 
@@ -268,6 +258,89 @@
         localStorage.removeItem('token');
         window.location.href = '../auth/masuk.html';
     }
+
+    async function loadDashboardData() {
+        const token = localStorage.getItem('rs_token');
+        if (!token) return;
+
+        const headers = {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+        };
+
+        const baseUrl = 'http://kelompok1-rs.test/api';
+
+        try {
+            const resPendaftaran = await fetch(`${baseUrl}/pendaftaran`, { headers });
+            const dataPendaftaran = await resPendaftaran.json();
+            const pendaftaranList = dataPendaftaran.data || [];
+            const resAntrian = await fetch(`${baseUrl}/antrian`, { headers });
+            const rawAntrian = await resAntrian.json();
+            let antrianList = [];
+            
+            if (rawAntrian.data && !Array.isArray(rawAntrian.data)) {
+                Object.values(rawAntrian.data).forEach(unitAntrian => {
+                    antrianList = antrianList.concat(unitAntrian);
+                });
+            } else {
+                antrianList = rawAntrian.data || [];
+            }
+            document.getElementById('valPasienHariIni').innerText = pendaftaranList.length;
+            
+            const antrianAktif = antrianList.filter(a => ['menunggu', 'dipanggil'].includes(a.status)).length;
+            document.getElementById('valAntrianAktif').innerText = antrianAktif;
+
+            const pasienSelesai = pendaftaranList.filter(p => ['selesai', 'selesai_periksa'].includes(p.status)).length;
+            document.getElementById('valPasienSelesai').innerText = pasienSelesai;
+
+            const tbodyAntrian = document.getElementById('tbodyAntrian');
+            tbodyAntrian.innerHTML = '';
+            
+            if(antrianList.length === 0) {
+                tbodyAntrian.innerHTML = '<tr><td colspan="4" style="text-align:center;">Tidak ada antrian hari ini</td></tr>';
+            } else {
+                antrianList.slice(0, 5).forEach(antrian => {
+                    let statusColor = antrian.status === 'menunggu' ? 'text-orange' : (antrian.status === 'dipanggil' ? 'text-teal' : 'text-blue');
+                    
+                    let tr = `<tr>
+                        <td>${antrian.kode_antrian || antrian.nomor_antrian}</td>
+                        <td class="text-teal">${antrian.pasien?.nama_lengkap || antrian.nama_pasien || '-'}</td>
+                        <td class="fw-normal">${antrian.unit?.nama || '-'}</td>
+                        <td class="${statusColor}">${antrian.status}</td>
+                    </tr>`;
+                    tbodyAntrian.innerHTML += tr;
+                });
+            }
+            const tbodyPasien = document.getElementById('tbodyPasien');
+            tbodyPasien.innerHTML = '';
+
+            if(pendaftaranList.length === 0) {
+                tbodyPasien.innerHTML = '<tr><td colspan="5" style="text-align:center;">Tidak ada pendaftaran hari ini</td></tr>';
+            } else {
+                pendaftaranList.slice(0, 5).forEach(pasien => {
+                    let badgeClass = ['terdaftar', 'dipanggil'].includes(pasien.status) ? 'badge-yellow' : 'badge-green';
+                    let waktuDaftar = pasien.created_at ? new Date(pasien.created_at).toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'}) : '-';
+
+                    let tr = `<tr>
+                        <td class="text-teal">${pasien.pasien?.nama_lengkap || '-'}</td>
+                        <td>${pasien.pasien?.nomor_rm || '-'}</td>
+                        <td class="fw-normal">${pasien.unit?.nama || '-'}</td>
+                        <td class="fw-normal">${waktuDaftar} WIB</td>
+                        <td><span class="${badgeClass}">${pasien.status}</span></td>
+                    </tr>`;
+                    tbodyPasien.innerHTML += tr;
+                });
+            }
+
+        } catch (error) {
+            console.error("Gagal menarik data dashboard dari API:", error);
+            document.getElementById('tbodyAntrian').innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">Gagal terhubung ke server</td></tr>';
+            document.getElementById('tbodyPasien').innerHTML = '<tr><td colspan="5" style="text-align:center; color:red;">Gagal terhubung ke server</td></tr>';
+        }
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        loadDashboardData();
+    });
 </script>
 
 </body>
