@@ -1,6 +1,5 @@
-/* --- CSS KHUSUS DASHBOARD INI --- */
     body {
-      background-color: #ffffff; /* Warna background abu-abu terang */
+      background-color: #ffffff;
       margin: 0;
       font-family: 'Poppins', sans-serif;
     }
@@ -13,7 +12,6 @@
       gap: 20px;
     }
 
-    /* --- SIDEBAR KIRI --- */
     .sidebar-dashboard {
       background-color: #ffffff;
       width: 380px;
@@ -41,12 +39,9 @@
     .sidebar-logo small { font-weight: 300; }
 
     .menu-item {
-      /* 👇 1. UBAH DUA BARIS INI 👇 */
-      width: 210px; /* Ganti dari 100% jadi angka segini biar memendek */
-      margin: 0 auto 20px auto; /* Jurus sakti biar posisinya ke tengah! */
-      /* 👆 ---------------------- 👆 */
+      width: 210px;
+      margin: 0 auto 20px auto;
 
-      /* Sisa kodingan di bawahnya biarin aja persis kayak sebelumnya: */
       background-color: #f0f0f0;
       padding: 12px 20px;
       border-radius: 10px;
@@ -70,17 +65,15 @@
       background-color: #d8dbdb;
     }
 
-    /* --- KONTEN KANAN (MAIN) --- */
     .main-content {
       flex: 1;
-      background-color: #EFEFEF; /* Sesuai warna background card di gambar */
+      background-color: #EFEFEF;
       border-radius: 20px;
       padding: 30px;
       position: relative;
       box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     }
 
-    /* Profil Kanan Atas */
     .top-profile {
       position: absolute;
       top: 30px;
@@ -117,14 +110,13 @@
       color: #666;
     }
 
-    /* Banner Tengah */
     .welcome-banner {
       background: linear-gradient(to right, #20B2A6, #0E6B63);
       border-radius: 20px;
       margin-top: 130px;
       margin-left: 50px;
       margin-right: 50px;
-      height: 600px; /* Sesuaikan tingginya */
+      height: 600px;
       display: flex;
       align-items: center;
       padding: 0 50px;
@@ -135,7 +127,7 @@
       color: white;
       font-size: 28px;
       font-weight: 600;
-      margin-left: 648px; /* Kasih jarak buat gambar dokter */
+      margin-left: 648px;
       z-index: 2;
     }
 
@@ -143,11 +135,10 @@
       position: absolute;
       left: 20px;
       bottom: 0;
-      height: 120%; /* Biar dokternya nongol ke atas dikit */
+      height: 120%;
       z-index: 1;
     }
 
-    /* --- POP UP PROFIL --- */
     .popup-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;

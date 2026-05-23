@@ -1,7 +1,4 @@
-  /* =========================================
-       1. PENGATURAN DASAR & LAYOUT
-       ========================================= */
-    body {
+      body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
       background-color: #ffffff;
@@ -12,7 +9,6 @@
       overflow-x: hidden;
     }
 
-    /* Logo Kiri Atas */
     .header-logo {
       position: absolute;
       top: 30px;
@@ -24,10 +20,6 @@
     }
     .header-logo img { width: 45px; }
     .header-logo span { font-weight: 0; color: #000000; font-size: 14px; line-height: 1.2; }
-
-    /* =========================================
-       2. STEPPER (Indikator 4 Langkah)
-       ========================================= */
     .stepper {
       display: flex;
       align-items: flex-start;
@@ -53,11 +45,9 @@
       font-weight: 600; font-size: 18px; margin-bottom: 12px; 
     }
 
-    /* Warna Step 1, 2, 3 (Hijau Terang - Selesai) */
     .step.light .step-circle { background: #3BC1A8; }
     .step.light span { color: #005461; font-weight: 600; }
 
-    /* Warna Step 4 (Hijau Gelap - Aktif) */
     .step.dark .step-circle { background: #005461; }
     .step.dark span { color: #005461; font-weight: 600; }
 
@@ -66,9 +56,6 @@
       min-width: 30px; max-width: 70px;
     }
 
-    /* =========================================
-       3. AREA CARD TERIMA KASIH & TOMBOL
-       ========================================= */
     .content-wrapper {
       display: flex;
       flex-direction: column;
@@ -78,10 +65,9 @@
       margin-bottom: 40px;
     }
 
-    /* Kotak Terima Kasih yang Lebar */
     .thank-you-card {
-      background-color: #005461; /* Hijau Tua */
-      border-radius: 40px; /* Ujungnya sangat membulat */
+        background-color: #005461;
+        border-radius: 40px;
       padding: 60px 40px;
       text-align: center;
       color: white;
@@ -104,9 +90,8 @@
       margin: 0;
     }
 
-    /* Tombol Buat Nomor Antrian */
     .btn-buat-antrian {
-      background-color: #005461; /* Hijau Tua */
+        background-color: #005461;
       color: white;
       border: none;
       padding: 15px 40px;
@@ -124,9 +109,6 @@
       transform: translateY(-2px); 
     }
 
-    /* =========================================
-       4. FOOTER BANNER (Bawah Sendiri)
-       ========================================= */
     .footer-wrapper {
       margin-top: auto; /* Otomatis nempel di bawah */
       width: 100%;

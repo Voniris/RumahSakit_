@@ -1,5 +1,4 @@
-
-        .main-content {
+.main-content {
             flex: 1;
             background-color: #ECECEC; 
             border-radius: 30px;
@@ -7,12 +6,10 @@
             position: relative;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start; /* KUNCI 1: Ubah jadi flex-start biar semua naik ke atas */
-            gap: 20px; /* KUNCI 2: Kasih jarak fix antar baris biar gak berantakan */
+            justify-content: flex-start;
+            gap: 20px; 
             overflow: hidden; 
         }
-
-        /* --- HEADER --- */
         .header-area { margin-bottom: 0; }
         .header-area .welcome-text { font-size: 13px; color: #666; margin-bottom: 0; }
         .header-area .user-name { font-size: 24px; font-weight: 700; color: #111; margin: 0; line-height: 1.2; }
@@ -32,15 +29,14 @@
     .info-user .roles { font-size: 13px; font-weight: 700; color: #111; }
     .info-user .name { font-size: 12px; color: #666; }
 
-        /* --- POPUP MELAYANG --- */
-       .top-profile {
-        cursor: pointer; /* Ubah kursor jadi tangan biar keliatan bisa diklik */
+    .top-profile {
+    cursor: pointer; 
     }
 
     .profile-popup {
-        display: none; /* Sembunyikan default */
+        display: none; 
         position: absolute;
-        top: 60px; /* Jarak kotak dari foto profil */
+        top: 60px; 
         right: 0;
         background-color: #ffffff;
         border-radius: 15px;
@@ -52,7 +48,6 @@
         border: 1px solid #f0f0f0;
     }
 
-    /* Animasi muncul */
     .profile-popup.show {
         display: block;
         animation: fadeInDown 0.3s ease;
@@ -101,21 +96,18 @@
         to { opacity: 1; transform: translateY(0); }
     }
     
-       /* =========================================
-           3. KARTU STATISTIK PETUGAS
-           ========================================= */
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; }
         
         .stat-card-petugas {
             background: #FFFFFF; 
             width: 300px;
-            padding: 18px 20px; /* Bantalan dikalibrasi ulang */
+            padding: 18px 20px; 
             border-radius: 16px;
             display: flex; 
             align-items: center; 
-            gap: 18px; /* Jarak antara Icon dan Teks dilegakan sedikit */
+            gap: 18px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            height: 147px; /* TINGGI DIKUNCI MATI biar rata semua */
+            height: 147px; 
             box-sizing: border-box;
         }
         
@@ -124,11 +116,10 @@
             display: flex; align-items: center; justify-content: center;
         }
         
-        /* PAKSA UKURAN GAMBAR BIAR SAMA SEMUA */
         .stat-icon img {
             width: 48px !important; 
             height: 48px !important;
-            object-fit: contain; /* Biar gambar gak penyok */
+            object-fit: contain; 
         }
         
         .stat-info { display: flex; flex-direction: column; justify-content: center; }
@@ -136,13 +127,9 @@
         .stat-info .val { font-size: 22px; font-weight: 700; color: #111; line-height: 1;}
         .stat-info .sub-label { font-size: 10px; color: #A0AEC0; margin-top: 4px; line-height: 1;}
 
-
- /* =========================================
-           4. MIDDLE GRID (TABEL KIRI & BANNER KANAN)
-           ========================================= */
         .middle-grid { 
             display: grid; 
-            grid-template-columns: 1.4fr 1fr; /* INI YANG DIGANTI: Tabel kiri lebih lega (1.4) */
+            grid-template-columns: 1.4fr 1fr; 
             gap: 15px; 
         }
 
@@ -167,10 +154,8 @@
         }
         .btn-outline-teal:hover { background: #D6F0E9; }
 
-        /* Banner Dokter */
         .banner-card {
             background: linear-gradient(135deg, #3BC1A8 0%, #005461 100%);
-            /* INI YANG DIGANTI: 100px diubah jadi 20px biar gak kegendutan */
             border-radius: 16px; padding: 0 20px; color: white; 
             display: flex; align-items: center; justify-content: space-between;
             overflow: hidden; box-shadow: 0 8px 20px rgba(0,84,97,0.2);
@@ -181,8 +166,5 @@
         .banner-text h2 { font-size: 16px; margin: 0 0 8px 0; font-weight: 700; line-height: 1.3; }
         .banner-text p.desc { font-size: 9px; opacity: 0.8; line-height: 1.5; margin: 0;}
 
-        /* =========================================
-           5. TABEL BAWAH FULL WIDTH
-           ========================================= */
         .badge-yellow { background: #FEF3C7; color: #D97706; padding: 4px 10px; border-radius: 20px; font-size: 9px; font-weight: 600; border: 1px solid #FDE68A;}
         .badge-green { background: #D6F0E9; color: #0E6B63; padding: 4px 10px; border-radius: 20px; font-size: 9px; font-weight: 600; }

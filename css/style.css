@@ -4,19 +4,16 @@
   box-sizing: border-box;
 }
 
-/* ===== GLOBAL ===== */
 body {
   font-family: 'poppins', sans-serif;
   height: 100vh;
 }
 
-/* ===== CONTAINER (pembungkus utama) ===== */
 .container {
   display: flex;
   height: 100vh;
 }
 
-/* ===== FORM SIDE (bagian kiri) ===== */
 .form-side {
   width: 45%;
   min-width: 320px;
@@ -26,11 +23,10 @@ body {
   flex-direction: column;
   justify-content: center;
   overflow-y: auto;
-  flex-shrink: 0; /* biar form gak ikut menyusut saat layar kecil */
+  flex-shrink: 0;
   z-index: 1;
 }
 
-/* judul halaman (Daftar / Masuk) */
 .form-side h1 {
   font-size: 28px;
   font-weight: 500;
@@ -38,15 +34,12 @@ body {
   margin-bottom: 20px;
 }
 
-/* teks kecil di bawah judul */
 .subtitle {
   color: #666;
   margin-bottom: 24px;
   font-size: 14px;
 }
 
-/* ===== TAB SWITCH (khusus index.html - tombol Pasien/Petugas) ===== */
-/* Ganti .role-switcher dan .btn-role yang lama dengan ini */
 .roles-toggle {
   display: flex;
   gap: 10px;
@@ -70,13 +63,13 @@ body {
 .btn-roles.active {
   background-color: #005461;
   color: white;
-}/* ===== FORM GROUP (setiap baris input) ===== */
+}
+
 .form-group {
   margin-bottom: 20px;
   position: relative;
 }
 
-/* label (NIK, Nama, Nomor Telepon, dll) */
 .form-group label {
   display: block;
   font-size: 13px;
@@ -85,7 +78,6 @@ body {
   margin-bottom: 6px;
 }
 
-/* kotak input */
 .form-group input[type="text"],
 .form-group input[type="email"],
 .form-group input[type="password"],
@@ -99,23 +91,18 @@ body {
   transition: border 0.2s;
 }
 
-/* teks placeholder di dalam input */
 ::placeholder {
   color: rgba(102, 99, 99, 0.3);
 }
 
-/* warna outline kotak saat diklik */
 .form-group input:focus {
   border-color: #82af98;
 }
 
-/* ===== PASSWORD (input kata sandi) ===== */
-/* biar ada ruang untuk icon mata */
 .password-group input {
   padding-right: 40px;
 }
 
-/* icon mata show/hide password */
 .toggle-password {
   position: absolute;
   right: 12px;
@@ -126,7 +113,6 @@ body {
   color: #888;
 }
 
-/* ===== CHECKBOX (saya setuju syarat & ketentuan) ===== */
 .checkbox-group {
   display: flex;
   align-items: center;
@@ -139,21 +125,18 @@ body {
   color: #000000;
 }
 
-/* ===== REMEMBER ROW (khusus signin.html - ingat saya & lupa password) ===== */
 .remember-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-/* link lupa password */
 .remember-row a {
   font-size: 10px;
   color: #005baf;
   text-decoration: none;
 }
 
-/* label ingat saya */
 .remember-row label {
   display: flex;
   align-items: center;
@@ -164,8 +147,6 @@ body {
   cursor: pointer;
 }
 
-/* ===== BUTTON ===== */
-/* tombol utama (Daftar / Masuk) */
 .btn-primary {
   width: 100%;
   padding: 12px;
@@ -180,12 +161,10 @@ body {
   transition: background 0.2s;
 }
 
-/* warna tombol saat di hover */
 .btn-primary:hover {
   background: #249E94;
 }
 
-/* ===== DIVIDER (garis pemisah "atau") ===== */
 .divider {
   position: relative;
   text-align: center;
@@ -194,7 +173,6 @@ body {
   font-size: 9px;
 }
 
-/* garis kiri */
 .divider::before {
   content: "";
   position: absolute;
@@ -204,7 +182,6 @@ body {
   border-bottom: 1px solid #e2e8f0;
 }
 
-/* garis kanan */
 .divider::after {
   content: "";
   position: absolute;
@@ -214,14 +191,12 @@ body {
   border-bottom: 1px solid #e2e8f0;
 }
 
-/* ===== SOCIAL LOGIN (Google & Apple) ===== */
 .social-login {
   display: flex;
   gap: 10px;
   margin-bottom: 16px;
 }
 
-/* tombol Google / Apple */
 .btn-social {
   flex: 1;
   display: flex;
@@ -241,21 +216,18 @@ body {
   background: #f5f5f5;
 }
 
-/* ===== REDIRECT (sudah punya akun? / belum punya akun?) ===== */
 .redirect {
   text-align: center;
   font-size: 13px;
   color: #000000;
 }
 
-/* link masuk / daftar */
 .redirect a {
   color: #005baf;
   font-weight: 600;
   text-decoration: none;
 }
 
-/* ===== IMAGE SIDE (bagian kanan - foto rumah sakit) ===== */
 .image-side {
   width: 55%;
   overflow: hidden;
@@ -270,8 +242,6 @@ body {
   box-shadow: none;
 }
 
-
-/* ===== EMAIL ROW (input email + tombol kirim kode) ===== */
 .email-input-row {
   display: flex;
   gap: 8px;
@@ -282,10 +252,9 @@ body {
   flex: 1;
 }
 
-/* tombol kirim kode - CUKUP SATU INI AJA */
 .btn-kirim {
   padding: 12px 16px;
-  height: 100%;              /* ikut tinggi input */
+  height: 100%;
   background: #005461;
   color: white;
   border: none;
@@ -296,19 +265,18 @@ body {
   cursor: pointer;
   white-space: nowrap;
   transition: background 0.2s;
-  align-self: stretch;       /* biar tingginya sama dengan input */
+  align-self: stretch;
 }
+
 .btn-kirim:hover {
   background: #249E94;
 }
 
-/* tanda bintang merah */
 .required {
   color: red;
   margin-left: 2px;
 }
 
-/* padding khusus reset password */
 .reset-side {
   padding: 40px 10%;
 }
@@ -319,7 +287,6 @@ body {
   padding: 18px;
 }
 
-/* ===== LOGO ===== */
 .logo {
   display: flex;
   align-items: center;
@@ -341,15 +308,13 @@ body {
   color: #888;
 }
 
-/* Styling Tombol Role */
 .roles-switcher { display: flex; gap: 10px; margin-bottom: 20px; }
 .btn-roles { flex: 1; padding: 10px 0; border-radius: 8px; border: 1px solid #005461; background: transparent; color: #005461; cursor: pointer; font-weight: 600; font-family: 'Poppins', sans-serif; transition: 0.3s; }
 .btn-roles.active { background-color: #005461; color: white; }
 
-/* Styling Kode Verifikasi biar input dan tombolnya sejajar */
 .verify-wrapper {
   display: flex;
-  align-items: stretch;      /* ganti dari flex-end ke stretch */
+  align-items: stretch;
   gap: 10px;
 }
 
@@ -357,7 +322,6 @@ body {
   flex: 1;
 }
 
-/* Hilangkan warna autofill browser */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -367,7 +331,6 @@ input:-webkit-autofill:active {
   -webkit-text-fill-color: #1a1a1a !important;
 }
 
-/* ===== CUSTOM ALERT ===== */
 .custom-alert-overlay {
   position: fixed;
   inset: 0;

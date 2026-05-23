@@ -80,7 +80,6 @@
             cursor: not-allowed;
         }
 
-        /* Toast Notification */
         #toast-container {
             position: fixed;
             top: 24px;
@@ -129,7 +128,6 @@
             to   { transform: translateX(0);    opacity: 1; }
         }
 
-        /* Spinner */
         .spinner {
             width: 18px; height: 18px;
             border: 2.5px solid rgba(255,255,255,0.4);

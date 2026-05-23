@@ -1,4 +1,4 @@
-    /* Reset & Global */
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
       font-family: 'Poppins', sans-serif; 
@@ -8,8 +8,6 @@
       flex-direction: column;
       overflow-x: hidden;
     }
-
-    /* Logo Kiri Atas */
     .header-logo {
       position: absolute;
       top: 30px;
@@ -23,7 +21,6 @@
     .header-logo .logo-name { font-size: 14px; font-weight: 600; color: #005461; line-height: 1.2; }
     .header-logo .logo-name small { font-size: 11px; font-weight: 400; color: #888; }
 
-    /* Bagian Atas (Warna Putih) */
     .top-section {
       flex: 1;
       display: flex;
@@ -33,13 +30,11 @@
       position: relative;
     }
 
-   
-    /* --- KOTAK TIKET ANTRIAN --- */
     .ticket-wrapper {
       display: flex;
       flex-direction: column;
       align-items: center;
-      z-index: 5; /* Biar di atas background */
+      z-index: 5;
       margin-top: 60px;
     }
     .ticket-box {
@@ -86,7 +81,6 @@
       font-weight: 700;
     }
 
-    /* Tombol Ambil Antrian */
     .btn-ambil {
       background-color: #00828C;
       color: #ffffff;
@@ -104,7 +98,6 @@
       transform: translateY(-2px);
     }
 
-    /* --- BAGIAN BAWAH (Warna Tosca) --- */
     .bottom-section {
       background-color: #00828C;
       border-top-left-radius: 40px;
@@ -112,7 +105,7 @@
       padding: 60px 20px 80px 20px;
       text-align: center;
       position: relative;
-      margin-top: 40px; /* Jarak dari atas */
+      margin-top: 40px;
     }
     .bottom-text {
       color: #fff;
@@ -121,29 +114,22 @@
       margin: 0;
     }
 
-    /* --- GAMBAR DOKTER 3D --- */
     .doctor-img {
       position: absolute;
       left: 2%;
-      bottom: 0; /* Nempel ke garis bawah layar */
-      height: 430px; /* Sesuaikan dengan ukuran gambar aslimu */
+      bottom: 0;
+      height: 430px;
       z-index: 10;
     }
 
-    /* =========================================
-   PENGATURAN POSISI TIKET & JUDUL
-   ========================================= */
-
-/* Mengatur posisi keseluruhan area tiket (turun ke bawah) */
 .ticket-wrapper {
-  margin-top: 100px; /* UBAH ANGKA INI BUAT NURUNIN/NAIKIN TIKETNYA */
+  margin-top: 100px;
   text-align: center;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Memastikan semua isinya ke tengah */
+  align-items: center;
 }
 
-/* Styling untuk teks "Tiket Antrian Anda" */
 .judul-tiket {
   color: #005461;
   font-size: 24px;
@@ -151,13 +137,11 @@
   margin-bottom: 25px;
 }
 
-/* Memastikan kotak tiket tepat di tengah */
 .ticket-box {
   margin: 0 auto;
   text-align: center;
 }
 
-/* Jarak tombol dengan kotak tiket */
 .btn-ambil {
   margin-top: 25px;
 }
