@@ -259,6 +259,20 @@
         window.location.href = '../auth/masuk.html';
     }
 
+    function normalizeStatus(status) {
+        if (!status) return 'terdaftar';
+        
+        const s = status.toLowerCase();
+        
+        if (s.includes('obat') || s.includes('diserahkan') || s === 'selesai' || s === 'selesai_periksa') {
+            return 'selesai';
+        }
+        if (s === 'dipanggil') return 'dipanggil';
+        if (s === 'menunggu') return 'menunggu';
+        
+        return status; // fallback: tampilkan apa adanya
+    }
+
     async function loadDashboardData() {
         const token = localStorage.getItem('rs_token');
         if (!token) return;
@@ -271,64 +285,81 @@
         const baseUrl = 'http://kelompok1-rs.test/api';
 
         try {
+            // ✅ FIX 1: Ambil data pendaftaran — hasilnya pagination, jadi pakai .data.data
             const resPendaftaran = await fetch(`${baseUrl}/pendaftaran`, { headers });
             const dataPendaftaran = await resPendaftaran.json();
-            const pendaftaranList = dataPendaftaran.data || [];
+            const pendaftaranList = dataPendaftaran.data?.data || [];
+
+            // ✅ FIX 2: Ambil data antrian — grouped by unit_id (object, bukan array)
             const resAntrian = await fetch(`${baseUrl}/antrian`, { headers });
             const rawAntrian = await resAntrian.json();
             let antrianList = [];
-            
-            if (rawAntrian.data && !Array.isArray(rawAntrian.data)) {
+
+            if (rawAntrian.data && typeof rawAntrian.data === 'object' && !Array.isArray(rawAntrian.data)) {
+                // Format: { "1": [...], "2": [...] }
                 Object.values(rawAntrian.data).forEach(unitAntrian => {
                     antrianList = antrianList.concat(unitAntrian);
                 });
             } else {
                 antrianList = rawAntrian.data || [];
             }
+
+            // --- STAT CARDS ---
             document.getElementById('valPasienHariIni').innerText = pendaftaranList.length;
-            
+
             const antrianAktif = antrianList.filter(a => ['menunggu', 'dipanggil'].includes(a.status)).length;
             document.getElementById('valAntrianAktif').innerText = antrianAktif;
 
-            const pasienSelesai = pendaftaranList.filter(p => ['selesai', 'selesai_periksa'].includes(p.status)).length;
+            // ✅ FIX 3: Status selesai ada di antrian, bukan pendaftaran
+            const pasienSelesai = antrianList.filter(a => normalizeStatus(a.status) === 'selesai').length;
             document.getElementById('valPasienSelesai').innerText = pasienSelesai;
 
+            // --- TABEL ANTRIAN HARI INI ---
             const tbodyAntrian = document.getElementById('tbodyAntrian');
             tbodyAntrian.innerHTML = '';
-            
-            if(antrianList.length === 0) {
+
+            if (antrianList.length === 0) {
                 tbodyAntrian.innerHTML = '<tr><td colspan="4" style="text-align:center;">Tidak ada antrian hari ini</td></tr>';
             } else {
                 antrianList.slice(0, 5).forEach(antrian => {
-                    let statusColor = antrian.status === 'menunggu' ? 'text-orange' : (antrian.status === 'dipanggil' ? 'text-teal' : 'text-blue');
-                    
-                    let tr = `<tr>
+                    const statusNormal = normalizeStatus(antrian.status); // ← tambah ini
+                    const statusColor = statusNormal === 'menunggu' ? 'text-orange'
+                        : statusNormal === 'dipanggil' ? 'text-teal' : 'text-blue';
+
+                    const namaPasien = antrian.pendaftaran?.pasien?.nama_lengkap || '-';
+                    const namaUnit   = antrian.unit?.nama_unit || '-';
+
+                    tbodyAntrian.innerHTML += `<tr>
                         <td>${antrian.kode_antrian || antrian.nomor_antrian}</td>
-                        <td class="text-teal">${antrian.pasien?.nama_lengkap || antrian.nama_pasien || '-'}</td>
-                        <td class="fw-normal">${antrian.unit?.nama || '-'}</td>
-                        <td class="${statusColor}">${antrian.status}</td>
+                        <td class="text-teal">${namaPasien}</td>
+                        <td class="fw-normal">${namaUnit}</td>
+                        <td class="${statusColor}">${statusNormal}</td>  <!-- ← pakai statusNormal -->
                     </tr>`;
-                    tbodyAntrian.innerHTML += tr;
                 });
             }
+
+            // --- TABEL PASIEN TERDAFTAR HARI INI ---
             const tbodyPasien = document.getElementById('tbodyPasien');
             tbodyPasien.innerHTML = '';
 
-            if(pendaftaranList.length === 0) {
+            if (pendaftaranList.length === 0) {
                 tbodyPasien.innerHTML = '<tr><td colspan="5" style="text-align:center;">Tidak ada pendaftaran hari ini</td></tr>';
             } else {
                 pendaftaranList.slice(0, 5).forEach(pasien => {
-                    let badgeClass = ['terdaftar', 'dipanggil'].includes(pasien.status) ? 'badge-yellow' : 'badge-green';
-                    let waktuDaftar = pasien.created_at ? new Date(pasien.created_at).toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'}) : '-';
-
-                    let tr = `<tr>
+                    const statusAntrian = normalizeStatus(pasien.antrian?.status); // ← pakai normalizeStatus
+                    const badgeClass = statusAntrian === 'selesai' ? 'badge-green' : 'badge-yellow';
+                    const waktuDaftar = pasien.created_at
+                        ? new Date(pasien.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+                        : '-';
+                    const namaUnit = pasien.unit?.nama_unit || '-';
+                                
+                    tbodyPasien.innerHTML += `<tr>
                         <td class="text-teal">${pasien.pasien?.nama_lengkap || '-'}</td>
                         <td>${pasien.pasien?.nomor_rm || '-'}</td>
-                        <td class="fw-normal">${pasien.unit?.nama || '-'}</td>
+                        <td class="fw-normal">${namaUnit}</td>
                         <td class="fw-normal">${waktuDaftar} WIB</td>
-                        <td><span class="${badgeClass}">${pasien.status}</span></td>
+                        <td><span class="${badgeClass}">${statusAntrian}</span></td>  <!-- ← pakai statusAntrian -->
                     </tr>`;
-                    tbodyPasien.innerHTML += tr;
                 });
             }
 
