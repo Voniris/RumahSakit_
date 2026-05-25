@@ -56,7 +56,6 @@
   <script src="../../js/main.js"></script>
 
   <script>
-
     function setRoles(roles) {
       document.getElementById('selectedRoles').value = roles;
       document.getElementById('btnPasien').classList.toggle('active', roles === 'pasien');
@@ -86,40 +85,40 @@
             });
             
             const result = await response.json();
-
             if (response.ok || result.success) {
                 localStorage.setItem('rs_token', result.data.token);
                 const userRoles = result.data.user.roles; 
 
-                alert("Login berhasil! Selamat datang.");
-                if (tombolAktif === 'pasien') {
-                    if (userRoles.includes('pasien')) {
-                        window.location.href = "../pasien/dashboard_pasien.html";
-                    } else {
-                        alert("Akses Ditolak: Akun Anda tidak terdaftar sebagai Pasien.");
-                        localStorage.removeItem('rs_token');
-                    }
-                } 
-                
-                else if (tombolAktif === 'petugas') {
-                    if (userRoles.includes('superadmin')) {
-                        window.location.href = "../super_admin/dashboard_superadmin.html";
+                showAlert('success', 'Login Berhasil!', 'Selamat datang.', () => {
+                    
+                    if (tombolAktif === 'pasien') {
+                        if (userRoles.includes('pasien')) {
+                            window.location.href = "../pasien/dashboard_pasien.html";
+                        } else {
+                            showAlert('error', 'Akses Ditolak', 'Akun Anda tidak terdaftar sebagai Pasien.');
+                            localStorage.removeItem('rs_token');
+                        }
                     } 
-                    else if (userRoles.includes('admin_perawat') || userRoles.includes('petugas') || userRoles.includes('perawat') || userRoles.includes('dokter')) {
-                        window.location.href = "../petugas/dashboard_petugas.html";
-                    } 
-                    else {
-                        alert("Akses Ditolak: Anda tidak memiliki otoritas akses Petugas/Admin.");
-                        localStorage.removeItem('rs_token');
+                    else if (tombolAktif === 'petugas') {
+                        if (userRoles.includes('superadmin')) {
+                            window.location.href = "../super_admin/dashboard_superadmin.html";
+                        } 
+                        else if (userRoles.includes('admin_perawat') || userRoles.includes('petugas') || userRoles.includes('perawat') || userRoles.includes('dokter')) {
+                            window.location.href = "../petugas/dashboard_petugas.html";
+                        } 
+                        else {
+                            showAlert('error', 'Akses Ditolak', 'Anda tidak memiliki otoritas akses Petugas/Admin.');
+                            localStorage.removeItem('rs_token');
+                        }
                     }
-                }
+                });
 
             } else {
-                alert("Gagal Login: " + (result.message || "Username atau Password salah"));
+                showAlert('error', 'Login Gagal', result.message || "Email atau Password salah");
             }
         } catch (error) {
             console.error(error);
-            alert("Error: Tidak dapat terhubung ke server Backend.");
+            showAlert('error', 'Koneksi Gagal', 'Tidak dapat terhubung ke server Backend.');
         } finally {
             btnSubmit.innerText = "Masuk";
             btnSubmit.disabled = false;

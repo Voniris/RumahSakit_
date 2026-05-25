@@ -1,4 +1,4 @@
-// Fungsi Mata-mata (Toggle Password)
+
 function togglePassword(id, el) {
   const input = document.getElementById(id);
   const icon = el.querySelector('img');
@@ -12,7 +12,6 @@ function togglePassword(id, el) {
   }
 }
 
-// ===== CUSTOM ALERT =====
 function showAlert(type, title, message, callback) {
   const icons = {
   success: '<img src="../../assets/icons/alertberhasil.png" width="100" />',
@@ -44,7 +43,6 @@ function showAlert(type, title, message, callback) {
   });
 }
 
-// ===== TOGGLE ROLE (Pasien / Petugas) =====
 function setRoles(roles) {
   const selectedId = document.getElementById('selectedRoles') || document.getElementById('selectedroles');
   if (selectedId) selectedId.value = roles;
@@ -55,7 +53,6 @@ function setRoles(roles) {
   if (btnPetugas) btnPetugas.classList.toggle('active', roles === 'petugas');
 }
 
-// Switch tab Pasien / Petugas (lama - tetap dipertahankan)
 function switchTab(role) {
   const tabs = document.querySelectorAll('.tab');
   const inputLabel = document.querySelector('label[for="nik_login"]');
@@ -74,14 +71,8 @@ function switchTab(role) {
   }
 }
 
-// ==========================================
-// KONFIGURASI UTAMA
-// ==========================================
 const BASE_URL = 'http://kelompok1-rs.test/api';
 
-// ==========================================
-// 1. FUNGSI LOGIN PASIEN
-// ==========================================
 async function loginPasien(event) {
     event.preventDefault();
 
@@ -119,9 +110,6 @@ async function loginPasien(event) {
     }
 }
 
-// ==========================================
-// 2. FUNGSI REGISTER PASIEN
-// ==========================================
 async function daftarPasien(event) {
     event.preventDefault(); 
 

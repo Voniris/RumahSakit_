@@ -10,7 +10,6 @@
 <body>
 
   <div class="dashboard-container">
-    
     <aside class="sidebar-dashboard">
       <div class="sidebar-logo">
         <img src="../../assets/logo/Logors.png" alt="Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3063/3063206.png'" />
@@ -165,6 +164,9 @@
     </main>
   </div>
 
+
+  <script src="../../js/auth.js"></script>
+  
   <script>
     document.addEventListener("DOMContentLoaded", async function() {
         const token = localStorage.getItem('rs_token');
@@ -174,8 +176,6 @@
         }
 
         let pasienId = null;
-
-        // Validasi token saja
         try {
             const response = await fetch('http://kelompok1-rs.test/api/auth/me', {
                 headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
