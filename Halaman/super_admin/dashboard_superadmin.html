@@ -8,122 +8,6 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-
-    <style>
-      .top-profile {
-        cursor: pointer;
-        position: relative;
-      }
-      .profile-popup {
-        display: none;
-        position: absolute;
-        top: 60px;
-        right: 0;
-        background: white;
-        border: 1px solid #e0e0e0;
-        border-radius: 16px;
-        padding: 20px;
-        width: 220px;
-        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        z-index: 100;
-      }
-      .profile-popup.show {
-        display: block;
-        animation: slideUp 0.2s ease;
-      }
-      .close-popup {
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        font-size: 22px;
-        cursor: pointer;
-        color: #888;
-      }
-      .close-popup:hover {
-        color: #ef4444;
-      }
-      .profile-popup h4 {
-        color: #111;
-        margin: 10px 0 2px;
-        font-size: 15px;
-        font-weight: 700;
-      }
-      .popup-role {
-        color: #555;
-        font-size: 12px;
-        margin-bottom: 15px;
-        font-weight: 600;
-        text-transform: capitalize;
-      }
-      .btn-logout {
-        background: #ef4444;
-        color: white;
-        border: none;
-        padding: 10px 0;
-        border-radius: 10px;
-        width: 100%;
-        cursor: pointer;
-        font-family: inherit;
-        font-weight: 600;
-        font-size: 13px;
-        transition: 0.2s;
-      }
-      .btn-logout:hover {
-        background: #dc2626;
-      }
-      .img-large {
-        width: 65px !important;
-        height: 65px !important;
-        font-size: 24px !important;
-        margin: 0 auto;
-      }
-
-      /* Paksa hilangkan warna kuning autofill di browser jika cara HTML kurang mempan */
-      input:-webkit-autofill,
-      input:-webkit-autofill:hover,
-      input:-webkit-autofill:focus,
-      input:-webkit-autofill:active {
-        -webkit-box-shadow: 0 0 0 30px white inset !important;
-        -webkit-text-fill-color: #111111 !important;
-      }
-
-      @keyframes slideUp {
-        from {
-          transform: translateY(10px);
-          opacity: 0;
-        }
-        to {
-          transform: translateY(0);
-          opacity: 1;
-        }
-      }
-
-      .roles-superadmin {
-        background: #ede9fe;
-        color: #5b21b6;
-      }
-
-      /* Kolom role — bungkus badge kalau lebih dari satu */
-      .roles-cell {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 4px;
-        max-width: 220px; /* sesuaikan lebar kolom tabelmu */
-      }
-
-      .roles-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 2px 8px;
-        border-radius: 999px;
-        font-size: 11px;
-        font-weight: 500;
-        white-space: nowrap;
-      }
-    </style>
-
     <link rel="stylesheet" href="super_admin.css" />
   </head>
   <body>
@@ -440,14 +324,6 @@
       </svg>
       <span id="toastMsg">Berhasil disimpan!</span>
     </div>
-
-    <style>
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-    </style>
 
     <script>
       (async function initProfile() {
@@ -851,7 +727,6 @@
         document.getElementById("footerInfo").textContent =
           `Menampilkan ${from}-${to} dari ${total} pengguna`;
 
-        // Pagination
         const pag = document.getElementById("pagination");
         let html = `<button class="page-btn" onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled style="opacity:.4;cursor:not-allowed"' : ""}>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>

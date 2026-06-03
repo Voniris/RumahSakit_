@@ -1,103 +1,182 @@
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.header-logo {
+    position: absolute;
+    top: 30px;
+    left: 50px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 10;
+}
+
+.header-logo img { width: 45px; }
+
+.header-logo span { font-weight: 0; color: #000000; font-size: 14px; line-height: 1.2; }
+
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 10;
+    flex: 1;
+    margin-bottom: 40px;
+}
+
+.page-title {
+    color: #005461;
+    font-size: 26px;
+    font-weight: 700;
+    margin-top: 100px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.ticket-card {
+    border: 1px solid #777;
+    padding: 30px 40px;
+    text-align: center;
+    background: #fff;
+    width: 260px;
+    margin-bottom: 25px;
+}
+
+.tc-title { color: #005461; font-weight: 600; font-size: 15px; margin: 0; }
+
+.tc-number { color: #005461; font-weight: 700; font-size: 38px; margin: 5px 0 15px 0; }
+
+.tc-grey { color: #888; font-size: 14px; margin-bottom: 15px; }
+
+.action-buttons { display: flex; flex-direction: column; gap: 12px; width: 260px; }
+
+.btn-cetak {
+    background-color: #005461; color: white; border: none; padding: 12px;
+    border-radius: 25px; font-family: 'Poppins', sans-serif; font-weight: 600;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn-cetak:hover { 
+    background-color: #003d47; 
+    transform: translateY(-4px); 
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); 
+}
+
+.btn-cetak:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-kembali {
+    background-color: #00828C; color: white; border: none; padding: 12px;
+    border-radius: 25px; font-family: 'Poppins', sans-serif; font-weight: 600; 
+    cursor: pointer;
+    transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn-kembali:hover { 
+    background-color: #006870; 
+    transform: translateY(-4px); 
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); 
+}
+
+.btn-kembali:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.footer-wrapper { position: relative; margin-top: auto; }
+
+.footer-banner {
+    background: linear-gradient(to right, #3BC1A8, #005461);
+    border-top-left-radius: 40px; border-top-right-radius: 40px;
+    text-align: center; color: white; height: 130px;
+    display: flex; align-items: center; justify-content: center; padding-left: 200px;
+}
+
+.doctor-img { position: absolute; bottom: 0; left: 1%; height: 500px; z-index: 5; }
+
+@media screen and (max-width: 768px) {
     body {
-          margin: 0;
-          font-family: 'Poppins', sans-serif;
-          background-color: #ffffff;
-          display: flex;
-          flex-direction: column;
-          min-height: 100vh;
-          position: relative;
-          overflow-x: hidden;
-        }
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
 
-        .header-logo {
-          position: absolute;
-          top: 30px;
-          left: 50px;
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          z-index: 10;
-        }
-        .header-logo img { width: 45px; }
-        .header-logo span { font-weight: 0; color: #000000; font-size: 14px; line-height: 1.2; }
+    .header-logo {
+        position: relative;
+        top: 15px;
+        left: 0;
+        width: 100%;
+        justify-content: center;
+        margin-top: 10px;
+        margin-bottom: 0;
+    }
 
-        .content-wrapper {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          z-index: 10;
-          flex: 1;
-          margin-bottom: 40px;
-        }
+    .content-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 20px;
+    }
 
-        .page-title {
-          color: #005461;
-          font-size: 26px;
-          font-weight: 700;
-          margin-top: 100px;
-          margin-bottom: 20px;
-          text-align: center;
-        }
+    .page-title {
+        margin-top: 0;
+        margin-bottom: 20px;
+        font-size: 22px;
+    }
 
-        .ticket-card {
-          border: 1px solid #777;
-          padding: 30px 40px;
-          text-align: center;
-          background: #fff;
-          width: 260px;
-          margin-bottom: 25px;
-        }
-        .tc-title { color: #005461; font-weight: 600; font-size: 15px; margin: 0; }
-        .tc-number { color: #005461; font-weight: 700; font-size: 38px; margin: 5px 0 15px 0; }
-        .tc-grey { color: #888; font-size: 14px; margin-bottom: 15px; }
-    
-        .action-buttons { display: flex; flex-direction: column; gap: 12px; width: 260px; }
-    
-        .btn-cetak {
-          background-color: #005461; color: white; border: none; padding: 12px;
-          border-radius: 25px; font-family: 'Poppins', sans-serif; font-weight: 600;
-          cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-          transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-    
-        .btn-cetak:hover { 
-          background-color: #003d47; 
-          transform: translateY(-4px); 
-          box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); 
-        }
+    .ticket-card {
+        margin-top: 0;
+        margin-bottom: 25px;
+        padding: 20px 30px;
+        width: 80%;
+        max-width: 260px;
+        box-sizing: border-box;
+        border-radius: 15px;
+    }
 
-        .btn-cetak:active {
-          transform: translateY(2px);
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-    
-        .btn-kembali {
-          background-color: #00828C; color: white; border: none; padding: 12px;
-          border-radius: 25px; font-family: 'Poppins', sans-serif; font-weight: 600; 
-          cursor: pointer;
-          transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
+    .tc-number {
+        font-size: 32px;
+    }
 
-        .btn-kembali:hover { 
-          background-color: #006870; 
-          transform: translateY(-4px); 
-          box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); 
-        }
+    .action-buttons {
+        width: 80%;
+        max-width: 260px;
+    }
 
-        .btn-kembali:active {
-          transform: translateY(2px);
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
+    .doctor-img {
+        display: none;
+    }
 
-        .footer-wrapper { position: relative; margin-top: auto; }
-        .footer-banner {
-          background: linear-gradient(to right, #3BC1A8, #005461);
-          border-top-left-radius: 40px; border-top-right-radius: 40px;
-          text-align: center; color: white; height: 130px;
-          display: flex; align-items: center; justify-content: center; padding-left: 200px;
-        }
-        .doctor-img { position: absolute; bottom: 0; left: 1%; height: 500px; z-index: 5; }
+    .footer-wrapper {
+        margin-top: auto;
+        width: 100%;
+    }
 
+    .footer-banner {
+        height: auto;
+        padding: 20px;
+        padding-left: 20px;
+        font-size: 12px;
+        border-top-left-radius: 25px;
+        border-top-right-radius: 25px;
+    }
+}
         @media screen and (max-width: 768px) {
     body {
         height: 100vh;

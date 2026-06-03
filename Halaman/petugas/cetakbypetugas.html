@@ -39,7 +39,7 @@
             <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
             <rect x="6" y="14" width="12" height="8"></rect>
         </svg>
-        Cetak Nomor Antrian (PNG)
+        Cetak Nomor Antrian
       </button>
       <button type="button" class="btn-kembali" onclick="kembaliKePendaftaran()">
         Kembali Ke Pendaftaran
@@ -55,7 +55,7 @@
   </div>
 
   <script src="../../js/auth.js"></script>
-  <script>
+ <script>
     document.addEventListener("DOMContentLoaded", function() {
       const rawData = sessionStorage.getItem("dataPasienBaru");
 
@@ -85,7 +85,8 @@
         window.location.href = 'antrianbypetugas.html';
       }
     });
-          function simpanKePNG() {
+
+    function simpanKePNG() {
         const element = document.getElementById("areaTiket");
         const judul = document.querySelector(".page-title");
 
@@ -103,7 +104,6 @@
         const ukuranKotak = "420px"; 
         wrapper.style.width = ukuranKotak;
         wrapper.style.height = ukuranKotak;
-
 
         if (judul) {
           const judulClone = judul.cloneNode(true);
@@ -141,12 +141,12 @@
             document.body.removeChild(wrapper);
           }
         });
-        }
+    }
 
-          function kembaliKePendaftaran() {
-            sessionStorage.removeItem("dataPasienBaru");
-            window.location.href = 'antrianbypetugas.html';
-          }
-  </script>
+    function kembaliKePendaftaran() {
+        sessionStorage.removeItem("dataPasienBaru");
+        window.location.href = 'antrianbypetugas.html';
+    }
+</script>
 </body>
 </html>

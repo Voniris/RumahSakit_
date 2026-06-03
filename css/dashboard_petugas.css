@@ -168,3 +168,164 @@
 
         .badge-yellow { background: #FEF3C7; color: #D97706; padding: 4px 10px; border-radius: 20px; font-size: 9px; font-weight: 600; border: 1px solid #FDE68A;}
         .badge-green { background: #D6F0E9; color: #0E6B63; padding: 4px 10px; border-radius: 20px; font-size: 9px; font-weight: 600; }
+
+        @media screen and (max-width: 768px) {
+    body {
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .dashboard-container {
+        flex-direction: column;
+        padding: 0;
+        gap: 0;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .sidebar-dashboard {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 70px;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        padding: 0;
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.05);
+        z-index: 999;
+        background-color: #ffffff;
+    }
+
+    .sidebar-logo, .menu-item span {
+        display: none;
+    }
+
+    .menu-item {
+        width: auto;
+        margin: 0;
+        padding: 10px;
+        background-color: transparent;
+        box-shadow: none;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .menu-item img {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+        opacity: 0.6;
+        transition: 0.3s;
+    }
+
+    .menu-item.active {
+        background-color: transparent;
+        box-shadow: none;
+    }
+
+    .menu-item.active img {
+        opacity: 1;
+        filter: brightness(0.5) sepia(1) hue-rotate(140deg) saturate(300%);
+    }
+
+    .main-content {
+        border-radius: 0;
+        padding: 25px 15px 90px 15px;
+        overflow-y: visible;
+    }
+
+    .header-area {
+        margin-top: 40px;
+        margin-bottom: 25px;
+    }
+
+    .header-area .welcome-text {
+        font-size: 12px;
+    }
+
+    .header-area .user-name {
+        font-size: 20px;
+    }
+
+    .header-area .user-roles {
+        display: none;
+    }
+
+    .top-profile {
+        top: 25px;
+        right: 15px;
+    }
+
+    .info-user {
+        display: none;
+    }
+
+    .profile-popup {
+        top: 50px;
+        right: 5px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .stat-card-petugas {
+        width: 100%;
+        height: auto;
+        padding: 15px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .stat-icon img {
+        width: 35px !important;
+        height: 35px !important;
+    }
+
+    .stat-info .val {
+        font-size: 20px;
+    }
+
+    .middle-grid {
+        display: flex;
+        flex-direction: column-reverse;
+        gap: 20px;
+    }
+
+    .banner-card {
+        padding: 20px;
+    }
+
+    .banner-text {
+        padding: 0 0 0 10px;
+    }
+
+    .banner-text h2 {
+        font-size: 15px;
+    }
+
+    .banner-img {
+        width: 100px;
+        margin-bottom: -15px;
+    }
+
+    .card-tabel {
+        padding: 20px 15px;
+        width: 100%;
+        box-sizing: border-box;
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 500px;
+    }
+
+    #paginationControls {
+        gap: 15px !important;
+    }
+}
