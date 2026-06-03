@@ -164,3 +164,95 @@
       cursor: not-allowed;
       color: #555;
     }
+
+    @media screen and (max-width: 768px) {
+    body {
+        height: auto;
+        min-height: 100vh;
+        overflow-y: auto; 
+        display: flex;
+        align-items: flex-start; 
+        padding: 80px 15px 30px 15px; 
+        box-sizing: border-box;
+    }
+
+    .logo-container {
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%); 
+        margin: 0;
+        text-align: center;
+    }
+
+    .logo-container img {
+        height: 35px;
+    }
+
+    .form-card {
+        width: 100%;
+        padding: 25px 20px;
+        border-radius: 15px;
+        margin: 0 auto;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .stepper-wrapper {
+        padding: 0;
+        margin-bottom: 25px;
+    }
+
+    .stepper-wrapper::before {
+        top: 17px;
+        left: 20px;
+        right: 20px;
+    }
+
+    .step {
+        width: auto;
+        flex: 1;
+    }
+
+    .circle {
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+    .step p {
+        font-size: 9px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        font-size: 12px;
+    }
+
+    .form-control {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+
+    .pad-left { padding-left: 35px; }
+    .icon-left { left: 10px; width: 14px; height: 14px; }
+    
+    .pad-right { padding-right: 35px; }
+    .icon-right { right: 10px; width: 14px; height: 14px; }
+    svg.icon-right { width: 14px; height: 14px; }
+
+    .action-buttons {
+        flex-direction: column-reverse;
+        gap: 12px;
+        margin-top: 25px;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 14px;
+    }
+}

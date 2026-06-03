@@ -406,3 +406,58 @@ input:-webkit-autofill:active {
 
 .custom-alert-btn.info { background: #005461; color: white; }
 .custom-alert-btn.info:hover { background: #249E94; }
+
+/* ini hape */
+@media screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        display: block;
+    }
+
+    .image-side {
+        display: none;
+    }
+
+    .form-side {
+        width: 100%;
+        padding: 40px 25px;
+        box-sizing: border-box;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .logo {
+        margin-bottom: 70px;
+        margin-left: 0;
+        justify-content: center;
+    }
+
+    .form-side h1 {
+        font-size: 24px;
+        margin-bottom: 25px;
+    }
+
+    .roles-toggle {
+        width: 100%;
+    }
+
+    .btn-roles {
+        flex: 1;
+    }
+
+    .verify-wrapper {
+        display: flex;
+        gap: 10px;
+    }
+
+    .verify-wrapper input {
+        width: 100%;
+    }
+
+    .btn-kirim {
+        white-space: nowrap;
+        padding: 10px 15px;
+    }
+}

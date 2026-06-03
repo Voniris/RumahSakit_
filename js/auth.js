@@ -3,6 +3,7 @@ const BASE_URL = 'http://kelompok1-rs.test/api';
 async function checkAndRefreshToken() {
     const token = localStorage.getItem('rs_token');
     if (!token) return;
+    if (window.location.href.includes('/auth/')) return;
 
     try {
         const response = await fetch(`${BASE_URL}/auth/refresh`, {
@@ -19,24 +20,41 @@ async function checkAndRefreshToken() {
             localStorage.setItem('rs_token', result.data.token);
             console.log("Token berhasil diperbarui.");
         } else {
-            paksakLogout();
+            console.warn("Refresh token gagal:", result?.message);
         }
     } catch (error) {
         console.error("Gagal refresh token:", error);
     }
 }
 
-function paksakLogout() {
-    localStorage.removeItem('rs_token');
-    localStorage.removeItem('token');
-    window.location.href = '../auth/masuk.html';
-}
 function mulaiAutoRefresh() {
     const token = localStorage.getItem('rs_token');
     if (!token) return;
+    if (window.location.href.includes('/auth/')) return;
 
-    checkAndRefreshToken();
-    setInterval(checkAndRefreshToken, 50 * 60 * 1000);
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const rememberMe = payload?.remember_me || false;
+
+        const intervalMs = rememberMe
+            ? 6 * 24 * 60 * 60 * 1000
+            : 45 * 60 * 1000;
+
+        console.log(`Auto refresh: ${rememberMe ? 'setiap 6 hari' : 'setiap 45 menit'}`);
+
+        setTimeout(() => {
+            checkAndRefreshToken();
+            setInterval(checkAndRefreshToken, intervalMs);
+        }, intervalMs / 2);
+
+    } catch (e) {
+
+        console.warn("Gagal baca payload token, pakai default 45 menit");
+        setTimeout(() => {
+            checkAndRefreshToken();
+            setInterval(checkAndRefreshToken, 45 * 60 * 1000);
+        }, 45 * 60 * 1000);
+    }
 }
 
 mulaiAutoRefresh();

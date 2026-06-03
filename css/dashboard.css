@@ -294,3 +294,228 @@
         from { opacity: 0; transform: translateY(-10px); }
         to { opacity: 1; transform: translateY(0); }
     }
+
+@media screen and (max-width: 768px) {
+    body {
+        overflow-y: auto;
+    }
+
+    .dashboard-container {
+        flex-direction: column;
+        padding: 0;
+        gap: 0;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .sidebar-dashboard {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 70px;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        padding: 0;
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.05);
+        z-index: 999;
+    }
+
+    .sidebar-logo, .menu-item span {
+        display: none;
+    }
+
+    .menu-item {
+        width: auto;
+        margin: 0;
+        padding: 10px;
+        background-color: transparent;
+        box-shadow: none;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .menu-item img {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+        opacity: 0.6;
+        transition: 0.3s;
+    }
+
+    .menu-item.active {
+        background-color: transparent;
+    }
+
+    .menu-item.active img {
+        opacity: 1;
+        filter: brightness(0.5) sepia(1) hue-rotate(140deg) saturate(300%);
+    }
+
+    .main-content {
+        border-radius: 0;
+        padding: 25px 20px 90px 20px;
+        gap: 20px;
+        overflow-y: visible;
+    }
+
+    .top-profile {
+        position: relative;
+        width: max-content;
+        align-self: flex-end;
+        margin-top: 15px;
+        margin-bottom: 25px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        z-index: 10;
+    }
+
+    .main-content::before {
+        content: "";
+        position: absolute;
+        top: 25px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 140px;
+        height: 35px;
+        background: url('../../assets/logo/Logorsijo.png') no-repeat center center;
+        background-size: contain;
+        pointer-events: none;
+    }
+
+    .top-profile::before {
+        display: none;
+    }
+
+    .info-user {
+        text-align: right;
+        margin-right: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .info-user .role {
+        display: none;
+    }
+
+    .info-user .name {
+        display: none;
+    }
+
+    .top-profile img#headerAvatar,
+    .top-profile > img {
+        width: 36px;
+        height: 35px;
+    }
+
+    .stats-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 10px;
+    }
+
+    .stat-card {
+        padding: 15px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .stat-card:nth-child(3) {
+        grid-column: span 2;
+        flex-direction: row;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .stat-card:nth-child(3)::after {
+        content: "›";
+        font-size: 26px;
+        color: #999;
+        margin-left: auto;
+    }
+
+    .stat-card .icon-box {
+        width: 35px;
+        height: 35px;
+        margin-bottom: 0;
+    }
+
+    .stat-card .icon-box svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .stat-info h3 {
+        font-size: 16px;
+        margin: 2px 0;
+    }
+
+    .stat-info p {
+        font-size: 11px;
+    }
+
+    .stat-info span {
+        font-size: 10px;
+    }
+
+    .badge-menunggu {
+        margin-top: 8px;
+    }
+
+    .banner-card {
+        padding: 25px 20px 25px 120px;
+        min-height: 120px;
+    }
+
+    .banner-content {
+        max-width: 100%;
+    }
+
+    .banner-content h2 {
+        font-size: 16px;
+    }
+
+    .banner-content h2 span {
+        font-size: 14px;
+    }
+
+    .doctor-img {
+        right: auto;
+        left: 5px;
+        height: 120px;
+    }
+
+    .bottom-row {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .history-card {
+        padding: 25px 20px;
+    }
+
+    .history-box {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        padding: 20px;
+    }
+
+    .hb-doctor, .hb-diagnosa {
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+        padding-right: 0;
+        padding-bottom: 15px;
+        width: 100%;
+    }
+
+    .profile-popup {
+        top: 50px;
+        right: 10px;
+    }
+}
