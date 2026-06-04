@@ -221,79 +221,77 @@
     .ht-dots { display: flex; justify-content: center; gap: 6px; margin-top: 15px; }
     .ht-dots .dot { width: 6px; height: 6px; background-color: #bbb; border-radius: 50%; cursor: pointer; transition: all 0.3s ease; }
     .ht-dots .dot.active { background-color: #005461; width: 15px; border-radius: 10px; }
+@keyframes fadeMasuk {
+    from { opacity: 0; transform: translateX(10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
 
-    @keyframes fadeMasuk {
-      from { opacity: 0; transform: translateX(10px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
+.top-profile {
+    cursor: pointer;
+}
 
-    .top-profile {
-        cursor: pointer;
-    }
+.profile-popup {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    padding: 20px;
+    width: 180px;
+    text-align: center;
+    z-index: 100;
+    border: 1px solid #f0f0f0;
+}
 
-    .profile-popup {
-        display: none;
-        position: absolute;
-        top: 60px;
-        right: 0;
-        background-color: #ffffff;
-        border-radius: 15px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        padding: 20px;
-        width: 180px;
-        text-align: center;
-        z-index: 100;
-        border: 1px solid #f0f0f0;
-    }
+.profile-popup.show {
+    display: block;
+    animation: fadeInDown 0.3s ease;
+}
 
+.close-popup {
+    position: absolute;
+    top: 8px;
+    right: 15px;
+    font-size: 22px;
+    cursor: pointer;
+    color: #888;
+}
 
-    .profile-popup.show {
-        display: block;
-        animation: fadeInDown 0.3s ease;
-    }
+.close-popup:hover { color: #333; }
 
-    .close-popup {
-        position: absolute;
-        top: 8px;
-        right: 15px;
-        font-size: 22px;
-        cursor: pointer;
-        color: #888;
-    }
+.profile-popup .img-large {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    object-fit: cover;
+}
 
-    .close-popup:hover { color: #333; }
+.profile-popup h4 { margin: 0; font-size: 16px; color: #111; }
+.profile-popup .popup-roles { margin: 2px 0 15px 0; font-size: 12px; color: #888; }
 
-    .profile-popup .img-large {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        margin-bottom: 10px;
-        object-fit: cover;
-    }
+.btn-logout {
+    background-color: #e53e3e;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+}
 
-    .profile-popup h4 { margin: 0; font-size: 16px; color: #111; }
-    .profile-popup .popup-roles { margin: 2px 0 15px 0; font-size: 12px; color: #888; }
+.btn-logout:hover { background-color: #c53030; }
 
-    .btn-logout {
-        background-color: #e53e3e;
-        color: white;
-        border: none;
-        padding: 8px 20px;
-        border-radius: 8px;
-        font-family: 'Poppins', sans-serif;
-        font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: 0.3s;
-        width: 100%;
-    }
-
-    .btn-logout:hover { background-color: #c53030; }
-
-    @keyframes fadeInDown {
-        from { opacity: 0; transform: translateY(-10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
 @media screen and (max-width: 768px) {
     body {
@@ -371,6 +369,7 @@
         justify-content: flex-end;
         align-items: center;
         z-index: 10;
+        right: -10px;
     }
 
     .main-content::before {
@@ -398,10 +397,7 @@
         justify-content: center;
     }
 
-    .info-user .role {
-        display: none;
-    }
-
+    .info-user .role,
     .info-user .name {
         display: none;
     }
@@ -433,7 +429,6 @@
     }
 
     .stat-card:nth-child(3)::after {
-        content: "›";
         font-size: 26px;
         color: #999;
         margin-left: auto;
@@ -516,6 +511,6 @@
 
     .profile-popup {
         top: 50px;
-        right: 10px;
+        right: 0;
     }
 }
