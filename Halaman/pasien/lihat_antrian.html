@@ -14,7 +14,7 @@
     
     <aside class="sidebar-dashboard">
       <div class="sidebar-logo">
-        <img src="../../assets/logo/Logors.png" alt="Logo" />
+        <img src="../../assets/logo/Logors.png" alt="Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3063/3063206.png'" />
         <span>Rumah Sakit<br><small>Viamedika</small></span>
       </div>
 
@@ -33,38 +33,47 @@
     </aside>
 
     <main class="main-content">
-      <div class="header-area">
-        <h1 class="page-title">Antrian Pasien</h1>
+      
+      <div class="top-profile" onclick="toggleProfile()">
+        <div class="info-user">
+          <span class="roles" id="profileRole">Pasien</span>
+          <span class="name" id="profileName">Memuat...</span>
+        </div>
+        <img id="headerAvatar" src="https://ui-avatars.com/api/?name=Pasien&background=005461&color=fff" alt="Profile">
         
-        <div class="top-profile" onclick="toggleProfile()">
-          <div class="info-user">
-            <span class="role" id="profileRole">Pasien</span>
-            <span class="name" id="profileName">Memuat...</span>
-          </div>
-          <img id="headerAvatar" src="https://ui-avatars.com/api/?name=Pasien&background=005461&color=fff" alt="Profile">
-
-          <div class="profile-popup" id="profilePopup">
-            <span class="close-popup" onclick="toggleProfile(); event.stopPropagation();">&times;</span>
-            <img id="popupAvatar" src="https://ui-avatars.com/api/?name=Pasien&background=005461&color=fff" class="img-large" alt="Profile">
-            <h4 id="popupName">Memuat...</h4>
-            <p class="popup-role" id="popupRoleDisplay">Pasien</p>
-            <div class="popup-btns">
-              <button class="btn-logout" onclick="logout(event)">Keluar</button>
-            </div>
-          </div>
+        <div class="profile-popup" id="profilePopup">
+          <span class="close-popup" onclick="toggleProfile(); event.stopPropagation();">&times;</span>
+          <img id="popupAvatar" src="https://ui-avatars.com/api/?name=Pasien&background=005461&color=fff" class="img-large" alt="Profile">
+          <h4 id="popupName">Memuat...</h4>
+          <p class="popup-roles" id="popupRoleDisplay">Pasien</p>
+          <button class="btn-logout" onclick="logout(event)">Keluar</button>
         </div>
       </div>
 
+      <div class="header-area">
+        <h1 class="page-title">Antrian Pasien</h1>
+      </div>
+
       <div class="queue-container">
+        
         <div class="current-card" id="cardBerlangsung">
           <div class="badge-berlangsung">Berlangsung</div>
           <h1 class="current-no" id="berlangsungNo">-</h1>
           <h2 class="current-name" id="berlangsungName">Memuat data...</h2>
           <p class="current-unit">Memuat unit...</p>
           
-          <div class="timer-badge">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-            <span id="timerText">00:00</span>
+          <div style="margin-top: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <span style="font-size: 12px; font-weight: 700; color: #a0a0a0; letter-spacing: 1px;">DURASI PELAYANAN</span>
+            
+            <div class="timer-badge" style="margin: 5px 0;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span id="timerText">00:00</span>
+            </div>
+            
+            <span id="waktuPanggilText" style="font-size: 14px; font-weight: 500; color: #b0b0b0;">Dipanggil pukul --:--</span>
           </div>
         </div>
 
@@ -72,7 +81,12 @@
           <div class="waiting-header">
             <div class="waiting-title-area">
               <div class="icon-box">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
               </div>
               <div class="waiting-title">
                 <h3>Antrian</h3>
@@ -94,82 +108,92 @@
 
   <script>
     const BASE_URL = 'http://kelompok1-rs.test/api';
-    const unitId = 1; 
-
+    
     let waktuPanggilSekarang = null;
     let dataMenunggu = [];
 
-    (async function initProfile() {
-        const token = localStorage.getItem('rs_token');
-        if (!token) return;
+    async function initProfile() {
+      const token = localStorage.getItem('rs_token');
+      if (!token) return;
 
-        let namaFinal = "Pasien";
-        let roleFinal = "Pasien";
+      let namaFinal = "Pasien";
+      let roleFinal = "Pasien";
 
-        try {
-            const responseAuth = await fetch(`${BASE_URL}/auth/me`, {
-                method: 'GET',
-                headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
-            });
-            const resultAuth = await responseAuth.json();
+      try {
+        const responseAuth = await fetch(`${BASE_URL}/auth/me`, {
+          method: 'GET',
+          headers: { 
+            'Authorization': `Bearer ${token}`, 
+            'Accept': 'application/json' 
+          }
+        });
+        
+        const resultAuth = await responseAuth.json();
 
-            if (responseAuth.ok) {
-                namaFinal = resultAuth?.data?.name || resultAuth?.name || resultAuth?.data?.user?.name || resultAuth?.user?.name;
-                roleFinal = resultAuth?.data?.roles?.[0]?.nama_role || "Pasien";
+        if (responseAuth.ok) {
+          namaFinal = resultAuth?.data?.name || resultAuth?.name || resultAuth?.data?.user?.name || resultAuth?.user?.name;
+          roleFinal = resultAuth?.data?.roles?.[0]?.nama_role || "Pasien";
 
-                if (!namaFinal || namaFinal.trim() === "") {
-                    const emailUser = resultAuth?.data?.user?.email || resultAuth?.user?.email || resultAuth?.data?.email || resultAuth?.email;
-                    if (emailUser && emailUser.includes('@')) {
-                        let namaMentah = emailUser.split('@')[0];
-                        let namaBersih = namaMentah.replace(/[^a-zA-Z]/g, ' ');
-                        namaFinal = namaBersih.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ').trim();
-                    }
-                }
-            } else {
-                localStorage.removeItem('rs_token');
-                window.location.href = '../auth/masuk.html';
-                return;
+          if (!namaFinal || namaFinal.trim() === "") {
+            const emailUser = resultAuth?.data?.user?.email || resultAuth?.user?.email || resultAuth?.data?.email || resultAuth?.email;
+            if (emailUser && emailUser.includes('@')) {
+              let namaMentah = emailUser.split('@')[0];
+              let namaBersih = namaMentah.replace(/[^a-zA-Z]/g, ' ');
+              namaFinal = namaBersih.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ').trim();
             }
-
-            const responseProfil = await fetch(`${BASE_URL}/pasien/profil`, {
-                method: 'GET',
-                headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
-            });
-            const dataProfil = await responseProfil.json();
-
-            if (responseProfil.ok && dataProfil.terdaftar) {
-                namaFinal = dataProfil.data?.nama_lengkap || namaFinal;
-            }
-
-        } catch (error) {
-            console.error(error);
+          }
+        } else {
+          localStorage.removeItem('rs_token');
+          window.location.href = '../auth/masuk.html';
+          return;
         }
 
-        if (!namaFinal || namaFinal.trim() === "") namaFinal = "Pasien";
+        const responseProfil = await fetch(`${BASE_URL}/pasien/profil`, {
+          method: 'GET',
+          headers: { 
+            'Authorization': `Bearer ${token}`, 
+            'Accept': 'application/json' 
+          }
+        });
         
-        roleFinal = roleFinal.replace(/_/g, " ");
-        roleFinal = roleFinal.split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+        const dataProfil = await responseProfil.json();
 
-        const profileNameEl = document.getElementById('profileName');
-        const popupNameEl = document.getElementById('popupName');
-        const profileRoleEl = document.getElementById('profileRole');
-        const popupRoleDisplayEl = document.getElementById('popupRoleDisplay');
+        if (responseProfil.ok && dataProfil.terdaftar) {
+          namaFinal = dataProfil.data?.nama_lengkap || namaFinal;
+        }
 
-        if(profileNameEl) profileNameEl.innerText = namaFinal;
-        if(popupNameEl) popupNameEl.innerText = namaFinal;
-        if(profileRoleEl) profileRoleEl.innerText = roleFinal;
-        if(popupRoleDisplayEl) popupRoleDisplayEl.innerText = roleFinal;
-        
-        const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(namaFinal)}&background=005461&color=fff`;
-        const headerAvatar = document.getElementById('headerAvatar');
-        const popupAvatar = document.getElementById('popupAvatar');
-        if (headerAvatar) headerAvatar.src = avatarUrl;
-        if (popupAvatar) popupAvatar.src = avatarUrl;
-    })();
+      } catch (error) {
+        console.error("Gagal init profil:", error);
+      }
+
+      if (!namaFinal || namaFinal.trim() === "") namaFinal = "Pasien";
+      roleFinal = roleFinal.replace(/_/g, " ");
+      roleFinal = roleFinal.split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+
+      const profileNameEl = document.getElementById('profileName');
+      const popupNameEl = document.getElementById('popupName');
+      const profileRoleEl = document.getElementById('profileRole');
+      const popupRoleDisplayEl = document.getElementById('popupRoleDisplay');
+
+      if(profileNameEl) profileNameEl.innerText = namaFinal;
+      if(popupNameEl) popupNameEl.innerText = namaFinal;
+      if(profileRoleEl) profileRoleEl.innerText = roleFinal;
+      if(popupRoleDisplayEl) popupRoleDisplayEl.innerText = roleFinal;
+      
+      const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(namaFinal)}&background=005461&color=fff`;
+      const headerAvatar = document.getElementById('headerAvatar');
+      const popupAvatar = document.getElementById('popupAvatar');
+      if (headerAvatar) headerAvatar.src = avatarUrl;
+      if (popupAvatar) popupAvatar.src = avatarUrl;
+    }
+
+    initProfile();
 
     function toggleProfile() {
       const popup = document.getElementById('profilePopup');
-      if(popup) popup.classList.toggle('show');
+      if(popup) {
+        popup.classList.toggle('show');
+      }
     }
 
     window.addEventListener('click', function(event) {
@@ -182,14 +206,15 @@
     });
 
     function logout(event) {
-        event.stopPropagation();
-        localStorage.removeItem('rs_token');
-        localStorage.removeItem('token');
-        window.location.href = '../auth/masuk.html';
+      event.stopPropagation();
+      localStorage.removeItem('rs_token');
+      localStorage.removeItem('token');
+      window.location.href = '../auth/masuk.html';
     }
 
     function hitungSelisihWaktu(waktuMulai) {
       if (!waktuMulai) return "00:00";
+      
       const now = new Date();
       const start = new Date(waktuMulai);
       const diffInSeconds = Math.floor((now - start) / 1000);
@@ -203,115 +228,197 @@
 
     function hitungWaktuTunggu(createdAt) {
       if (!createdAt) return "Menunggu 0m";
+      
       const now = new Date();
       const created = new Date(createdAt);
       const diffInMinutes = Math.floor((now - created) / 60000);
+      
       return `Menunggu ${diffInMinutes > 0 ? diffInMinutes : 0}m`;
     }
 
-    async function fetchBerlangsung() {
-        try {
-            const token = localStorage.getItem('rs_token') || localStorage.getItem('token') || '';
-            const res = await fetch(`${BASE_URL}/antrian/unit/${unitId}/display`, {
-                headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
-            });
-            const json = await res.json();
-            
-            if (json.success && json.dipanggil) {
-                document.getElementById("berlangsungNo").innerText = json.dipanggil.kode || json.dipanggil.kode_antrian || "-";
-                document.getElementById("berlangsungName").innerText = json.dipanggil.nama_pasien || "-";
-                document.querySelector(".current-unit").innerText = `Unit ${json.unit || '-'}`;
-                
-                waktuPanggilSekarang = json.dipanggil.waktu_panggil;
-            } else {
-                document.getElementById("berlangsungNo").innerText = "-";
-                document.getElementById("berlangsungName").innerText = "Tidak ada antrian";
-                document.querySelector(".current-unit").innerText = "Unit -";
-                waktuPanggilSekarang = null;
-                document.getElementById("timerText").innerText = "00:00";
-            }
-        } catch (e) {
-            console.error(e);
+    async function dapatkanUnitPasien() {
+      try {
+        const token = localStorage.getItem('rs_token');
+        if (!token) return null;
+
+        const res = await fetch(`${BASE_URL}/antrian/saya`, {
+          headers: { 
+            'Authorization': `Bearer ${token}`, 
+            'Accept': 'application/json' 
+          }
+        });
+        const json = await res.json();
+        
+        if (res.ok && json.data) {
+          let listAntrian = Array.isArray(json.data) ? json.data : [];
+          
+          const antrianAktif = listAntrian.filter(a => a.status?.toLowerCase() !== 'lunas');
+          
+          if (antrianAktif.length > 0) {
+            return antrianAktif[0].unit_id || antrianAktif[0].unit?.id || null;
+          }
         }
+      } catch (e) {
+        console.error("Gagal ngecek poli pasien:", e);
+      }
+      return null;
     }
 
-    async function fetchMenunggu() {
-        try {
-            const token = localStorage.getItem('rs_token') || localStorage.getItem('token') || '';
-            const res = await fetch(`${BASE_URL}/antrian/unit/${unitId}`, {
-                headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
-            });
-            const json = await res.json();
-            
-            if (json.success && json.data) {
-                const listContainer = document.getElementById("waitingListContainer");
-                listContainer.innerHTML = "";
-                
-                const totalMenunggu = json.statistik?.menunggu || 0;
-                document.getElementById("jumlahTertunda").innerText = `${totalMenunggu} Tertunda`;
-                
-                const titleSpan = document.querySelector(".waiting-title span");
-                if (titleSpan) titleSpan.innerText = `Unit ${json.unit || '-'}`;
-                
-                dataMenunggu = json.data.menunggu || [];
-                
-                if(dataMenunggu.length === 0) {
-                    listContainer.innerHTML = "<center><p style='color:#888; margin-top:50px;'>Antrian Kosong</p></center>";
-                } else {
-                    renderWaitingList();
-                }
-            }
-        } catch (e) {
-            console.error(e);
+    function tampilkanLayarKosong() {
+      document.getElementById("berlangsungNo").innerText = "-";
+      document.getElementById("berlangsungName").innerText = "Belum Ada Antrian";
+      document.querySelector(".current-unit").innerText = "Anda belum mendaftar di poli manapun hari ini.";
+      
+      waktuPanggilSekarang = null;
+      document.getElementById("timerText").innerText = "00:00";
+      document.getElementById("waktuPanggilText").innerText = "Dipanggil pukul --:--";
+
+      document.getElementById("jumlahTertunda").innerText = "0 Tertunda";
+      document.querySelector(".waiting-title span").innerText = "-";
+      
+      document.getElementById("waitingListContainer").innerHTML = 
+        "<center><p style='color:#888; margin-top:50px;'>Anda belum memiliki antrian aktif.</p></center>";
+    }
+
+    async function fetchBerlangsung(unitId) {
+      try {
+        const token = localStorage.getItem('rs_token') || '';
+        const res = await fetch(`${BASE_URL}/antrian/unit/${unitId}/display`, {
+          headers: { 
+            'Authorization': `Bearer ${token}`, 
+            'Accept': 'application/json' 
+          }
+        });
+        const json = await res.json();
+        
+        if (json.success && json.dipanggil) {
+          document.getElementById("berlangsungNo").innerText = json.dipanggil.kode || json.dipanggil.kode_antrian || "-";
+          document.getElementById("berlangsungName").innerText = json.dipanggil.nama_pasien || "-";
+          document.querySelector(".current-unit").innerText = `Unit ${json.unit || '-'}`;
+          
+          waktuPanggilSekarang = json.dipanggil.waktu_panggil;
+
+          if(waktuPanggilSekarang) {
+            const callDate = new Date(waktuPanggilSekarang);
+            const hh = callDate.getHours().toString().padStart(2, '0');
+            const mm = callDate.getMinutes().toString().padStart(2, '0');
+            document.getElementById("waktuPanggilText").innerText = `Dipanggil pukul ${hh}:${mm}`;
+          } else {
+            document.getElementById("waktuPanggilText").innerText = "Dipanggil pukul --:--";
+          }
+
+        } else {
+          document.getElementById("berlangsungNo").innerText = "-";
+          document.getElementById("berlangsungName").innerText = "Tidak ada antrian";
+          document.querySelector(".current-unit").innerText = `Unit ${json.unit || '-'}`;
+          
+          waktuPanggilSekarang = null;
+          document.getElementById("timerText").innerText = "00:00";
+          document.getElementById("waktuPanggilText").innerText = "Dipanggil pukul --:--";
         }
+      } catch (e) {
+        console.error("Fetch berlangsung error:", e);
+      }
+    }
+
+    async function fetchMenunggu(unitId) {
+      try {
+        const token = localStorage.getItem('rs_token') || '';
+        const res = await fetch(`${BASE_URL}/antrian/unit/${unitId}`, {
+          headers: { 
+            'Authorization': `Bearer ${token}`, 
+            'Accept': 'application/json' 
+          }
+        });
+        const json = await res.json();
+        
+        if (json.success && json.data) {
+          const listContainer = document.getElementById("waitingListContainer");
+          listContainer.innerHTML = "";
+          
+          const totalMenunggu = json.statistik?.menunggu || 0;
+          document.getElementById("jumlahTertunda").innerText = `${totalMenunggu} Tertunda`;
+          
+          const titleSpan = document.querySelector(".waiting-title span");
+          if (titleSpan) {
+            titleSpan.innerText = `Unit ${json.unit || '-'}`;
+          }
+          
+          dataMenunggu = json.data.menunggu || [];
+          
+          if(dataMenunggu.length === 0) {
+            listContainer.innerHTML = "<center><p style='color:#888; margin-top:50px;'>Antrian Kosong</p></center>";
+          } else {
+            renderWaitingList();
+          }
+        }
+      } catch (e) {
+        console.error("Fetch menunggu error:", e);
+      }
     }
 
     function renderWaitingList() {
-        const listContainer = document.getElementById("waitingListContainer");
-        listContainer.innerHTML = "";
-        
-        dataMenunggu.forEach(p => {
-            let div = document.createElement("div");
-            div.className = "list-item";
-            div.innerHTML = `
-              <div class="item-no"><span>No.</span><strong>${p.kode_antrian || p.kode || '-'}</strong></div>
-              <div class="item-info">
-                <h4>${p.nama_pasien || '-'}</h4>
-                <p>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                  <span class="wait-timer" data-created="${p.created_at}">${hitungWaktuTunggu(p.created_at)}</span> • Unit
-                </p>
-              </div>
-            `;
-            listContainer.appendChild(div);
-        });
+      const listContainer = document.getElementById("waitingListContainer");
+      listContainer.innerHTML = "";
+      
+      dataMenunggu.forEach(p => {
+        let div = document.createElement("div");
+        div.className = "list-item";
+        div.innerHTML = `
+          <div class="item-no">
+            <span>No.</span>
+            <strong>${p.kode_antrian || p.kode || '-'}</strong>
+          </div>
+          <div class="item-info">
+            <h4>${p.nama_pasien || '-'}</h4>
+            <p>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              <span class="wait-timer" data-created="${p.created_at}">${hitungWaktuTunggu(p.created_at)}</span> • Unit
+            </p>
+          </div>
+        `;
+        listContainer.appendChild(div);
+      });
     }
 
     function mulaiTimerGlobal() {
-        setInterval(() => {
-            if (waktuPanggilSekarang) {
-                document.getElementById("timerText").innerText = hitungSelisihWaktu(waktuPanggilSekarang);
-            }
-            
-            document.querySelectorAll('.wait-timer').forEach(el => {
-                const created = el.getAttribute('data-created');
-                if(created) {
-                    el.innerText = hitungWaktuTunggu(created);
-                }
-            });
-        }, 1000);
+      setInterval(() => {
+        if (waktuPanggilSekarang) {
+          document.getElementById("timerText").innerText = hitungSelisihWaktu(waktuPanggilSekarang);
+        }
+        
+        document.querySelectorAll('.wait-timer').forEach(el => {
+          const created = el.getAttribute('data-created');
+          if(created) {
+            el.innerText = hitungWaktuTunggu(created);
+          }
+        });
+      }, 1000); 
+    }
+
+    async function muatSemuaAntrian() {
+      const activeUnitId = await dapatkanUnitPasien();
+      
+      if (activeUnitId) {
+        await fetchBerlangsung(activeUnitId);
+        await fetchMenunggu(activeUnitId);
+      } else {
+        tampilkanLayarKosong();
+      }
     }
 
     window.onload = () => {
-        fetchBerlangsung();
-        fetchMenunggu();
-        mulaiTimerGlobal();
-        
-        setInterval(() => {
-            fetchBerlangsung();
-            fetchMenunggu();
-        }, 10000);
+      muatSemuaAntrian();
+      mulaiTimerGlobal();
+      
+      setInterval(() => {
+        muatSemuaAntrian();
+      }, 10000);
     };
+
   </script>
 </body>
 </html>
