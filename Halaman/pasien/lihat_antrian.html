@@ -7,7 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../css/lihatantrian.css" />
   <link rel="stylesheet" href="../../css/dashboard.css" />
-
 </head>
 <body>
 
@@ -33,15 +32,25 @@
       </a>
     </aside>
 
-
     <main class="main-content">
       <div class="header-area">
         <h1 class="page-title">Antrian Pasien</h1>
-        <div class="profile-area">
-          <img src="https://ui-avatars.com/api/?name=Petugas&background=005461&color=fff" alt="Profile" class="profile-img">
-          <div class="profile-text">
-            <strong>Petugas</strong>
-            <span>Nulla</span>
+        
+        <div class="top-profile" onclick="toggleProfile()">
+          <div class="info-user">
+            <span class="role" id="profileRole">Pasien</span>
+            <span class="name" id="profileName">Memuat...</span>
+          </div>
+          <img id="headerAvatar" src="https://ui-avatars.com/api/?name=Pasien&background=005461&color=fff" alt="Profile">
+
+          <div class="profile-popup" id="profilePopup">
+            <span class="close-popup" onclick="toggleProfile(); event.stopPropagation();">&times;</span>
+            <img id="popupAvatar" src="https://ui-avatars.com/api/?name=Pasien&background=005461&color=fff" class="img-large" alt="Profile">
+            <h4 id="popupName">Memuat...</h4>
+            <p class="popup-role" id="popupRoleDisplay">Pasien</p>
+            <div class="popup-btns">
+              <button class="btn-logout" onclick="logout(event)">Keluar</button>
+            </div>
           </div>
         </div>
       </div>
@@ -49,13 +58,13 @@
       <div class="queue-container">
         <div class="current-card" id="cardBerlangsung">
           <div class="badge-berlangsung">Berlangsung</div>
-          <h1 class="current-no" id="berlangsungNo">A-001</h1>
-          <h2 class="current-name" id="berlangsungName">Mr. Rajwa Shahifa</h2>
-          <p class="current-unit">Kedokteran Umum • Dr. James Unit</p>
+          <h1 class="current-no" id="berlangsungNo">-</h1>
+          <h2 class="current-name" id="berlangsungName">Memuat data...</h2>
+          <p class="current-unit">Memuat unit...</p>
           
           <div class="timer-badge">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-            <span id="timerText">00:10</span>
+            <span id="timerText">00:00</span>
           </div>
         </div>
 
@@ -67,14 +76,14 @@
               </div>
               <div class="waiting-title">
                 <h3>Antrian</h3>
-                <span>General Medicine</span>
+                <span>Memuat...</span>
               </div>
             </div>
-            <div class="badge-tertunda" id="jumlahTertunda">4 Tertunda</div>
+            <div class="badge-tertunda" id="jumlahTertunda">0 Tertunda</div>
           </div>
 
-
           <div class="waiting-list" id="waitingListContainer">
+            <center><p style='color:#888; margin-top:50px;'>Memuat Antrian...</p></center>
           </div>
         </div>
 
@@ -84,82 +93,224 @@
   </div>
 
   <script>
-    let dataAntrian = [
-      { no: "A-001", name: "Mr. Rajwa Shahifa", time: "Sedang Dilayani" },
-      { no: "A-002", name: "Mr. Maulana", time: "Menunggu 15m" },
-      { no: "A-003", name: "Mr. Ivan Adinata", time: "Menunggu 22m" },
-      { no: "A-004", name: "Mr. Akhmad Saputra", time: "Menunggu 28m" },
-      { no: "A-005", name: "Mr. Firdaus", time: "Menunggu 35m" },
-      { no: "A-006", name: "Ms. Cia", time: "Menunggu 42m" },
-      { no: "A-007", name: "Mr. Budi Santoso", time: "Menunggu 50m" },
-      { no: "A-008", name: "Ms. Siti Aminah", time: "Menunggu 58m" }
-    ];
-    let waktuSisa = 10; 
-    let timerInterval;
+    const BASE_URL = 'http://kelompok1-rs.test/api';
+    const unitId = 1; 
 
+    let waktuPanggilSekarang = null;
+    let dataMenunggu = [];
 
-    function updateTampilanAntrian() {
-      if (dataAntrian.length === 0) {
-        document.getElementById("berlangsungNo").innerText = "-";
-        document.getElementById("berlangsungName").innerText = "Tidak ada antrian";
-        document.getElementById("jumlahTertunda").innerText = "0 Tertunda";
-        document.getElementById("waitingListContainer").innerHTML = "<center><p style='color:#888; margin-top:50px;'>Antrian Kosong</p></center>";
-        clearInterval(timerInterval);
-        document.getElementById("timerText").innerText = "00:00";
-        return;
-      }
-      let pasienSekarang = dataAntrian[0];
-      
+    (async function initProfile() {
+        const token = localStorage.getItem('rs_token');
+        if (!token) return;
 
-      let cardBerlangsung = document.getElementById("cardBerlangsung");
-      cardBerlangsung.style.animation = 'none';
-      cardBerlangsung.offsetHeight;
-      cardBerlangsung.style.animation = 'slideUp 0.5s ease';
+        let namaFinal = "Pasien";
+        let roleFinal = "Pasien";
 
-      document.getElementById("berlangsungNo").innerText = pasienSekarang.no;
-      document.getElementById("berlangsungName").innerText = pasienSekarang.name;
+        try {
+            const responseAuth = await fetch(`${BASE_URL}/auth/me`, {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
+            });
+            const resultAuth = await responseAuth.json();
 
-      let listContainer = document.getElementById("waitingListContainer");
-      listContainer.innerHTML = "";
+            if (responseAuth.ok) {
+                namaFinal = resultAuth?.data?.name || resultAuth?.name || resultAuth?.data?.user?.name || resultAuth?.user?.name;
+                roleFinal = resultAuth?.data?.roles?.[0]?.nama_role || "Pasien";
 
-      let tertundaCount = dataAntrian.length - 1;
-      document.getElementById("jumlahTertunda").innerText = tertundaCount + " Tertunda";
+                if (!namaFinal || namaFinal.trim() === "") {
+                    const emailUser = resultAuth?.data?.user?.email || resultAuth?.user?.email || resultAuth?.data?.email || resultAuth?.email;
+                    if (emailUser && emailUser.includes('@')) {
+                        let namaMentah = emailUser.split('@')[0];
+                        let namaBersih = namaMentah.replace(/[^a-zA-Z]/g, ' ');
+                        namaFinal = namaBersih.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ').trim();
+                    }
+                }
+            } else {
+                localStorage.removeItem('rs_token');
+                window.location.href = '../auth/masuk.html';
+                return;
+            }
 
-      for (let i = 1; i < Math.min(dataAntrian.length, 5); i++) {
-        let p = dataAntrian[i];
-        let div = document.createElement("div");
-        div.className = "list-item";
-        div.innerHTML = `
-          <div class="item-no"><span>No.</span><strong>${p.no}</strong></div>
-          <div class="item-info">
-            <h4>${p.name}</h4>
-            <p>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-              ${p.time} • Unit
-            </p>
-          </div>
-        `;
-        listContainer.appendChild(div);
-      }
-    }
+            const responseProfil = await fetch(`${BASE_URL}/pasien/profil`, {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
+            });
+            const dataProfil = await responseProfil.json();
 
-    function mulaiTimer() {
-      timerInterval = setInterval(() => {
-        waktuSisa--;
-        let menit = Math.floor(waktuSisa / 60);
-        let detik = waktuSisa % 60;
-        document.getElementById("timerText").innerText = 
-          (menit < 10 ? "0" : "") + menit + ":" + (detik < 10 ? "0" : "") + detik;
-        if (waktuSisa <= 0) {
-          dataAntrian.shift(); 
-          waktuSisa = 10; 
-          updateTampilanAntrian(); 
+            if (responseProfil.ok && dataProfil.terdaftar) {
+                namaFinal = dataProfil.data?.nama_lengkap || namaFinal;
+            }
+
+        } catch (error) {
+            console.error(error);
         }
-      }, 1000); 
+
+        if (!namaFinal || namaFinal.trim() === "") namaFinal = "Pasien";
+        
+        roleFinal = roleFinal.replace(/_/g, " ");
+        roleFinal = roleFinal.split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+
+        const profileNameEl = document.getElementById('profileName');
+        const popupNameEl = document.getElementById('popupName');
+        const profileRoleEl = document.getElementById('profileRole');
+        const popupRoleDisplayEl = document.getElementById('popupRoleDisplay');
+
+        if(profileNameEl) profileNameEl.innerText = namaFinal;
+        if(popupNameEl) popupNameEl.innerText = namaFinal;
+        if(profileRoleEl) profileRoleEl.innerText = roleFinal;
+        if(popupRoleDisplayEl) popupRoleDisplayEl.innerText = roleFinal;
+        
+        const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(namaFinal)}&background=005461&color=fff`;
+        const headerAvatar = document.getElementById('headerAvatar');
+        const popupAvatar = document.getElementById('popupAvatar');
+        if (headerAvatar) headerAvatar.src = avatarUrl;
+        if (popupAvatar) popupAvatar.src = avatarUrl;
+    })();
+
+    function toggleProfile() {
+      const popup = document.getElementById('profilePopup');
+      if(popup) popup.classList.toggle('show');
     }
+
+    window.addEventListener('click', function(event) {
+      if (!event.target.closest('.top-profile')) {
+        const popupProfile = document.getElementById('profilePopup');
+        if (popupProfile && popupProfile.classList.contains('show')) {
+          popupProfile.classList.remove('show');
+        }
+      }
+    });
+
+    function logout(event) {
+        event.stopPropagation();
+        localStorage.removeItem('rs_token');
+        localStorage.removeItem('token');
+        window.location.href = '../auth/masuk.html';
+    }
+
+    function hitungSelisihWaktu(waktuMulai) {
+      if (!waktuMulai) return "00:00";
+      const now = new Date();
+      const start = new Date(waktuMulai);
+      const diffInSeconds = Math.floor((now - start) / 1000);
+      
+      if (diffInSeconds < 0) return "00:00";
+
+      const m = Math.floor(diffInSeconds / 60).toString().padStart(2, '0');
+      const s = (diffInSeconds % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function hitungWaktuTunggu(createdAt) {
+      if (!createdAt) return "Menunggu 0m";
+      const now = new Date();
+      const created = new Date(createdAt);
+      const diffInMinutes = Math.floor((now - created) / 60000);
+      return `Menunggu ${diffInMinutes > 0 ? diffInMinutes : 0}m`;
+    }
+
+    async function fetchBerlangsung() {
+        try {
+            const token = localStorage.getItem('rs_token') || localStorage.getItem('token') || '';
+            const res = await fetch(`${BASE_URL}/antrian/unit/${unitId}/display`, {
+                headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
+            });
+            const json = await res.json();
+            
+            if (json.success && json.dipanggil) {
+                document.getElementById("berlangsungNo").innerText = json.dipanggil.kode || json.dipanggil.kode_antrian || "-";
+                document.getElementById("berlangsungName").innerText = json.dipanggil.nama_pasien || "-";
+                document.querySelector(".current-unit").innerText = `Unit ${json.unit || '-'}`;
+                
+                waktuPanggilSekarang = json.dipanggil.waktu_panggil;
+            } else {
+                document.getElementById("berlangsungNo").innerText = "-";
+                document.getElementById("berlangsungName").innerText = "Tidak ada antrian";
+                document.querySelector(".current-unit").innerText = "Unit -";
+                waktuPanggilSekarang = null;
+                document.getElementById("timerText").innerText = "00:00";
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    async function fetchMenunggu() {
+        try {
+            const token = localStorage.getItem('rs_token') || localStorage.getItem('token') || '';
+            const res = await fetch(`${BASE_URL}/antrian/unit/${unitId}`, {
+                headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
+            });
+            const json = await res.json();
+            
+            if (json.success && json.data) {
+                const listContainer = document.getElementById("waitingListContainer");
+                listContainer.innerHTML = "";
+                
+                const totalMenunggu = json.statistik?.menunggu || 0;
+                document.getElementById("jumlahTertunda").innerText = `${totalMenunggu} Tertunda`;
+                
+                const titleSpan = document.querySelector(".waiting-title span");
+                if (titleSpan) titleSpan.innerText = `Unit ${json.unit || '-'}`;
+                
+                dataMenunggu = json.data.menunggu || [];
+                
+                if(dataMenunggu.length === 0) {
+                    listContainer.innerHTML = "<center><p style='color:#888; margin-top:50px;'>Antrian Kosong</p></center>";
+                } else {
+                    renderWaitingList();
+                }
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    function renderWaitingList() {
+        const listContainer = document.getElementById("waitingListContainer");
+        listContainer.innerHTML = "";
+        
+        dataMenunggu.forEach(p => {
+            let div = document.createElement("div");
+            div.className = "list-item";
+            div.innerHTML = `
+              <div class="item-no"><span>No.</span><strong>${p.kode_antrian || p.kode || '-'}</strong></div>
+              <div class="item-info">
+                <h4>${p.nama_pasien || '-'}</h4>
+                <p>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  <span class="wait-timer" data-created="${p.created_at}">${hitungWaktuTunggu(p.created_at)}</span> • Unit
+                </p>
+              </div>
+            `;
+            listContainer.appendChild(div);
+        });
+    }
+
+    function mulaiTimerGlobal() {
+        setInterval(() => {
+            if (waktuPanggilSekarang) {
+                document.getElementById("timerText").innerText = hitungSelisihWaktu(waktuPanggilSekarang);
+            }
+            
+            document.querySelectorAll('.wait-timer').forEach(el => {
+                const created = el.getAttribute('data-created');
+                if(created) {
+                    el.innerText = hitungWaktuTunggu(created);
+                }
+            });
+        }, 1000);
+    }
+
     window.onload = () => {
-      updateTampilanAntrian();
-      mulaiTimer();
+        fetchBerlangsung();
+        fetchMenunggu();
+        mulaiTimerGlobal();
+        
+        setInterval(() => {
+            fetchBerlangsung();
+            fetchMenunggu();
+        }, 10000);
     };
   </script>
 </body>

@@ -395,3 +395,125 @@
         box-sizing: border-box;
     }
 }
+    .header-area {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    
+    .top-profile {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .top-profile .info-user {
+      display: flex;
+      flex-direction: column;
+      text-align: right;
+    }
+
+    .top-profile .info-user .role {
+      font-size: 13px;
+      font-weight: 700;
+      color: #111;
+    }
+
+    .top-profile .info-user .name {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .top-profile img {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    
+    .profile-popup {
+      display: none;
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 16px;
+      padding: 20px;
+      width: 220px;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+      z-index: 100;
+    }
+
+    .profile-popup.show {
+      display: block;
+      animation: slideUpPopup 0.2s ease;
+    }
+
+    .close-popup {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 22px;
+      cursor: pointer;
+      color: #888;
+    }
+
+    .close-popup:hover { color: #ef4444; }
+    
+    .profile-popup .img-large {
+      width: 65px;
+      height: 65px;
+      margin: 0 auto;
+    }
+
+    .profile-popup h4 {
+      color: #111;
+      margin: 10px 0 2px;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .popup-role {
+      color: #555;
+      font-size: 12px;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    .btn-logout {
+      background: #ef4444;
+      color: white;
+      border: none;
+      padding: 10px 0;
+      border-radius: 10px;
+      width: 100%;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 13px;
+      transition: 0.2s;
+    }
+
+    .btn-logout:hover { background: #dc2626; }
+
+    @keyframes slideUpPopup {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @media screen and (max-width: 768px) {
+      .header-area {
+        justify-content: flex-end;
+      }
+      .page-title {
+        display: none;
+      }
+      .top-profile .info-user {
+        display: none;
+      }
+    }
