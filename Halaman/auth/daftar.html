@@ -14,12 +14,9 @@
                 <img src="../../assets/logo/Logors.png" alt="Logo" width="40" />
                 <span class="logo-name">Rumah Sakit<br><small>Viamedika</small></span>
             </div>
+            
             <h1>Daftar Akun</h1>
-            <div class="roles-toggle">
-                <button type="button" class="btn-roles active" id="btnPasien" onclick="setRoles('pasien')">Pasien</button>
-                <button type="button" class="btn-roles" id="btnPetugas" onclick="setRoles('petugas')">Petugas</button>
-            </div>
-            <input type="hidden" id="selectedroles" value="pasien" />
+            
             <form id="formDaftar">
                 <div class="form-group">
                     <label>Alamat Email</label>
@@ -69,11 +66,6 @@
     <script src="../../js/main.js"></script>
 
 <script>
-    function setRoles(roles) {
-        document.getElementById('selectedroles').value = roles;
-        document.getElementById('btnPasien').classList.toggle('active', roles === 'pasien');
-        document.getElementById('btnPetugas').classList.toggle('active', roles === 'petugas');
-    }
     let isResending = false;
     
     document.querySelector('.btn-kirim').addEventListener('click', async function() {
@@ -124,6 +116,7 @@
             btnKirim.disabled = false;
         }
     });
+
     document.getElementById('formDaftar').addEventListener('submit', async function(e) {
         e.preventDefault();
         const btnSubmit = document.getElementById('btnSubmitDaftar');
