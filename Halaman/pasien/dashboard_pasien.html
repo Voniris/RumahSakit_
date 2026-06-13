@@ -17,18 +17,23 @@
       </div>
 
       <a href="dashboard_pasien.html" class="menu-item active">
-        <img src="../../assets/icons/beranda.png" alt="Home" width="27">
+        <img src="../../assets/icons/beranda.png" alt="Home" width="25">
         <span>Dashboard</span>
       </a>
 
       <a href="pendaftaran_pasien.html" class="menu-item">
-        <img src="../../assets/icons/pendaftaran.png" alt="Daftar" width="20">
+        <img src="../../assets/icons/pendaftaran.png" alt="Daftar" width="16">
         <span>Pendaftaran</span>
       </a>
 
       <a href="lihat_antrian.html" class="menu-item">
         <img src="../../assets/icons/panggill.png" alt="Antrian" width="20">
         <span>Lihat Antrian</span>
+      </a>
+
+      <a href="riwayat_kunjungan2.html" class="menu-item">
+        <img src="../../assets/icons/riwayatkunjungan.png" alt="Riwayat" width="20" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2965/2965306.png'">
+        <span>Riwayat Kunjungan</span>
       </a>
     </aside>
 
@@ -171,7 +176,8 @@
         const token = localStorage.getItem('rs_token');
 
         if (!token) {
-            console.log("Bypass login aktif untuk testing"); 
+           console.log("Bypass login aktif untuk testing"); //console.log("Bypass login aktif untuk testing"); //window.location.href = '../auth/masuk.html'
+            return;
         }
 
         let pasienId = null;

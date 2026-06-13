@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    </head>
+<body>
+
+    <div class="card-tabel">
+        <h3>Riwayat Kunjungan Saya</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tanggal</th>
+                    <th>Dokter</th>
+                    <th>Diagnosa</th>
+                    <th>Tindakan Medis</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyRiwayat">
+                <tr><td colspan="4" style="text-align: center;">Memuat riwayat...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('rs_token') || localStorage.getItem('token');
+        if (!token) {
+            console.log("Bypass login aktif untuk testing");
+        }
+
+        async function loadRiwayatKunjungan() {
+            
+            try {
+                const resProfil = await fetch('http://kelompok1-rs.test/api/pasien/profil', {
+                    headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
+                });
+                const dataProfil = await resProfil.json();
+                
+                if (!dataProfil.terdaftar) {
+                    document.getElementById('tbodyRiwayat').innerHTML = '<tr><td colspan="4" style="text-align:center;">Anda belum terdaftar sebagai pasien</td></tr>';
+                    return;
+                }
+
+                const pasienId = dataProfil.data.id;
+                const response = await fetch(`http://localhost/api/rekam-medik/pasien/${pasienId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/json'
+                    }
+                });
+
+                const dataRiwayat = await response.json();
+                const tbody = document.getElementById('tbodyRiwayat');
+                tbody.innerHTML = ''; 
+
+                if (response.ok && dataRiwayat.data && dataRiwayat.data.length > 0) {
+            
+                    dataRiwayat.data.forEach(riwayat => { 
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${riwayat.tanggal || '-'}</td>
+                                <td>${riwayat.nama_dokter || '-'}</td>
+                                <td class="text-teal">${riwayat.diagnosa || '-'}</td>
+                                <td>${riwayat.tindakan_medis || '-'}</td>
+                            </tr>
+                        `;
+                    });
+
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Belum ada riwayat kunjungan</td></tr>';
+                }
+
+            } catch (error) {
+                console.error("Gagal mengambil riwayat:", error);
+                document.getElementById('tbodyRiwayat').innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">Gagal terhubung ke server Kelompok 2</td></tr>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadRiwayatKunjungan();
+        });
+    </script>
+</body>
+</html>
