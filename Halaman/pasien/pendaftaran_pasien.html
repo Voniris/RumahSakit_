@@ -97,7 +97,7 @@
         const token = localStorage.getItem('rs_token');
         
         if (!token) {
-             console.log("Bypass login aktif untuk testing"); 
+             window.location.href = '../auth/masuk.html';
             return;
         }
 

@@ -31,11 +31,6 @@
             <img src="../../assets/icons/pendaftaran.png" alt="Daftar" width="20">
             <span>Pendaftaran</span>
         </a>
-
-        <a href="panggil_antrian.html" class="menu-item">
-            <img src="../../assets/icons/panggill.png" alt="Antrian" width="20">
-            <span>Lihat Antrian</span>
-        </a>
     </aside>
 
     <div class="main-content">
@@ -154,7 +149,7 @@
     (async function initProfile() {
         const token = localStorage.getItem('rs_token');
         if (!token) {
-            console.log("Bypass login aktif untuk testing");//disini cia kunci 
+            window.location.href = '../auth/masuk.html';
             return;
         }
         try {
