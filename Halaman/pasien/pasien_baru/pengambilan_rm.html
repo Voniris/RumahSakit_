@@ -55,5 +55,29 @@
   </div>
 
   <script src="../../js/auth.js"></script>
+  <script>
+  (function checkAuth() {
+    const token = localStorage.getItem('rs_token');
+    if (!token) {
+      window.location.href = '../../auth/masuk.html';
+      return;
+    }
+    fetch('http://kelompok1-rs.test/api/auth/me', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json'
+      }
+    }).then(function(res) {
+      if (!res.ok) {
+        localStorage.removeItem('rs_token');
+        localStorage.removeItem('token');
+        window.location.href = '../../auth/masuk.html';
+      }
+    }).catch(function(error) {
+      console.error("Gagal validasi token:", error);
+    });
+  })();
+</script>
 </body>
 </html>

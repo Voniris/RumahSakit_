@@ -346,7 +346,8 @@
           localStorage.getItem("rs_token") || localStorage.getItem("token");
 
         if (!token) {
-          console.log("Bypass login aktif untuk testing.");
+          window.location.href = "../auth/masuk.html";
+          return;
         }
 
         try {
@@ -357,6 +358,13 @@
               Accept: "application/json",
             },
           });
+
+          if (!response.ok) {
+            localStorage.removeItem("rs_token");
+            localStorage.removeItem("token");
+            window.location.href = "../auth/masuk.html";
+            return;
+          }
 
           const result = await response.json();
 
@@ -372,6 +380,18 @@
               result?.data?.user?.roles?.[0]?.nama_role ||
               result?.user?.roles?.[0]?.nama_role ||
               "Admin";
+
+            const roleRaw =
+              result?.data?.roles?.[0]?.nama_role ||
+              result?.roles?.[0]?.nama_role ||
+              result?.data?.user?.roles?.[0]?.nama_role ||
+              result?.user?.roles?.[0]?.nama_role ||
+              "";
+            if (roleRaw.toLowerCase() !== "super_admin") {
+              alert("Akses ditolak. Halaman ini hanya untuk Super Admin.");
+              window.location.href = "../auth/masuk.html";
+              return;
+            }
 
             if (!namaFinal || namaFinal.trim() === "") {
               const emailUser =
