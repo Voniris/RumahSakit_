@@ -521,3 +521,44 @@
         right: 0;
     }
 }
+    .hb-loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      color: #888;
+      font-size: 14px;
+      gap: 8px;
+    }
+    .hb-loading::before {
+      content: '';
+      width: 18px;
+      height: 18px;
+      border: 2px solid #cce7ea;
+      border-top-color: #005461;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .hb-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 24px 16px;
+      color: #aaa;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .diagnosa-text {
+      color: #2ecc71;
+      font-weight: 600;
+    }
+
+    #riwayatMedisContainer .history-box + .history-box {
+      margin-top: 12px;
+    }

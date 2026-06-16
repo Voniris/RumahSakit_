@@ -99,22 +99,9 @@
         
         <div class="history-card">
           <h3>Riwayat Medis Terakhir</h3>
-          <div class="history-box">
-            <div class="hb-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-            </div>
-            <div class="hb-doctor">
-              <p>01 Mei 2026</p>
-              <h4>dr. Andi Wijaya, Sp.PD</h4>
-              <span>Poli Penyakit Dalam</span>
-            </div>
-            <div class="hb-diagnosa">
-              <h4>Diagnosa</h4>
-              <p>Gerd</p>
-            </div>
-            <div class="hb-tindakan">
-              <h4>Tindakan & Catatan</h4>
-              <p>Keluhan nyeri ulu hati, mual, diberikan obat dan saran pola makan.</p>
+          <div id="riwayatMedisContainer">
+            <div class="hb-loading">
+              <span>Memuat riwayat medis...</span>
             </div>
           </div>
         </div>
@@ -272,36 +259,30 @@
             try {
                 const responseRiwayat = await fetch(`http://kelompok1-rs.test/api/pendaftaran/pasien/${pasienId}/riwayat`, {
                     method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`, 
-                        'Accept': 'application/json'
-                    }
+                    headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
                 });
-
                 const resRiwayat = await responseRiwayat.json();
 
-              if (responseRiwayat.ok) {
-                  const totalRiwayat = resRiwayat.data?.total || 0;  
-                  const dataRiwayat  = resRiwayat.data?.data || [];  
-              
-                  const jmlEl = document.getElementById('jmlRiwayat');
-                  const tglEl = document.getElementById('tglRiwayat');
-              
-                  if (totalRiwayat > 0) {
-                      jmlEl.innerText = `${totalRiwayat} Kali`;
-                      
-                      let tglTerakhir = dataRiwayat[0]?.tanggal_kunjungan || dataRiwayat[0]?.created_at;
-                      if (tglTerakhir) {
-                          const d = new Date(tglTerakhir);
-                          const b = ['Januari','Februari','Maret','April','Mei','Juni','Juli',
-                                     'Agustus','September','Oktober','November','Desember'];
-                          tglEl.innerHTML = `Kunjungan Terakhir ${d.getDate().toString().padStart(2,'0')}<br>${b[d.getMonth()]} ${d.getFullYear()}`;
-                      }
-                  } else {
-                      jmlEl.innerText = "0 Kali";
-                      tglEl.innerText = "Belum ada riwayat";
-                  }
-              } else {
+                if (responseRiwayat.ok) {
+                    const totalRiwayat = resRiwayat.data?.total || 0;
+                    const dataRiwayat  = resRiwayat.data?.data || [];
+                    const jmlEl = document.getElementById('jmlRiwayat');
+                    const tglEl = document.getElementById('tglRiwayat');
+
+                    if (totalRiwayat > 0) {
+                        jmlEl.innerText = `${totalRiwayat} Kali`;
+                        let tglTerakhir = dataRiwayat[0]?.tanggal_kunjungan || dataRiwayat[0]?.created_at;
+                        if (tglTerakhir) {
+                            const d = new Date(tglTerakhir);
+                            const b = ['Januari','Februari','Maret','April','Mei','Juni','Juli',
+                                       'Agustus','September','Oktober','November','Desember'];
+                            tglEl.innerHTML = `Kunjungan Terakhir ${d.getDate().toString().padStart(2,'0')}<br>${b[d.getMonth()]} ${d.getFullYear()}`;
+                        }
+                    } else {
+                        jmlEl.innerText = "0 Kali";
+                        tglEl.innerText = "Belum ada riwayat";
+                    }
+                } else {
                     document.getElementById('jmlRiwayat').innerText = "-";
                     document.getElementById('tglRiwayat').innerText = "Data kosong";
                 }
@@ -310,9 +291,83 @@
                 document.getElementById('jmlRiwayat').innerText = "Eror";
                 document.getElementById('tglRiwayat').innerText = "Gagal memuat";
             }
+            try {
+                const responseRM = await fetch(`http://localhost/api/rekam-medik/pasien/${pasienId}`, {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
+                });
+                const resRM = await responseRM.json();
+                const container = document.getElementById('riwayatMedisContainer');
+
+                if (responseRM.ok) {
+                    const listRM = Array.isArray(resRM.data) ? resRM.data
+                                 : (resRM.data ? [resRM.data] : []);
+
+                    if (listRM.length === 0) {
+                        container.innerHTML = `
+                          <div class="hb-empty">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                            <p>Belum ada riwayat medis</p>
+                          </div>`;
+                    } else {
+                        const bulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli',
+                                       'Agustus','September','Oktober','November','Desember'];
+
+                        container.innerHTML = listRM.map(rm => {
+                            let tglTampil = '-';
+                            const tglRaw = rm.created_at || rm.tanggal_kunjungan || rm.tanggal;
+                            if (tglRaw) {
+                                const d = new Date(tglRaw);
+                                tglTampil = `${d.getDate().toString().padStart(2,'0')} ${bulan[d.getMonth()]} ${d.getFullYear()}`;
+                            }
+                            const namaDokter = rm.dokter?.nama || rm.nama_dokter || 'Dokter tidak diketahui';
+                            const spesialisasi = rm.dokter?.spesialisasi || rm.spesialisasi || '';
+
+                            return `
+                              <div class="history-box">
+                                <div class="hb-icon">
+                                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                  </svg>
+                                </div>
+                                <div class="hb-doctor">
+                                  <p>${tglTampil}</p>
+                                  <h4>${namaDokter}</h4>
+                                  <span>${spesialisasi}</span>
+                                </div>
+                                <div class="hb-diagnosa">
+                                  <h4>Diagnosa</h4>
+                                  <p class="diagnosa-text">${rm.diagnosa || '-'}</p>
+                                </div>
+                                <div class="hb-tindakan">
+                                  <h4>Tindakan & Catatan</h4>
+                                  <p>${rm.tindakan_medis || '-'}</p>
+                                </div>
+                              </div>`;
+                        }).join('');
+                    }
+                } else {
+                    container.innerHTML = `
+                      <div class="hb-empty">
+                        <p>Gagal memuat riwayat medis.</p>
+                      </div>`;
+                }
+            } catch (error) {
+                console.error("Gagal memuat rekam medis:", error);
+                document.getElementById('riwayatMedisContainer').innerHTML = `
+                  <div class="hb-empty">
+                    <p>Terjadi kesalahan saat memuat data.</p>
+                  </div>`;
+            }
+
         } else {
             document.getElementById('jmlRiwayat').innerText = "-";
             document.getElementById('tglRiwayat').innerText = "ID tidak ditemukan";
+            document.getElementById('riwayatMedisContainer').innerHTML = `
+              <div class="hb-empty"><p>ID pasien tidak ditemukan.</p></div>`;
         }
     });
 
