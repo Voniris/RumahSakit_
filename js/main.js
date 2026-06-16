@@ -71,7 +71,7 @@ function switchTab(role) {
   }
 }
 
-const BASE_URL = 'http://kelompok1-rs.test/api';
+const BASE_URL = 'https://daftar4b06.vps-poliban.my.id/api';
 
 async function loginPasien(event) {
     event.preventDefault();
