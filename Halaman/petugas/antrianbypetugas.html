@@ -146,7 +146,7 @@
     
 <script>
 
-    const API_BASE      = 'https://daftar4b06.vps-poliban.my.id/api';
+    const API_BASE      = 'https://http://kelompok1-rs.test/api';
     const CEK_NIK_URL   = (nik) => `${API_BASE}/pasien/cek-nik/${nik}`;
     const UNITS_URL     = `${API_BASE}/units`;
     const DAFTAR_URL    = `${API_BASE}/pendaftaran/langsung`;
@@ -154,7 +154,6 @@
     (async function initProfile() {
         const token = localStorage.getItem('rs_token');
         if (!token) {
-            window.location.href = '../auth/masuk.html';
             return;
         }
         try {

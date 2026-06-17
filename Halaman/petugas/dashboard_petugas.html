@@ -166,7 +166,7 @@
 
 <script src="../../js/auth.js"></script>
 <script>
-    const baseUrl = 'https://daftar4b06.vps-poliban.my.id/api';
+    const baseUrl = 'https://http://kelompok1-rs.test/api';
 
     let globalAntrianList = [];
     let isExpanded = false;
@@ -176,7 +176,6 @@
     (async function initProfile() {
         const token = localStorage.getItem('rs_token') || localStorage.getItem('token');
         if (!token) {
-            window.location.href = '../auth/masuk.html';
             return;
         }
 
