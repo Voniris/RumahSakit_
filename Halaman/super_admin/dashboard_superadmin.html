@@ -341,8 +341,6 @@
     </div>
 
     <script>
-      const BASE_URL = "http://kelompok1-rs.test/api";
-
       (async function initProfile() {
         const token =
           localStorage.getItem("rs_token") || localStorage.getItem("token");
@@ -353,7 +351,7 @@
         }
 
         try {
-          const response = await fetch(`${BASE_URL}/auth/me`, {
+          const response = await fetch("${BASE_URL}/auth/me", {
             method: "GET",
             headers: {
               Authorization: `Bearer ${token}`,
@@ -459,6 +457,8 @@
         localStorage.removeItem("token");
         window.location.href = "../auth/masuk.html";
       }
+
+      const BASE_URL = 'http://kelompok1-rs.test/api';
 
       function authHeaders() {
         const token =
@@ -608,7 +608,7 @@
         const res = await fetch(`${BASE_URL}/users/${id}`, {
           method: "DELETE",
           headers: authHeaders(),
-          });
+        });
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
           throw new Error(err.message || `HTTP ${res.status}`);
