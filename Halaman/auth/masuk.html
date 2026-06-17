@@ -27,12 +27,16 @@
             if (response.ok) {
               const result = await response.json();
               const rawRoles = result?.data?.roles || result?.roles || result?.data?.user?.roles || result?.user?.roles || [];
-              const userRoles = rawRoles.map(role => typeof role === 'object' ? role.name : role);
+              
+              const userRoles = rawRoles.map(role => {
+                  let r = typeof role === 'object' ? (role.nama_role || role.name || "") : role;
+                  return String(r).toLowerCase().replace(/_/g, "");
+              });
 
               if (userRoles.includes("superadmin")) {
                 window.location.href = "../super_admin/dashboard_superadmin.html";
               } else if (
-                userRoles.includes("admin_perawat") ||
+                userRoles.includes("adminperawat") ||
                 userRoles.includes("petugas") ||
                 userRoles.includes("perawat") ||
                 userRoles.includes("dokter")
@@ -225,7 +229,7 @@
             showAlert(
               "error",
               "Koneksi Gagal",
-              "Tidak dapat terhubung ke server Backend.",
+              "Tidak dapat terhubung ke server",
             );
           } finally {
             btnSubmit.innerText = "Masuk";

@@ -76,7 +76,7 @@
     (function checkAuth() {
       const token = localStorage.getItem('rs_token');
       if (!token) {
-      console.log(" Tidak ada token, ke halaman login.");
+        window.location.href = '../../auth/masuk.html';
         return;
       }
       fetch('http://kelompok1-rs.test/api/auth/me', {
