@@ -1,240 +1,240 @@
 <!doctype html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <title>Masuk - Rumah Sakit</title>
-    <link rel="stylesheet" href="../../css/style.css" />
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link
+href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+rel="stylesheet"
+/>
+<title>Masuk - Rumah Sakit</title>
+<link rel="stylesheet" href="../../css/style.css" />
 
-    <script>
-      (async function cekSesiAktif() {
-        const token = localStorage.getItem("rs_token");
-        if (token) {
-          console.log(" Token ditemukan, memvalidasi sesi...");
-          try {
-            const response = await fetch("https://http://kelompok1-rs.test/api/auth/me", {
-              method: "GET",
-              headers: {
-                "Authorization": `Bearer ${token}`,
-                "Accept": "application/json"
-              }
-            });
+<script>
+(async function cekSesiAktif() {
+const token = localStorage.getItem("rs_token");
+if (token) {
+console.log(" Token ditemukan, memvalidasi sesi...");
+try {
+const response = await fetch("https://http://kelompok1-rs.test/api/auth/me", {
+method: "GET",
+headers: {
+"Authorization": `Bearer ${token}`,
+"Accept": "application/json"
+}
+});
 
-            if (response.ok) {
-              const result = await response.json();
-              const rawRoles = result?.data?.roles || result?.roles || result?.data?.user?.roles || result?.user?.roles || [];
-              const userRoles = rawRoles.map(role => typeof role === 'object' ? role.name : role);
+if (response.ok) {
+const result = await response.json();
+const rawRoles = result?.data?.roles || result?.roles || result?.data?.user?.roles || result?.user?.roles || [];
+const userRoles = rawRoles.map(role => typeof role === 'object' ? role.name : role);
 
-              if (userRoles.includes("superadmin")) {
-                window.location.href = "../super_admin/dashboard_superadmin.html";
-              } else if (
-                userRoles.includes("admin_perawat") ||
-                userRoles.includes("petugas") ||
-                userRoles.includes("perawat") ||
-                userRoles.includes("dokter")
-              ) {
-                window.location.href = "../petugas/dashboard_petugas.html";
-              } else if (userRoles.includes("pasien")) {
-                window.location.href = "../pasien/dashboard_pasien.html";
-              }
-            } else {
-              localStorage.removeItem("rs_token");
-            }
-          } catch (error) {
-            console.error("Gagal auto-check token:", error);
-          }
-        }
-      })();
-    </script>
-  </head>
-  <body>
-    <div class="container">
-      <div class="form-side">
-        <div class="logo">
-          <img src="../../assets/logo/Logors.png" alt="Logo" width="40" />
-          <span class="logo-name">Rumah Sakit<br /><small>Viamedika</small></span>
-        </div>
-        <h1>Masuk</h1>
+if (userRoles.includes("superadmin")) {
+window.location.href = "../super_admin/dashboard_superadmin.html";
+} else if (
+userRoles.includes("admin_perawat") ||
+userRoles.includes("petugas") ||
+userRoles.includes("perawat") ||
+userRoles.includes("dokter")
+) {
+window.location.href = "../petugas/dashboard_petugas.html";
+} else if (userRoles.includes("pasien")) {
+window.location.href = "../pasien/dashboard_pasien.html";
+}
+} else {
+localStorage.removeItem("rs_token");
+}
+} catch (error) {
+console.error("Gagal auto-check token:", error);
+}
+}
+})();
+</script>
+</head>
+<body>
+<div class="container">
+<div class="form-side">
+<div class="logo">
+<img src="../../assets/logo/Logors.png" alt="Logo" width="40" />
+<span class="logo-name">Rumah Sakit<br /><small>Viamedika</small></span>
+</div>
+<h1>Masuk</h1>
 
-        <div class="roles-toggle">
-          <button
-            type="button"
-            class="btn-roles active"
-            id="btnPasien"
-            onclick="setRoles('pasien')"
-          >
-            Pasien
-          </button>
-          <button
-            type="button"
-            class="btn-roles"
-            id="btnPetugas"
-            onclick="setRoles('petugas')"
-          >
-            Petugas
-          </button>
-        </div>
+<div class="roles-toggle">
+<button
+type="button"
+class="btn-roles active"
+id="btnPasien"
+onclick="setRoles('pasien')"
+>
+Pasien
+</button>
+<button
+type="button"
+class="btn-roles"
+id="btnPetugas"
+onclick="setRoles('petugas')"
+>
+Petugas
+</button>
+</div>
 
-        <input type="hidden" id="selectedRoles" value="pasien" />
+<input type="hidden" id="selectedRoles" value="pasien" />
 
-        <form id="formLogin">
-          <div class="form-group">
-            <label>Alamat Email / NIK</label>
-            <input
-              type="email"
-              id="email"
-              placeholder="Masuk kan Email atau NIK Anda"
-              required
-              autocomplete="off"
-            />
-          </div>
+<form id="formLogin">
+<div class="form-group">
+<label>Alamat Email / NIK</label>
+<input
+type="email"
+id="email"
+placeholder="Masuk kan Email atau NIK Anda"
+required
+autocomplete="off"
+/>
+</div>
 
-          <div class="form-group password-group">
-            <label>Kata Sandi</label>
-            <input
-              type="password"
-              id="password"
-              placeholder="Masukkan Kata Sandi"
-              required
-              autocomplete="new-password"
-            />
-            <span
-              class="toggle-password"
-              onclick="togglePassword('password', this)"
-            >
-              <img src="../../assets/icons/closedeyes.png" width="20" />
-            </span>
-          </div>
-          <br />
-          <div class="remember-row">
-            <label><input type="checkbox" id="remember_me" checked /> Ingatlah selama 7 hari</label>
-            <a href="reset_password.html" style="margin-top: -50px">Lupa Kata Sandi</a>
-          </div>
-          <br />
-          <button type="submit" class="btn-primary" id="btnSubmitLogin">
-            Masuk
-          </button>
-          <br />
-          <br />
-          <p class="redirect">
-            Belum punya akun? <a href="daftar.html">Daftar</a>
-          </p>
-        </form>
-      </div>
+<div class="form-group password-group">
+<label>Kata Sandi</label>
+<input
+type="password"
+id="password"
+placeholder="Masukkan Kata Sandi"
+required
+autocomplete="new-password"
+/>
+<span
+class="toggle-password"
+onclick="togglePassword('password', this)"
+>
+<img src="../../assets/icons/closedeyes.png" width="20" />
+</span>
+</div>
+<br />
+<div class="remember-row">
+<label><input type="checkbox" id="remember_me" checked /> Ingatlah selama 7 hari</label>
+<a href="reset_password.html" style="margin-top: -50px">Lupa Kata Sandi</a>
+</div>
+<br />
+<button type="submit" class="btn-primary" id="btnSubmitLogin">
+Masuk
+</button>
+<br />
+<br />
+<p class="redirect">
+Belum punya akun? <a href="daftar.html">Daftar</a>
+</p>
+</form>
+</div>
 
-      <div class="image-side">
-        <img src="../../assets/images/Hospital.png" />
-      </div>
-    </div>
+<div class="image-side">
+<img src="../../assets/images/Hospital.png" />
+</div>
+</div>
 
-    <script src="../../js/main.js"></script>
+<script src="../../js/main.js"></script>
 
-    <script>
-      function setRoles(roles) {
-        document.getElementById("selectedRoles").value = roles;
-        document
-          .getElementById("btnPasien")
-          .classList.toggle("active", roles === "pasien");
-        document
-          .getElementById("btnPetugas")
-          .classList.toggle("active", roles === "petugas");
-      }
+<script>
+function setRoles(roles) {
+document.getElementById("selectedRoles").value = roles;
+document
+.getElementById("btnPasien")
+.classList.toggle("active", roles === "pasien");
+document
+.getElementById("btnPetugas")
+.classList.toggle("active", roles === "petugas");
+}
 
-      document
-        .getElementById("formLogin")
-        .addEventListener("submit", async function (e) {
-          e.preventDefault();
+document
+.getElementById("formLogin")
+.addEventListener("submit", async function (e) {
+e.preventDefault();
 
-          const btnSubmit = document.getElementById("btnSubmitLogin");
-          btnSubmit.innerText = "Memeriksa...";
-          btnSubmit.disabled = true;
+const btnSubmit = document.getElementById("btnSubmitLogin");
+btnSubmit.innerText = "Memeriksa...";
+btnSubmit.disabled = true;
 
-          const tombolAktif = document.getElementById("selectedRoles").value;
+const tombolAktif = document.getElementById("selectedRoles").value;
 
-          const payload = {
-            email: document.getElementById("email").value,
-            password: document.getElementById("password").value,
-            remember_me: document.getElementById("remember_me").checked,
-          };
+const payload = {
+email: document.getElementById("email").value,
+password: document.getElementById("password").value,
+remember_me: document.getElementById("remember_me").checked,
+};
 
-          try {
-            const response = await fetch(
+try {
+const response = await fetch(
               "http://kelompok1-rs.test/api/auth/login",
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  Accept: "application/json",
-                },
-                body: JSON.stringify(payload),
-              },
-            );
+              "http://kelompok1-rs.test/api/auth/login",
+{
+method: "POST",
+headers: {
+"Content-Type": "application/json",
+Accept: "application/json",
+},
+body: JSON.stringify(payload),
+},
+);
 
-            const result = await response.json();
-            if (response.ok || result.success) {
-              localStorage.setItem("rs_token", result.data.token);
-              
-              const rawRoles = result?.data?.user?.roles || result?.user?.roles || [];
-              const userRoles = rawRoles.map(role => typeof role === 'object' ? role.name : role);
+const result = await response.json();
+if (response.ok || result.success) {
+localStorage.setItem("rs_token", result.data.token);
 
-              showAlert("success", "Login Berhasil!", "Selamat datang.", () => {
-                if (userRoles.includes("superadmin")) {
-                    window.location.href = "../super_admin/dashboard_superadmin.html";
-                    return; 
-                }
+const rawRoles = result?.data?.user?.roles || result?.user?.roles || [];
+const userRoles = rawRoles.map(role => typeof role === 'object' ? role.name : role);
 
-                if (tombolAktif === "pasien") {
-                  if (userRoles.includes("pasien")) {
-                    window.location.href = "../pasien/dashboard_pasien.html";
-                  } else {
-                    showAlert(
-                      "error",
-                      "Akses Ditolak",
-                      "Akun Anda tidak terdaftar sebagai Pasien.",
-                    );
-                    localStorage.removeItem("rs_token");
-                  }
-                } else if (tombolAktif === "petugas") {
-                  if (
-                    userRoles.includes("admin_perawat") ||
-                    userRoles.includes("petugas") ||
-                    userRoles.includes("perawat") ||
-                    userRoles.includes("dokter")
-                  ) {
-                    window.location.href = "../petugas/dashboard_petugas.html";
-                  } else {
-                    showAlert(
-                      "error",
-                      "Akses Ditolak",
-                      "Anda tidak memiliki otoritas akses Petugas/Admin",
-                    );
-                    localStorage.removeItem("rs_token");
-                  }
-                }
-              });
-            } else {
-              showAlert(
-                "error",
-                "Login Gagal",
-                result.message || "Email atau Password salah",
-              );
-            }
-          } catch (error) {
-            console.error(error);
-            showAlert(
-              "error",
-              "Koneksi Gagal",
-              "Tidak dapat terhubung ke server Backend.",
-            );
-          } finally {
-            btnSubmit.innerText = "Masuk";
-            btnSubmit.disabled = false;
-          }
-        });
-    </script>
-  </body>
-</html>
+showAlert("success", "Login Berhasil!", "Selamat datang.", () => {
+if (userRoles.includes("superadmin")) {
+window.location.href = "../super_admin/dashboard_superadmin.html";
+return; 
+}
+
+if (tombolAktif === "pasien") {
+if (userRoles.includes("pasien")) {
+window.location.href = "../pasien/dashboard_pasien.html";
+} else {
+showAlert(
+"error",
+"Akses Ditolak",
+"Akun Anda tidak terdaftar sebagai Pasien.",
+);
+localStorage.removeItem("rs_token");
+}
+} else if (tombolAktif === "petugas") {
+if (
+userRoles.includes("admin_perawat") ||
+userRoles.includes("petugas") ||
+userRoles.includes("perawat") ||
+userRoles.includes("dokter")
+) {
+window.location.href = "../petugas/dashboard_petugas.html";
+} else {
+showAlert(
+"error",
+"Akses Ditolak",
+"Anda tidak memiliki otoritas akses Petugas/Admin",
+);
+localStorage.removeItem("rs_token");
+}
+}
+});
+} else {
+showAlert(
+"error",
+"Login Gagal",
+result.message || "Email atau Password salah",
+);
+}
+} catch (error) {
+console.error(error);
+showAlert(
+"error",
+"Koneksi Gagal",
+"Tidak dapat terhubung ke server Backend.",
+);
+} finally {
+btnSubmit.innerText = "Masuk";
+btnSubmit.disabled = false;
+}
+});
+</script>
+</body>
