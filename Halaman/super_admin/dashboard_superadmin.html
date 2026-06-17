@@ -339,11 +339,21 @@
       </svg>
       <span id="toastMsg">Berhasil disimpan!</span>
     </div>
+<script>
+      // 1. PINDAHKAN BASE_URL KE PALING ATAS
+      // Ganti jadi URL VPS kamu kalau udah nggak pakai localhost lagi
+      const BASE_URL = 'http://kelompok1-rs.test/api'; 
 
-    <script>
+      function authHeaders() {
+        const token = localStorage.getItem("rs_token") || localStorage.getItem("token") || "";
+        return {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        };
+      }
+
       (async function initProfile() {
-        const token =
-          localStorage.getItem("rs_token") || localStorage.getItem("token");
+        const token = localStorage.getItem("rs_token") || localStorage.getItem("token");
 
         if (!token) {
           window.location.href = "../auth/masuk.html";
@@ -351,7 +361,8 @@
         }
 
         try {
-          const response = await fetch("${BASE_URL}/auth/me", {
+          // 2. PERBAIKI TANDA KUTIP MENJADI BACKTICK (`)
+          const response = await fetch(`${BASE_URL}/auth/me`, {
             method: "GET",
             headers: {
               Authorization: `Bearer ${token}`,
@@ -374,11 +385,14 @@
               result?.name ||
               result?.data?.user?.name ||
               result?.user?.name;
+            
             let roleFinal =
               result?.data?.roles?.[0]?.nama_role ||
               result?.roles?.[0]?.nama_role ||
               result?.data?.user?.roles?.[0]?.nama_role ||
               result?.user?.roles?.[0]?.nama_role ||
+              result?.data?.roles?.[0]?.name || 
+              result?.roles?.[0]?.name || 
               "Admin";
 
             const roleRaw =
@@ -386,8 +400,13 @@
               result?.roles?.[0]?.nama_role ||
               result?.data?.user?.roles?.[0]?.nama_role ||
               result?.user?.roles?.[0]?.nama_role ||
+              result?.data?.roles?.[0]?.name ||
+              result?.roles?.[0]?.name ||
               "";
-            if (roleRaw.toLowerCase() !== "super_admin") {
+            
+            // 3. PERBAIKI PENGECEKAN ROLE (Hapus garis bawah)
+            const roleBanding = roleRaw.toLowerCase().replace(/_/g, "");
+            if (roleBanding !== "superadmin") {
               alert("Akses ditolak. Halaman ini hanya untuk Super Admin.");
               window.location.href = "../auth/masuk.html";
               return;
@@ -456,19 +475,6 @@
         localStorage.removeItem("rs_token");
         localStorage.removeItem("token");
         window.location.href = "../auth/masuk.html";
-      }
-
-      const BASE_URL = 'http://kelompok1-rs.test/api';
-
-      function authHeaders() {
-        const token =
-          localStorage.getItem("rs_token") ||
-          localStorage.getItem("token") ||
-          "";
-        return {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        };
       }
 
       let allUsers = [];
