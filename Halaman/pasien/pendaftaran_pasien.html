@@ -92,8 +92,7 @@
   <script src="../../js/auth.js"></script>
   
   <script>
-    const BASE_URL = 'http://kelompok1-rs.test/api';
-
+ 
     (async function initProfile() {
         const token = localStorage.getItem('rs_token');
         
@@ -103,7 +102,7 @@
         }
 
         try {
-            const response = await fetch(`${BASE_URL}/auth/me`, {
+            const response = await fetch('http://kelompok1-rs.test/api/auth/me', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`, 

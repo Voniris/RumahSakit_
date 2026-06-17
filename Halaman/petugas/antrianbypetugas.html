@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="../../css/dashboard.css">
     <link rel="stylesheet" href="../../css/panggilbypetugas.css">    
+    
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -145,11 +146,6 @@
     
 <script>
 
-    const API_BASE      = 'http://kelompok1-rs.test/api';
-    const CEK_NIK_URL   = (nik) => `${API_BASE}/pasien/cek-nik/${nik}`;
-    const UNITS_URL     = `${API_BASE}/units`;
-    const DAFTAR_URL    = `${API_BASE}/pendaftaran/langsung`;
-
     (async function initProfile() {
         const token = localStorage.getItem('rs_token');
         if (!token) {
@@ -157,7 +153,7 @@
             return;
         }
         try {
-            const response = await fetch(`${API_BASE}/auth/me`, {
+            const response = await fetch('http://kelompok1-rs.test/api/auth/me', {
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
             });
@@ -213,6 +209,11 @@
         localStorage.removeItem('rs_token');
         window.location.href = '../auth/masuk.html';
     }
+
+    const API_BASE      = 'http://kelompok1-rs.test/api';
+    const CEK_NIK_URL   = (nik) => `${API_BASE}/pasien/cek-nik/${nik}`;
+    const UNITS_URL     = `${API_BASE}/units`;
+    const DAFTAR_URL    = `${API_BASE}/pendaftaran/langsung`;
 
     function authHeaders() {
         const token = localStorage.getItem('rs_token');

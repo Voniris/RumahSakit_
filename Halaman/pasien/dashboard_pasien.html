@@ -167,8 +167,6 @@
   <script src="../../js/auth.js"></script>
   
   <script>
-    const BASE_URL = 'http://kelompok1-rs.test/api';
-
     document.addEventListener("DOMContentLoaded", async function() {
         const token = localStorage.getItem('rs_token');
 
@@ -179,7 +177,7 @@
 
         let pasienId = null;
         try {
-            const response = await fetch(`${BASE_URL}/auth/me`, {
+            const response = await fetch('http://kelompok1-rs.test/api/auth/me', {
                 headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
             });
             if (response.status === 401) {
@@ -191,7 +189,7 @@
             console.error("Gagal validasi token:", error);
         }
         try {
-            const resProfil = await fetch(`${BASE_URL}/pasien/profil`, {
+            const resProfil = await fetch('http://kelompok1-rs.test/api/pasien/profil', {
                 headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
             });
             const dataProfil = await resProfil.json();
@@ -218,7 +216,7 @@
         }
 
         try {
-            const responseAntrian = await fetch(`${BASE_URL}/antrian/saya`, {
+            const responseAntrian = await fetch('http://kelompok1-rs.test/api/antrian/saya', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`, 
@@ -272,7 +270,7 @@
 
         if (pasienId) {
             try {
-                const responseRiwayat = await fetch(`${BASE_URL}/pendaftaran/pasien/${pasienId}/riwayat`, {
+                const responseRiwayat = await fetch(`http://kelompok1-rs.test/api/pendaftaran/pasien/${pasienId}/riwayat`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`, 

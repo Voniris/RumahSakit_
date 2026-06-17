@@ -166,8 +166,6 @@
 
 <script src="../../js/auth.js"></script>
 <script>
-    const baseUrl = 'http://kelompok1-rs.test/api';
-
     let globalAntrianList = [];
     let isExpanded = false;
     let currentPage = 1;
@@ -181,7 +179,7 @@
         }
 
         try {
-            const response = await fetch(`${baseUrl}/auth/me`, {
+            const response = await fetch('http://kelompok1-rs.test/api/auth/me', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`, 
@@ -236,7 +234,7 @@
         event.stopPropagation();
         const token = localStorage.getItem('rs_token');
         try {
-            const response = await fetch(`${baseUrl}/auth/daftar-sebagai-pasien`, {
+            const response = await fetch('http://kelompok1-rs.test/api/auth/daftar-sebagai-pasien', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -291,7 +289,7 @@
 
         const token = localStorage.getItem('rs_token') || localStorage.getItem('token');
         try {
-            const response = await fetch(`${baseUrl}/pendaftaran/${pendaftaranId}`, {
+            const response = await fetch(`http://kelompok1-rs.test/api/pendaftaran/${pendaftaranId}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -420,6 +418,7 @@
             'Accept': 'application/json'
         };
 
+        const baseUrl = 'http://kelompok1-rs.test/api';
 
         try {
             const resPendaftaran = await fetch(`${baseUrl}/pendaftaran`, { headers });
