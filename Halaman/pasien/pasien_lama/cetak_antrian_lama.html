@@ -76,7 +76,7 @@
     (function checkAuth() {
       const token = localStorage.getItem('rs_token');
       if (!token) {
-        window.location.href = '../../auth/masuk.html';
+      console.log(" Tidak ada token, ke halaman login.");
         return;
       }
       fetch('http://kelompok1-rs.test/api/auth/me', {
@@ -108,7 +108,7 @@
         document.getElementById("teksUnitLama").innerText = tiket.unit ?? "Unit";
         document.getElementById("teksSisaAntrianLama").innerText = `Ada ${tiket.antrian_di_depan ?? 0} Antrian Didepan`;
         document.getElementById("teksEstimasiLama").innerText = `Estimasi Dipanggil: ${tiket.estimasi?.perkiraan_jam ?? "--:--"}`;
-        
+
         const tgl = tiket.tanggal ? new Date(tiket.tanggal + "T00:00:00") : new Date();
         const namaHari  = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
         const namaBulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
@@ -123,14 +123,27 @@
     function simpanKePNGLama() {
       const element = document.getElementById("areaTiketLama");
       
+      if (!element) return;
+
       const wrapper = document.createElement("div");
-      wrapper.style.padding = "20px";
+      
+      wrapper.style.width = "420px";
+      wrapper.style.height = "420px";
+      wrapper.style.boxSizing = "border-box";
+      wrapper.style.justifyContent = "center";
+      
+      wrapper.style.padding = "30px";
       wrapper.style.backgroundColor = "white";
       wrapper.style.display = "flex";
       wrapper.style.flexDirection = "column";
       wrapper.style.alignItems = "center";
       
-      wrapper.appendChild(element.cloneNode(true));
+      const tiketClone = element.cloneNode(true);
+      tiketClone.style.margin = "0";
+      tiketClone.style.boxShadow = "none";
+      tiketClone.style.border = "1px solid #777";
+      
+      wrapper.appendChild(tiketClone);
       document.body.appendChild(wrapper);
 
       html2canvas(wrapper, {
@@ -138,7 +151,9 @@
         scale: 2
       }).then(canvas => {
         const link = document.createElement("a");
-        link.download = "Antrian-Lama-Viamedika.png";
+        const noAntrian = document.getElementById("teksNomorAntrianLama").innerText.trim();
+        link.download = `Tiket-Antrian-${noAntrian}-Viamedika.png`;
+        
         link.href = canvas.toDataURL("image/png");
         link.click();
         

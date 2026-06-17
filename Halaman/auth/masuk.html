@@ -9,15 +9,54 @@
     />
     <title>Masuk - Rumah Sakit</title>
     <link rel="stylesheet" href="../../css/style.css" />
+
+    <script>
+      (async function cekSesiAktif() {
+        const token = localStorage.getItem("rs_token");
+        if (token) {
+          console.log(" Token ditemukan, memvalidasi sesi...");
+          try {
+            const response = await fetch("http://kelompok1-rs.test/api/auth/me", {
+              method: "GET",
+              headers: {
+                "Authorization": `Bearer ${token}`,
+                "Accept": "application/json"
+              }
+            });
+
+            if (response.ok) {
+              const result = await response.json();
+              const rawRoles = result?.data?.roles || result?.roles || result?.data?.user?.roles || result?.user?.roles || [];
+              const userRoles = rawRoles.map(role => typeof role === 'object' ? role.name : role);
+
+              if (userRoles.includes("superadmin")) {
+                window.location.href = "../super_admin/dashboard_superadmin.html";
+              } else if (
+                userRoles.includes("admin_perawat") ||
+                userRoles.includes("petugas") ||
+                userRoles.includes("perawat") ||
+                userRoles.includes("dokter")
+              ) {
+                window.location.href = "../petugas/dashboard_petugas.html";
+              } else if (userRoles.includes("pasien")) {
+                window.location.href = "../pasien/dashboard_pasien.html";
+              }
+            } else {
+              localStorage.removeItem("rs_token");
+            }
+          } catch (error) {
+            console.error("Gagal auto-check token:", error);
+          }
+        }
+      })();
+    </script>
   </head>
   <body>
     <div class="container">
       <div class="form-side">
         <div class="logo">
           <img src="../../assets/logo/Logors.png" alt="Logo" width="40" />
-          <span class="logo-name"
-            >Rumah Sakit<br /><small>Viamedika</small></span
-          >
+          <span class="logo-name">Rumah Sakit<br /><small>Viamedika</small></span>
         </div>
         <h1>Masuk</h1>
 
@@ -72,13 +111,8 @@
           </div>
           <br />
           <div class="remember-row">
-            <label
-              ><input type="checkbox" id="remember_me" /> Ingatlah selama 7
-              hari</label
-            >
-            <a href="reset_password.html" style="margin-top: -50px"
-              >Lupa Kata Sandi</a
-            >
+            <label><input type="checkbox" id="remember_me" checked /> Ingatlah selama 7 hari</label>
+            <a href="reset_password.html" style="margin-top: -50px">Lupa Kata Sandi</a>
           </div>
           <br />
           <button type="submit" class="btn-primary" id="btnSubmitLogin">
@@ -143,15 +177,9 @@
             const result = await response.json();
             if (response.ok || result.success) {
               localStorage.setItem("rs_token", result.data.token);
-              const userRoles = result.data.user.roles;
-
-              console.log("DEBUG - Tombol Aktif:", tombolAktif);
-              console.log("DEBUG - User Roles:", userRoles);
-              console.log(
-                "DEBUG - Roles Type:",
-                Array.isArray(userRoles) ? "Array" : typeof userRoles,
-              );
-              console.log("DEBUG - Roles Detail:", JSON.stringify(userRoles));
+              
+              const rawRoles = result?.data?.user?.roles || result?.user?.roles || [];
+              const userRoles = rawRoles.map(role => typeof role === 'object' ? role.name : role);
 
               showAlert("success", "Login Berhasil!", "Selamat datang.", () => {
                 if (tombolAktif === "pasien") {
@@ -166,17 +194,8 @@
                     localStorage.removeItem("rs_token");
                   }
                 } else if (tombolAktif === "petugas") {
-                  console.log(
-                    "DEBUG - Check Superadmin:",
-                    userRoles.includes("superadmin"),
-                  );
-                  console.log(
-                    "DEBUG - Check Admin Perawat:",
-                    userRoles.includes("admin_perawat"),
-                  );
                   if (userRoles.includes("superadmin")) {
-                    window.location.href =
-                      "../super_admin/dashboard_superadmin.html";
+                    window.location.href = "../super_admin/dashboard_superadmin.html";
                   } else if (
                     userRoles.includes("admin_perawat") ||
                     userRoles.includes("petugas") ||

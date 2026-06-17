@@ -3,13 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <title>Sistem Informasi Viamedika</title>
-    <meta http-equiv="refresh" content="0; url=Halaman/auth/masuk.html">
 </head>
 <body>
-    <p>:3</p>
-    
+    <p>Memuat sesi Anda...</p>
+
     <script>
-        window.location.href = "Halaman/auth/masuk.html";
+        const BASE_URL = 'http://kelompok1-rs.test/api';
+
+        (async function cekSesiDanRedirect() {
+            const token = localStorage.getItem('rs_token');
+
+            if (!token) {
+                console.log(" Tidak ada token, ke halaman login.");
+                window.location.href = "Halaman/auth/masuk.html";
+                return;
+            }
+
+            try {
+                const response = await fetch(`${BASE_URL}/auth/me`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    localStorage.removeItem('rs_token');
+                    window.location.href = "Halaman/auth/masuk.html";
+                    return;
+                }
+
+                const result = await response.json();
+                const rawRoles = result?.data?.roles || result?.roles || result?.data?.user?.roles || result?.user?.roles || [];
+                const userRoles = rawRoles.map(role => typeof role === 'object' ? role.name : role);
+
+                if (userRoles.includes('superadmin')) {
+                    window.location.href = "Halaman/super_admin/dashboard_superadmin.html";
+                } else if (
+                    userRoles.includes('admin_perawat') || 
+                    userRoles.includes('petugas') || 
+                    userRoles.includes('perawat') || 
+                    userRoles.includes('dokter')
+                ) {
+                    window.location.href = "Halaman/petugas/dashboard_petugas.html";
+                } else if (userRoles.includes('pasien')) {
+                    window.location.href = "Halaman/pasien/dashboard_pasien.html";
+                } else {
+                    window.location.href = "Halaman/auth/masuk.html";
+                }
+
+            } catch (error) {
+                console.error("Gagal verifikasi ke backend:", error);
+                window.location.href = "Halaman/auth/masuk.html";
+            }
+        })();
     </script>
 </body>
 </html>
