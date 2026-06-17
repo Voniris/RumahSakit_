@@ -1,4 +1,4 @@
-const BASE_URL = 'https://kelompok1-rs.test/api';
+const BASE_URL = 'http://kelompok1-rs.test/api';
 
 async function checkAndRefreshToken() {
     const token = localStorage.getItem('rs_token');
