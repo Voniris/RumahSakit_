@@ -341,14 +341,13 @@
     </div>
 
     <script>
-      const BASE_URL = "https://http://kelompok1-rs.test/api";
+      const BASE_URL = "https://kelompok1-rs.test/api";
 
       (async function initProfile() {
         const token =
           localStorage.getItem("rs_token") || localStorage.getItem("token");
 
         if (!token) {
-          window.location.href = "../auth/masuk.html";
           return;
         }
 
@@ -552,31 +551,41 @@
       };
 
       async function loadUsers() {
-        setLoading(true);
-        try {
-          const res = await fetch(`${BASE_URL}/users`, {
-            headers: authHeaders(),
-          });
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
-          const data = await res.json();
+  setLoading(true);
+  try {
+    // Mem-bypass fetch ke API untuk sementara dan menggunakan Data Dummy
+    /*
+    const res = await fetch(`${BASE_URL}/users`, {
+      headers: authHeaders(),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    */
 
-          if (data && Array.isArray(data.data)) {
-            allUsers = data.data;
-          } else if (data && data.data && Array.isArray(data.data.data)) {
-            allUsers = data.data.data;
-          } else if (Array.isArray(data)) {
-            allUsers = data;
-          } else {
-            allUsers = [];
-          }
+    // --- DATA DUMMY ---
+    const dummyData = [
+      { id: 1, name: "Dr. Tirta Mandira", email: "tirta@vamedika.id", roles: ["Dokter"], is_active: true },
+      { id: 2, name: "Siti Fadilah", email: "siti.perawat@vamedika.id", roles: ["Perawat", "Admin_perawat"], is_active: true },
+      { id: 3, name: "Andi Saputra", email: "andi@gmail.com", roles: ["Pasien"], is_active: false },
+      { id: 4, name: "Rina Kumala", email: "rina.apotik@vamedika.id", roles: ["Apoteker", "Admin_apotik"], is_active: true },
+      { id: 5, name: "Budi Santoso", email: "budi.kasir@vamedika.id", roles: ["Kasir"], is_active: true },
+      { id: 6, name: "Dewi Lestari", email: "dewi@yahoo.com", roles: ["Pasien"], is_active: true },
+      { id: 7, name: "Lukman Hakim", email: "lukman@vamedika.id", roles: ["Admin_kasir"], is_active: true }
+    ];
 
-          setLoading(false);
-          render();
-        } catch (err) {
-          console.error(err);
-          setError("Gagal memuat data pengguna. " + err.message);
-        }
-      }
+    // Simulasi delay jaringan selama 800ms agar animasi loading SVG-mu terlihat
+    await new Promise(resolve => setTimeout(resolve, 800));
+
+    // Memasukkan data dummy ke array utama
+    allUsers = dummyData;
+
+    setLoading(false);
+    render();
+  } catch (err) {
+    console.error(err);
+    setError("Gagal memuat data pengguna. " + err.message);
+  }
+}
 
       async function createUser(payload) {
         const res = await fetch(`${BASE_URL}/users`, {
