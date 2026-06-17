@@ -166,6 +166,8 @@
 
 <script src="../../js/auth.js"></script>
 <script>
+    const baseUrl = 'https://daftar4b06.vps-poliban.my.id/api';
+
     let globalAntrianList = [];
     let isExpanded = false;
     let currentPage = 1;
@@ -179,7 +181,7 @@
         }
 
         try {
-            const response = await fetch('https://daftar4b06.vps-poliban.my.id/api/auth/me', {
+            const response = await fetch(`${baseUrl}/auth/me`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`, 
@@ -234,7 +236,7 @@
         event.stopPropagation();
         const token = localStorage.getItem('rs_token');
         try {
-            const response = await fetch('https://daftar4b06.vps-poliban.my.id/api/auth/daftar-sebagai-pasien', {
+            const response = await fetch(`${baseUrl}/auth/daftar-sebagai-pasien`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -289,7 +291,7 @@
 
         const token = localStorage.getItem('rs_token') || localStorage.getItem('token');
         try {
-            const response = await fetch(`https://daftar4b06.vps-poliban.my.id/api/pendaftaran/${pendaftaranId}`, {
+            const response = await fetch(`${baseUrl}/pendaftaran/${pendaftaranId}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -418,7 +420,6 @@
             'Accept': 'application/json'
         };
 
-        const baseUrl = 'https://daftar4b06.vps-poliban.my.id/api';
 
         try {
             const resPendaftaran = await fetch(`${baseUrl}/pendaftaran`, { headers });

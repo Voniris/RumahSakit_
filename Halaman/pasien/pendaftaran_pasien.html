@@ -92,7 +92,8 @@
   <script src="../../js/auth.js"></script>
   
   <script>
- 
+    const BASE_URL = 'https://daftar4b06.vps-poliban.my.id/api';
+
     (async function initProfile() {
         const token = localStorage.getItem('rs_token');
         
@@ -102,7 +103,7 @@
         }
 
         try {
-            const response = await fetch('https://daftar4b06.vps-poliban.my.id/api/auth/me', {
+            const response = await fetch(`${BASE_URL}/auth/me`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`, 

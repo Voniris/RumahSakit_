@@ -56,13 +56,15 @@
 
   <script src="../../js/auth.js"></script>
     <script>
+    const BASE_URL = 'https://daftar4b06.vps-poliban.my.id/api';
+
     (function checkAuth() {
       const token = localStorage.getItem('rs_token');
       if (!token) {
         window.location.href = '../auth/masuk.html'; 
         return;
       }
-      fetch('https://daftar4b06.vps-poliban.my.id/api/auth/me', {
+      fetch(`${BASE_URL}/auth/me`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

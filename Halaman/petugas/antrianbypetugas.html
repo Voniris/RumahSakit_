@@ -146,6 +146,11 @@
     
 <script>
 
+    const API_BASE      = 'https://daftar4b06.vps-poliban.my.id/api';
+    const CEK_NIK_URL   = (nik) => `${API_BASE}/pasien/cek-nik/${nik}`;
+    const UNITS_URL     = `${API_BASE}/units`;
+    const DAFTAR_URL    = `${API_BASE}/pendaftaran/langsung`;
+
     (async function initProfile() {
         const token = localStorage.getItem('rs_token');
         if (!token) {
@@ -153,7 +158,7 @@
             return;
         }
         try {
-            const response = await fetch('https://daftar4b06.vps-poliban.my.id/api/auth/me', {
+            const response = await fetch(`${API_BASE}/auth/me`, {
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
             });
@@ -209,11 +214,6 @@
         localStorage.removeItem('rs_token');
         window.location.href = '../auth/masuk.html';
     }
-
-    const API_BASE      = 'https://daftar4b06.vps-poliban.my.id/api';
-    const CEK_NIK_URL   = (nik) => `${API_BASE}/pasien/cek-nik/${nik}`;
-    const UNITS_URL     = `${API_BASE}/units`;
-    const DAFTAR_URL    = `${API_BASE}/pendaftaran/langsung`;
 
     function authHeaders() {
         const token = localStorage.getItem('rs_token');

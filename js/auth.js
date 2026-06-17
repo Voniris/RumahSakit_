@@ -1,63 +1,23 @@
 const BASE_URL = 'https://daftar4b06.vps-poliban.my.id/api';
 
-function getToken() {
-    return localStorage.getItem('rs_token') || sessionStorage.getItem('rs_token');
-}
-function saveToken(token, rememberMe, expiresIn) {
-    if (rememberMe) {
-        localStorage.setItem('rs_token', token);
-        if (expiresIn) localStorage.setItem('rs_expires_in', expiresIn);
-        sessionStorage.removeItem('rs_token');
-        sessionStorage.removeItem('rs_expires_in');
-    } else {
-        sessionStorage.setItem('rs_token', token);
-        if (expiresIn) sessionStorage.setItem('rs_expires_in', expiresIn);
-        localStorage.removeItem('rs_token');
-        localStorage.removeItem('rs_expires_in');
-    }
-}
-
-function clearToken() {
-    localStorage.removeItem('rs_token');
-    localStorage.removeItem('rs_expires_in');
-    sessionStorage.removeItem('rs_token');
-    sessionStorage.removeItem('rs_expires_in');
-}
-
-function isLoggedIn() {
-    return !!getToken();
-}
-
-async function authFetch(url, options = {}) {
-    const token = getToken();
-    const headers = {
-        'Accept': 'application/json',
-        ...(options.headers || {}),
-    };
-    if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-    }
-    return fetch(url, { ...options, headers });
-}
-
-/* ===================== AUTO REFRESH TOKEN ===================== */
-
 async function checkAndRefreshToken() {
-    const token = getToken();
+    const token = localStorage.getItem('rs_token');
     if (!token) return;
     if (window.location.href.includes('/auth/')) return;
 
     try {
-        const response = await authFetch(`${BASE_URL}/auth/refresh`, {
-            method: 'POST'
+        const response = await fetch(`${BASE_URL}/auth/refresh`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json'
+            }
         });
 
         const result = await response.json();
 
         if (response.ok && result.success) {
-            // Simpan token baru ke tempat yang sama dengan token lama
-            const rememberMe = !!localStorage.getItem('rs_token');
-            saveToken(result.data.token, rememberMe, result.data.expires_in);
+            localStorage.setItem('rs_token', result.data.token);
             console.log("Token berhasil diperbarui.");
         } else {
             console.warn("Refresh token gagal:", result?.message);
@@ -68,7 +28,7 @@ async function checkAndRefreshToken() {
 }
 
 function mulaiAutoRefresh() {
-    const token = getToken();
+    const token = localStorage.getItem('rs_token');
     if (!token) return;
     if (window.location.href.includes('/auth/')) return;
 
