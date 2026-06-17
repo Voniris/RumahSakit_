@@ -8,7 +8,7 @@
     flex-direction: column;
     justify-content: flex-start;
     gap: 20px; 
-    overflow: hidden; 
+    overflow-y: auto; 
 }
 .header-area { margin-bottom: 0; }
 .header-area .welcome-text { font-size: 13px; color: #666; margin-bottom: 0; }
@@ -22,7 +22,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    z-index: 10;
+    z-index: 999;
     cursor: pointer; 
 }
 .top-profile img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
