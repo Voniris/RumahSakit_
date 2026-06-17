@@ -53,6 +53,7 @@
     </div>
   </div>
 
+  <script src="../../js/auth.js"></script>
   <script src="../../js/main.js"></script>
 
   <script>
@@ -86,7 +87,8 @@
             
             const result = await response.json();
             if (response.ok || result.success) {
-                localStorage.setItem('rs_token', result.data.token);
+                saveToken(result.data.token, payload.remember_me, result.data.expires_in);
+
                 const userRoles = result.data.user.roles; 
 
                 showAlert('success', 'Login Berhasil!', 'Selamat datang.', () => {
@@ -96,7 +98,7 @@
                             window.location.href = "../pasien/dashboard_pasien.html";
                         } else {
                             showAlert('error', 'Akses Ditolak', 'Akun Anda tidak terdaftar sebagai Pasien.');
-                            localStorage.removeItem('rs_token');
+                            clearToken();
                         }
                     } 
                     else if (tombolAktif === 'petugas') {
@@ -108,7 +110,7 @@
                         } 
                         else {
                             showAlert('error', 'Akses Ditolak', 'Anda tidak memiliki otoritas akses Petugas/Admin');
-                            localStorage.removeItem('rs_token');
+                            clearToken();
                         }
                     }
                 });
