@@ -66,6 +66,7 @@
     <script src="../../js/main.js"></script>
 
 <script>
+    const BASE_URL = 'https://daftar4b06.vps-poliban.my.id/api';
     let isResending = false;
     
     document.querySelector('.btn-kirim').addEventListener('click', async function() {
@@ -78,8 +79,8 @@
         }
 
         const endpoint = isResending 
-            ? 'http://kelompok1-rs.test/api/auth/resend-verification' 
-            : 'http://kelompok1-rs.test/api/auth/register';
+            ? `${BASE_URL}/auth/resend-verification` 
+            : `${BASE_URL}/auth/register`;
     
         btnKirim.innerText = "Mengirim...";
         btnKirim.disabled = true;
@@ -106,7 +107,7 @@
                 showAlert('error', 'Gagal Mengirim Kode', data.message || 'Terjadi kesalahan pada server.');
             }
         } catch (error) {
-            showAlert('error', 'Koneksi Gagal', 'Tidak dapat terhubung ke server.');
+            showAlert('error', 'Koneksi Gagal', 'Tidak dapat terhubung ke server Backend.');
         } finally {
             if (!isResending) {
                 btnKirim.innerText = "Kirim Kode";
@@ -148,7 +149,7 @@
         btnSubmit.disabled = true;
 
         try {
-            const response = await fetch('http://kelompok1-rs.test/api/auth/verify-email', {
+            const response = await fetch(`${BASE_URL}/auth/verify-email`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                 body: JSON.stringify({
@@ -169,7 +170,7 @@
                 showAlert('error', 'Pendaftaran Gagal', data.message || 'Terjadi kesalahan.');
             }
         } catch (error) {
-            showAlert('error', 'Koneksi Gagal', 'Tidak dapat terhubung ke server.');
+            showAlert('error', 'Koneksi Gagal', 'Tidak dapat terhubung ke server Backend.');
         } finally {
             btnSubmit.innerText = "Daftar";
             btnSubmit.disabled = false;
